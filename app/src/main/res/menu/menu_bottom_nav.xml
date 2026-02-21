@@ -7,11 +7,6 @@
         android:title="@string/menu_home" />
 
     <item
-        android:id="@+id/menu_favorites"
-        android:icon="@drawable/ic_favorite_24"
-        android:title="@string/menu_favorites" />
-
-    <item
         android:id="@+id/menu_profile"
         android:icon="@drawable/ic_profile_24"
         android:title="@string/menu_profile" />

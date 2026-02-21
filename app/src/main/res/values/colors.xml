@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="petopia_orange">#FF8A65</color>
+    <color name="rescue_red">#E53935</color>
+    <color name="toolbar_gray">#F5F5F5</color>
+    <color name="filter_bg">#EEEEEE</color>
 </resources>
