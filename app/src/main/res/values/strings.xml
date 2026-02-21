@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Petopia</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_favorites">Saved</string>
+    <string name="menu_profile">Profile</string>
 </resources>
