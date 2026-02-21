@@ -1,10 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="light_blue_600">#FF039BE5</color>
-    <color name="light_blue_900">#FF01579B</color>
-    <color name="light_blue_A200">#FF40C4FF</color>
-    <color name="light_blue_A400">#FF00B0FF</color>
-    <color name="black_overlay">#66000000</color>
+    <color name="petopia_orange">#FF8A65</color>
+    <color name="rescue_red">#E53935</color>
+    <color name="toolbar_gray">#F5F5F5</color>
+    <color name="filter_bg">#EEEEEE</color>
+    <color name="auth_background">#FFFBF0</color>
+    <color name="text_primary">#333333</color>
+    <color name="text_secondary">#777777</color>
+    <color name="button_primary">#FF6F43</color>
+    <color name="tab_background">#F1F3F4</color>
+
 </resources>

@@ -8,7 +8,7 @@
     <style name="Theme.Petopia" parent="Base.Theme.Petopia" />
 
     <style name="ThemeOverlay.Petopia.FullscreenContainer" parent="">
-        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
-        <item name="fullscreenTextColor">@color/light_blue_A200</item>
+        <item name="fullscreenBackgroundColor">@color/petopia_orange</item>
+        <item name="fullscreenTextColor">@color/petopia_orange</item>
     </style>
 </resources>

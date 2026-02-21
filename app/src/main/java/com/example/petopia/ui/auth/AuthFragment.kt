@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.petopia.R
 import com.example.petopia.dao.AppLocalDB
 import com.example.petopia.data.repository.UserRepository
-import com.example.petopia.features.auth.AuthViewModel
+import com.example.petopia.ui.auth.AuthViewModel
 import com.google.android.material.tabs.TabLayout
 
 class AuthFragment : Fragment(R.layout.fragment_auth) {
@@ -21,9 +21,6 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // 1. Setup Architecture Components
-        // Inside onViewCreated
 
         val userDao = AppLocalDB.db.userDao()
 
@@ -36,6 +33,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         val authTabLayout = view.findViewById<TabLayout>(R.id.authTabLayout)
         val signupExtraFields = view.findViewById<LinearLayout>(R.id.signupExtraFields)
         val tvFormTitle = view.findViewById<TextView>(R.id.tvFormTitle)
+        val tvFormDescription = view.findViewById<TextView>(R.id.tvFormDescription)
         val btnSubmit = view.findViewById<Button>(R.id.btnSubmit)
 
         val etUser = view.findViewById<EditText>(R.id.etUsername)
@@ -47,13 +45,15 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         authTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab?.position == 0) { // Login Mode
-                    tvFormTitle.text = "Welcome Back"
+                    tvFormTitle.text = getString(R.string.welcome_back)
+                    tvFormDescription.text = getString(R.string.login_description)
                     signupExtraFields.visibility = View.GONE
-                    btnSubmit.text = "Login"
+                    btnSubmit.text = getString(R.string.login_tab)
                 } else { // Sign Up Mode
-                    tvFormTitle.text = "Join Petopia"
+                    tvFormTitle.text = getString(R.string.join_petopia)
+                    tvFormDescription.text = getString(R.string.create_account_description)
                     signupExtraFields.visibility = View.VISIBLE
-                    btnSubmit.text = "Sign Up"
+                    btnSubmit.text = getString(R.string.signup_tab)
                 }
             }
 
@@ -78,10 +78,10 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         // 5. Observe Results
         viewModel.authStatus.observe(viewLifecycleOwner) { success ->
             if (success == true) {
-                Toast.makeText(context, "Success!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.auth_success), Toast.LENGTH_SHORT).show()
                 // Navigation.findNavController(view).navigate(R.id.action_auth_to_feed)
             } else if (success == false) {
-                Toast.makeText(context, "Authentication Failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.auth_failed), Toast.LENGTH_SHORT).show()
             }
         }
     }

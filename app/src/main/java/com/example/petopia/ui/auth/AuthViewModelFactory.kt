@@ -3,7 +3,7 @@ package com.example.petopia.ui.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.petopia.data.repository.UserRepository
-import com.example.petopia.features.auth.AuthViewModel
+import com.example.petopia.ui.auth.AuthViewModel
 
 class AuthViewModelFactory(private val repository: UserRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

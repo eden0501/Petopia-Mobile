@@ -1,4 +1,4 @@
-package com.example.petopia.features.auth
+package com.example.petopia.ui.auth
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

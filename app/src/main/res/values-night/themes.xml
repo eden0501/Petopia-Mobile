@@ -6,7 +6,7 @@
     </style>
 
     <style name="ThemeOverlay.Petopia.FullscreenContainer" parent="">
-        <item name="fullscreenBackgroundColor">@color/light_blue_900</item>
-        <item name="fullscreenTextColor">@color/light_blue_A400</item>
+        <item name="fullscreenBackgroundColor">@color/petopia_orange</item>
+        <item name="fullscreenTextColor">@color/petopia_orange</item>
     </style>
 </resources>
