@@ -1,21 +1,33 @@
 package com.example.petopia.dao
 
+import android.content.Context
 import androidx.room.Room
 import com.example.petopia.base.MyApplication
 
 object AppLocalDB {
 
-    val db: AppLocalDbRepository by lazy {
+    @Volatile
+    private var instance: AppLocalDbRepository? = null
 
-        val context = MyApplication.appContext
-            ?: throw IllegalStateException("Context is null")
-
-        Room.databaseBuilder(
-            context = context,
-            klass = AppLocalDbRepository::class.java,
-            name = "petopia_database"
-        )
-            .fallbackToDestructiveMigration(true)
+    fun getDatabase(context: Context): AppLocalDbRepository {
+        return instance ?: synchronized(this) {
+            val db = Room.databaseBuilder(
+                context.applicationContext,
+                AppLocalDbRepository::class.java,
+                "petopia_database"
+            )
+            .fallbackToDestructiveMigration()
             .build()
+            instance = db
+            db
+        }
+    }
+
+    // Keep the old 'db' property for backward compatibility if needed, 
+    // but it's better to migrate to getDatabase(context)
+    val db: AppLocalDbRepository by lazy {
+        val context = MyApplication.appContext
+            ?: throw IllegalStateException("Context is null. Make sure to call AppLocalDB.getDatabase(context) first or ensure MyApplication is initialized.")
+        getDatabase(context)
     }
 }

@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.petopia.R
 import com.example.petopia.dao.AppLocalDB
 import com.example.petopia.data.repository.UserRepository
-import com.example.petopia.ui.auth.AuthViewModel
 import com.google.android.material.tabs.TabLayout
 
 class AuthFragment : Fragment(R.layout.fragment_auth) {
@@ -22,26 +21,26 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userDao = AppLocalDB.db.userDao()
-
+        // Initialize dependencies using fragment context for better safety
+        val db = AppLocalDB.getDatabase(requireContext())
+        val userDao = db.userDao()
         val repository = UserRepository(userDao)
-
         val factory = AuthViewModelFactory(repository)
 
         viewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
-        // 2. Bind Views
+
+        // Bind Views
         val authTabLayout = view.findViewById<TabLayout>(R.id.authTabLayout)
         val signupExtraFields = view.findViewById<LinearLayout>(R.id.signupExtraFields)
         val tvFormTitle = view.findViewById<TextView>(R.id.tvFormTitle)
         val tvFormDescription = view.findViewById<TextView>(R.id.tvFormDescription)
         val btnSubmit = view.findViewById<Button>(R.id.btnSubmit)
 
+        val etEmail = view.findViewById<EditText>(R.id.etEmail)
         val etUser = view.findViewById<EditText>(R.id.etUsername)
         val etPass = view.findViewById<EditText>(R.id.etPassword)
-        val etPetCount = view.findViewById<EditText>(R.id.etPetCount)
-        val etOwnerSince = view.findViewById<EditText>(R.id.etOwnerSince)
 
-        // 3. Tab Toggle Logic
+        // Tab Toggle Logic
         authTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab?.position == 0) { // Login Mode
@@ -61,25 +60,32 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-        // 4. Submit Button Logic
+        // Submit Button Logic
         btnSubmit.setOnClickListener {
+            val email = etEmail.text.toString()
             val username = etUser.text.toString()
             val password = etPass.text.toString()
 
+            if (email.isBlank() || password.isBlank()) {
+                Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             if (authTabLayout.selectedTabPosition == 0) {
-                viewModel.login(username, password)
+                viewModel.login(email, password)
             } else {
-//                val pets = etPetCount.text.toString().toIntOrNull() ?: 0
-//                val date = etOwnerSince.text.toString()
-                viewModel.signup(username, password)
+                if (username.isBlank()) {
+                    Toast.makeText(context, "Please enter a username", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                viewModel.signup(email, password, username)
             }
         }
 
-        // 5. Observe Results
+        // Observe Results
         viewModel.authStatus.observe(viewLifecycleOwner) { success ->
             if (success == true) {
                 Toast.makeText(context, getString(R.string.auth_success), Toast.LENGTH_SHORT).show()
-                // Navigation.findNavController(view).navigate(R.id.action_auth_to_feed)
             } else if (success == false) {
                 Toast.makeText(context, getString(R.string.auth_failed), Toast.LENGTH_SHORT).show()
             }
