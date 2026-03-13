@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.petopia.R
 import com.example.petopia.dao.AppLocalDB
 import com.example.petopia.data.repository.UserRepository
@@ -62,9 +63,9 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
         // Submit Button Logic
         btnSubmit.setOnClickListener {
-            val email = etEmail.text.toString()
-            val username = etUser.text.toString()
-            val password = etPass.text.toString()
+            val email = etEmail.text.toString().trim()
+            val username = etUser.text.toString().trim()
+            val password = etPass.text.toString().trim()
 
             if (email.isBlank() || password.isBlank()) {
                 Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
@@ -78,6 +79,10 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                     Toast.makeText(context, "Please enter a username", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
+                if (password.length < 6) {
+                    Toast.makeText(context, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
                 viewModel.signup(email, password, username)
             }
         }
@@ -86,6 +91,8 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         viewModel.authStatus.observe(viewLifecycleOwner) { success ->
             if (success == true) {
                 Toast.makeText(context, getString(R.string.auth_success), Toast.LENGTH_SHORT).show()
+                // Navigate to feed on success
+                findNavController().navigate(R.id.action_auth_to_feed)
             } else if (success == false) {
                 Toast.makeText(context, getString(R.string.auth_failed), Toast.LENGTH_SHORT).show()
             }

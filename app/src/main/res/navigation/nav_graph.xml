@@ -11,9 +11,9 @@
         android:label="Petopia Auth"
         tools:layout="@layout/fragment_auth">
 
-<!--        <action-->
-<!--            android:id="@+id/action_auth_to_feed"-->
-<!--            app:destination="@id/feedFragment" />-->
+        <action
+            android:id="@+id/action_auth_to_feed"
+            app:destination="@id/feedFragment" />
     </fragment>
 
     <fragment
