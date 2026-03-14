@@ -45,4 +45,7 @@
 
     <string name="auth_success">Success!</string>
     <string name="auth_failed">Authentication Failed</string>
+    <string name="pet_owner_since">Pet Owner Since</string>
+    <string name="n_a">N/A</string>
+    <string name="logout">Log Out</string>
 </resources>

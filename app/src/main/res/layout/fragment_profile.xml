@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Username"
+            android:text="@string/username_hint"
             android:textColor="@color/text_primary"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -42,7 +42,7 @@
             android:id="@+id/tvEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="email@example.com"
+            android:text="@string/email_hint"
             android:textColor="@color/text_secondary"
             android:textSize="16sp" />
 
@@ -69,14 +69,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Pets Count"
+                        android:text="@string/pets_label"
                         android:textColor="@color/text_secondary" />
 
                     <TextView
                         android:id="@+id/tvPetsCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
+                        android:text="@string/pet_count_hint"
                         android:textColor="@color/text_primary"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -96,14 +96,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Pet Owner Since"
+                        android:text="@string/pet_owner_since"
                         android:textColor="@color/text_secondary" />
 
                     <TextView
                         android:id="@+id/tvPetOwnerSince"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="N/A"
+                        android:text="@string/n_a"
                         android:textColor="@color/text_primary"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -116,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginBottom="16dp"
-            android:text="Log Out"
+            android:text="@string/logout"
             android:textColor="@color/rescue_red"
             app:rippleColor="#20E53935" />
 
