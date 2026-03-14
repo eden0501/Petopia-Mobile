@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white">
@@ -35,8 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/menu_home"
-                android:textSize="12sp"
-                android:textColor="@color/petopia_orange" />
+                android:textColor="@color/petopia_orange"
+                android:textSize="10sp" />
         </LinearLayout>
 
         <!-- FAB placeholder - center space for FAB -->
@@ -67,8 +68,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/menu_profile"
-                android:textSize="12sp"
-                android:textColor="#9E9E9E" />
+                android:textColor="#9E9E9E"
+                android:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -78,11 +79,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
         android:layout_marginTop="-28dp"
-        app:srcCompat="@drawable/ic_add_24"
+        android:contentDescription="@null"
         app:backgroundTint="@color/petopia_orange"
-        app:tint="@color/white"
         app:elevation="8dp"
         app:fabSize="normal"
-        android:contentDescription="@null" />
+        app:srcCompat="@drawable/ic_add_24"
+        app:tint="@color/white"
+        tools:visibility="visible" />
 
 </FrameLayout>
