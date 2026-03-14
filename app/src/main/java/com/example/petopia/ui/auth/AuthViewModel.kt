@@ -8,19 +8,19 @@ import com.example.petopia.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
 class AuthViewModel(private val repository: UserRepository) : ViewModel() {
-    val authStatus = MutableLiveData<Boolean?>()
+    val authStatus = MutableLiveData<Result<User>?>()
 
     fun login(email: String, pass: String) {
-        // Mock login logic - in a real app, use Firebase or API
         viewModelScope.launch {
-            authStatus.postValue(true)
+            val result = repository.login(email, pass)
+            authStatus.postValue(result)
         }
     }
 
-    fun signup(user: User) {
+    fun signup(user: User, pass: String) {
         viewModelScope.launch {
-            repository.signup(user)
-            authStatus.postValue(true)
+            val result = repository.signup(user, pass)
+            authStatus.postValue(result)
         }
     }
 }

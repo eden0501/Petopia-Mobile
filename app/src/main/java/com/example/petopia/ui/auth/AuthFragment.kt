@@ -79,13 +79,13 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 val username = etUser.text.toString()
                 if (email.isNotEmpty() && password.isNotEmpty() && username.isNotEmpty()) {
                     val user = User(
-                        id = email, // Temporary ID
+                        id = "", // Will be replaced by Firebase UID
                         email = email,
                         username = username,
                         petsCount = etPetCount.text.toString().toIntOrNull() ?: 0,
                         seniority = etOwnerSince.text.toString()
                     )
-                    viewModel.signup(user)
+                    viewModel.signup(user, password)
                 } else {
                     Toast.makeText(context, "Please fill required fields", Toast.LENGTH_SHORT).show()
                 }
@@ -93,10 +93,14 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         }
 
         // Observe Auth Status
-        viewModel.authStatus.observe(viewLifecycleOwner) { success ->
-            if (success == true) {
-                // Navigate to Home
-                findNavController().navigate(R.id.action_auth_to_home)
+        viewModel.authStatus.observe(viewLifecycleOwner) { result ->
+            result?.let {
+                if (it.isSuccess) {
+                    // Navigate to Home
+                    findNavController().navigate(R.id.action_auth_to_home)
+                } else {
+                    Toast.makeText(context, "Error: ${it.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
