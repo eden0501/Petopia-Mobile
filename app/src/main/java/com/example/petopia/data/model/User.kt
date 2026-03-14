@@ -9,7 +9,6 @@ data class User(
     val email: String = "",
     val username: String = "",
     val profileImageUrl: String? = null,
-    val dateOfBirth: String? = null,
     val petsCount: Int = 0,
-    val seniority: String? = "Newcomer"
+    val petOwnerSince: String? = null
 )

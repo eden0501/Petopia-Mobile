@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
 import com.example.petopia.data.PostDisplayItem
@@ -92,7 +93,7 @@ class HomeFragment : Fragment() {
             // TODO: navigate to create post
         }
         binding.root.findViewById<View>(R.id.navProfile)?.setOnClickListener {
-            // TODO: navigate to profile
+            findNavController().navigate(R.id.action_home_to_profile)
         }
     }
 
