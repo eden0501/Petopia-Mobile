@@ -36,7 +36,7 @@ set APP_HOME=%DIRNAME%
 for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
 
 @rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
-set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
+set DEFAULT_JVM_OPTS=-Xmx64m -Xms64m
 
 @rem Find java.exe
 if defined JAVA_HOME goto findJavaFromJavaHome
@@ -70,7 +70,14 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=
+set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
+
+echo DEBUG: JAVA_EXE=%JAVA_EXE%
+echo DEBUG: DEFAULT_JVM_OPTS=%DEFAULT_JVM_OPTS%
+echo DEBUG: JAVA_OPTS=%JAVA_OPTS%
+echo DEBUG: GRADLE_OPTS=%GRADLE_OPTS%
+echo DEBUG: APP_HOME=%APP_HOME%
+echo DEBUG: CLASSPATH=%CLASSPATH%
 
 
 @rem Execute Gradle

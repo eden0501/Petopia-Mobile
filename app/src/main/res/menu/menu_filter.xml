@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/filter_all"
+        android:title="@string/filter_all_posts" />
+
+    <item
+        android:id="@+id/filter_rescue"
+        android:title="@string/filter_rescue_alerts" />
+
+    <item
+        android:id="@+id/filter_care_tips"
+        android:title="@string/filter_care_tips" />
+
+    <item
+        android:id="@+id/filter_equipment"
+        android:title="@string/filter_equipment_donations" />
+
+</menu>
