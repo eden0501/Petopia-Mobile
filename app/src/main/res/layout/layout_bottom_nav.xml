@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,7 +82,7 @@
         android:layout_marginTop="-28dp"
         android:contentDescription="@null"
         app:backgroundTint="@color/petopia_orange"
-        app:elevation="8dp"
+        app:elevation="12dp"
         app:fabSize="normal"
         app:srcCompat="@drawable/ic_add_24"
         app:tint="@color/white"
