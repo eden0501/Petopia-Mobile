@@ -23,8 +23,6 @@ object AppLocalDB {
         }
     }
 
-    // Keep the old 'db' property for backward compatibility if needed, 
-    // but it's better to migrate to getDatabase(context)
     val db: AppLocalDbRepository by lazy {
         val context = MyApplication.appContext
             ?: throw IllegalStateException("Context is null. Make sure to call AppLocalDB.getDatabase(context) first or ensure MyApplication is initialized.")

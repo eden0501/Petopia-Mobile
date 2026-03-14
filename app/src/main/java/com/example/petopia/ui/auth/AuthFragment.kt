@@ -18,17 +18,24 @@ import com.google.android.material.tabs.TabLayout
 class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private lateinit var viewModel: AuthViewModel
+    private lateinit var repository: UserRepository
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize dependencies using fragment context for better safety
+        // Initialize dependencies
         val db = AppLocalDB.getDatabase(requireContext())
         val userDao = db.userDao()
-        val repository = UserRepository(userDao)
+        repository = UserRepository(userDao)
         val factory = AuthViewModelFactory(repository)
 
         viewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
+
+        // 1. Auto-login check (Requirement 6)
+        if (repository.getCurrentUser() != null) {
+            findNavController().navigate(R.id.action_auth_to_feed)
+            return
+        }
 
         // Bind Views
         val authTabLayout = view.findViewById<TabLayout>(R.id.authTabLayout)
@@ -91,7 +98,6 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         viewModel.authStatus.observe(viewLifecycleOwner) { success ->
             if (success == true) {
                 Toast.makeText(context, getString(R.string.auth_success), Toast.LENGTH_SHORT).show()
-                // Navigate to feed on success
                 findNavController().navigate(R.id.action_auth_to_feed)
             } else if (success == false) {
                 Toast.makeText(context, getString(R.string.auth_failed), Toast.LENGTH_SHORT).show()
