@@ -84,7 +84,6 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 return@setOnClickListener
             }
 
-            // Disable button to prevent double submission
             btnSubmit.isEnabled = false
 
             if (authTabLayout.selectedTabPosition == 0) {
@@ -107,7 +106,6 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         }
 
         viewModel.authStatus.observe(viewLifecycleOwner) { result ->
-            // Re-enable button when result is received
             btnSubmit.isEnabled = true
             
             result?.let {

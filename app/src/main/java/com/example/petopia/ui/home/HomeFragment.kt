@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
 import com.example.petopia.data.PostDisplayItem
+import com.example.petopia.data.PostType
 import com.example.petopia.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -52,9 +53,9 @@ class HomeFragment : Fragment() {
         val filter = viewModel.selectedFilter.value ?: PostFilter.ALL
         val filtered = when (filter) {
             PostFilter.ALL -> posts
-            PostFilter.RESCUE -> posts.filter { it.post.postType == com.example.petopia.data.PostType.RESCUE }
-            PostFilter.CARE_TIPS -> posts.filter { it.post.postType == com.example.petopia.data.PostType.KNOWLEDGE }
-            PostFilter.SUPPLIES -> posts.filter { it.post.postType == com.example.petopia.data.PostType.SUPPLIES }
+            PostFilter.RESCUE -> posts.filter { it.post.postType == PostType.RESCUE }
+            PostFilter.CARE_TIPS -> posts.filter { it.post.postType == PostType.KNOWLEDGE }
+            PostFilter.SUPPLIES -> posts.filter { it.post.postType == PostType.SUPPLIES }
         }
         adapter.submitList(filtered)
     }

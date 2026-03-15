@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "users")
 data class User(
-    @PrimaryKey val id: String = "", // Firebase UID
+    @PrimaryKey val id: String = "",
     val email: String = "",
     val username: String = "",
-    val profileImageUrl: String? = null,
+    val profileImageUrl: String? = null, // TODO: implement the profile image upload portion later
     val petsCount: Int = 0,
     val petOwnerSince: String? = null
 )
