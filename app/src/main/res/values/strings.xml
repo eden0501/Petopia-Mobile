@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">Petopia</string>
-
-    <string name="menu_home">Home</string>
-    <string name="menu_profile">Profile</string>
+    <string name="email_label">Email Address</string>
+    <string name="email_hint">email@example.com</string>
+    <string name="pets_label">Pets</string>
+    <string name="since_label">Since</string>
+    <string name="year_hint">Year</string>
 
     <string name="filter_all_posts">All Posts</string>
     <string name="filter_rescue_alerts">Rescue Alerts</string>
@@ -18,4 +19,33 @@
     <string name="rescue_alert">Rescue Alert</string>
     <string name="care_tip">Care Tips</string>
     <string name="equipment_donation">Equipment Donations</string>
+    <string name="app_name">Petopia</string>
+    <string name="app_subtitle">Your pet community hub</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_profile">Profile</string>
+
+    <string name="login_tab">Login</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="login_description">Login and connect with the pet community</string>
+
+    <string name="signup_tab">Sign Up</string>
+    <string name="join_petopia">Join Petopia</string>
+    <string name="create_account_description">Create an account and get started</string>
+
+    <string name="username_label">Username</string>
+    <string name="password_label">Password</string>
+    <string name="pet_count_label">Number of Pets</string>
+    <string name="owner_since_label">Owner Since</string>
+
+    <string name="username_hint">username</string>
+    <string name="password_hint">**********</string>
+    <string name="pet_count_hint">1</string>
+    <string name="owner_since_hint">02/08/2024</string>
+
+    <string name="auth_success">Success!</string>
+    <string name="auth_failed">Authentication Failed</string>
+    <string name="pet_owner_since">Pet Owner Since</string>
+    <string name="n_a">N/A</string>
+    <string name="logout">Log Out</string>
 </resources>

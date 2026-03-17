@@ -2,8 +2,49 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Petopia" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/petopia_orange</item>
     </style>
 
     <style name="Theme.Petopia" parent="Base.Theme.Petopia" />
+
+    <style name="DatePickerTheme" parent="Theme.Material3.Light.Dialog">
+        <item name="colorAccent">@color/petopia_orange</item>
+        <item name="android:datePickerStyle">@style/CustomDatePickerStyle</item>
+    </style>
+
+    <style name="CustomDatePickerStyle" parent="android:Widget.Material.Light.DatePicker">
+        <item name="android:headerBackground">@color/petopia_orange</item>
+        <item name="android:calendarTextColor">@color/petopia_orange</item>
+        <item name="android:dayOfWeekBackground">@color/petopia_orange</item>
+        <item name="android:yearListItemTextAppearance">@style/YearAppearance</item>
+        <item name="android:yearListSelectorColor">@color/petopia_orange</item>
+    </style>
+
+    <style name="YearAppearance" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:textColor">@color/petopia_orange</item>
+    </style>
+
+    <style name="LabelStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="InputStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:background">@drawable/input_background</item>
+        <item name="android:paddingHorizontal">12dp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="CircleImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

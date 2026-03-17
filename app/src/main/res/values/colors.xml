@@ -6,4 +6,9 @@
     <color name="rescue_red">#E53935</color>
     <color name="toolbar_gray">#F5F5F5</color>
     <color name="filter_bg">#EEEEEE</color>
+    <color name="auth_background">#FFFBF0</color>
+    <color name="text_primary">#333333</color>
+    <color name="text_secondary">#777777</color>
+    <color name="button_primary">#FF6F43</color>
+    <color name="tab_background">#F1F3F4</color>
 </resources>

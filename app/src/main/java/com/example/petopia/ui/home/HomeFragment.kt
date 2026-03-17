@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
 import com.example.petopia.data.PostDisplayItem
+import com.example.petopia.data.PostType
 import com.example.petopia.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -51,9 +53,9 @@ class HomeFragment : Fragment() {
         val filter = viewModel.selectedFilter.value ?: PostFilter.ALL
         val filtered = when (filter) {
             PostFilter.ALL -> posts
-            PostFilter.RESCUE -> posts.filter { it.post.postType == com.example.petopia.data.PostType.RESCUE }
-            PostFilter.CARE_TIPS -> posts.filter { it.post.postType == com.example.petopia.data.PostType.KNOWLEDGE }
-            PostFilter.SUPPLIES -> posts.filter { it.post.postType == com.example.petopia.data.PostType.SUPPLIES }
+            PostFilter.RESCUE -> posts.filter { it.post.postType == PostType.RESCUE }
+            PostFilter.CARE_TIPS -> posts.filter { it.post.postType == PostType.KNOWLEDGE }
+            PostFilter.SUPPLIES -> posts.filter { it.post.postType == PostType.SUPPLIES }
         }
         adapter.submitList(filtered)
     }
@@ -92,7 +94,7 @@ class HomeFragment : Fragment() {
             // TODO: navigate to create post
         }
         binding.root.findViewById<View>(R.id.navProfile)?.setOnClickListener {
-            // TODO: navigate to profile
+            findNavController().navigate(R.id.action_home_to_profile)
         }
     }
 
