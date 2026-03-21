@@ -40,4 +40,10 @@
             app:popUpToInclusive="true" />
     </fragment>
 
+    <dialog
+        android:id="@+id/createPostDialogFragment"
+        android:name="com.example.petopia.ui.home.CreatePostDialogFragment"
+        android:label="Create Post"
+        tools:layout="@layout/fragment_create_post" />
+
 </navigation>

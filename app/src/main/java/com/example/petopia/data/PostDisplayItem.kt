@@ -1,14 +1,17 @@
 package com.example.petopia.data
 
+import com.example.petopia.data.model.Post
+
 data class CommentPreview(
     val authorName: String,
-    val text: String,
-    val timeAgo: String
+    val content: String,
+    val createdAt: Long
 )
 
 data class PostDisplayItem(
     val post: Post,
-    val likeCount: Int,
     val commentCount: Int,
-    val previewComments: List<CommentPreview>
+    val previewComments: List<CommentPreview>,
+    val isLiked: Boolean = false,
+    val isCommentsVisible: Boolean = false
 )

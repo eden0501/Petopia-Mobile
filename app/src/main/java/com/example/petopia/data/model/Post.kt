@@ -1,25 +1,19 @@
-package com.example.petopia.data
+package com.example.petopia.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.petopia.data.PostType
 
 @Entity(tableName = "posts")
 data class Post(
     @PrimaryKey val id: String,
     val title: String,
-    val description: String,
+    val content: String,
     val imageUrl: String?,
     val authorId: String,
     val authorName: String,
     val createdAt: Long,
-    val updatedAt: Long? = null,
     val postType: PostType,
-    val hashtags: List<String> = emptyList()
+    val hashtags: List<String> = emptyList(),
+    var likeCount: Int = 0
 )
-
-enum class PostType {
-    RESCUE,
-    KNOWLEDGE,
-    SUPPLIES
-}
-

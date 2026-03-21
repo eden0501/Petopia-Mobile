@@ -69,4 +69,12 @@ class UserRepository(private val userDao: UserDao) {
             null
         }
     }
+
+    fun getCurrentUserId(): String? = firebaseAuth.currentUser?.uid
+
+    suspend fun getCurrentUser(): User? {
+        val userId = getCurrentUserId() ?: return null
+        return getUser(userId)
+    }
 }
+

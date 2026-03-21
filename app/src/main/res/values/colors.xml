@@ -3,12 +3,32 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="petopia_orange">#FF8A65</color>
-    <color name="rescue_red">#E53935</color>
-    <color name="toolbar_gray">#F5F5F5</color>
-    <color name="filter_bg">#EEEEEE</color>
     <color name="auth_background">#FFFBF0</color>
+    <!-- check if necessary -->
     <color name="text_primary">#333333</color>
     <color name="text_secondary">#777777</color>
     <color name="button_primary">#FF6F43</color>
     <color name="tab_background">#F1F3F4</color>
+    <!-- check if necessary -->
+    <color name="rescue_red">#DC2626</color>
+    <color name="rescue_bg">#FEF2F2</color>
+    <color name="rescue_border">#FEE2E2</color>
+    <color name="care_blue">#2563EB</color>
+    <color name="care_bg">#EFF6FF</color>
+    <color name="care_border">#DBEAFE</color>
+    <color name="supplies_green">#16A34A</color>
+    <color name="supplies_bg">#F0FDF4</color>
+    <color name="supplies_border">#DCFCE7</color>
+    <!-- check if necessary -->
+    <color name="gray_100">#F3F4F6</color>
+    <color name="gray_200">#E5E7EB</color>
+    <color name="gray_400">#9CA3AF</color>
+    <color name="gray_500">#6B7280</color>
+    <color name="gray_600">#4B5563</color>
+    <color name="gray_700">#374151</color>
+    <color name="gray_800">#1F2937</color>
+    <color name="gray_900">#111827</color>
+    <!-- check if necessary -->
+    <color name="filter_bg">#F3F4F6</color>
+    <color name="gray">#9E9E9E</color>
 </resources>

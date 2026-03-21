@@ -6,14 +6,11 @@
     <string name="year_hint">Year</string>
 
     <string name="filter_all_posts">All Posts</string>
-    <string name="filter_rescue_alerts">Rescue Alerts</string>
-    <string name="filter_care_tips">Care Tips</string>
-    <string name="filter_equipment_donations">Equipment Donations</string>
-
+    
     <string name="likes_format">%d Likes</string>
     <string name="comments_format">%d Comments</string>
     <string name="share">Share</string>
-    <string name="write_comment">Write a comment…</string>
+    <string name="write_comment">Write a comment...</string>
     <string name="post_button">Post</string>
 
     <string name="rescue_alert">Rescue Alert</string>

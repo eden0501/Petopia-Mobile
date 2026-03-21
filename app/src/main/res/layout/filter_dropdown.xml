@@ -6,13 +6,12 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    android:background="@color/filter_bg"
+    android:background="@drawable/bg_filter_container"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingHorizontal="16dp"
     android:paddingVertical="12dp"
     android:minHeight="48dp">
-
     <TextView
         android:id="@+id/filterDropdown"
         android:layout_width="0dp"
@@ -21,12 +20,10 @@
         android:text="@string/filter_all_posts"
         android:textColor="#424242"
         android:textSize="16sp" />
-
     <ImageView
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/ic_dropdown_arrow"
+        android:src="@drawable/ic_chevron_down"
         app:tint="#757575"
         android:contentDescription="@null" />
-
 </LinearLayout>
