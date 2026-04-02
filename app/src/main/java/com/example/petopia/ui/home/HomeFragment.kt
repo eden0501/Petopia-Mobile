@@ -10,8 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
-import com.example.petopia.data.PostDisplayItem
-import com.example.petopia.data.PostType
+import com.example.petopia.data.model.PostDisplayItem
+import com.example.petopia.data.model.PostType
 import com.example.petopia.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -171,7 +171,7 @@ class HomeFragment : Fragment() {
         val textProfile = binding.root.findViewById<android.widget.TextView>(R.id.textProfile) ?: return
 
         val orange = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.petopia_orange)
-        val gray = android.graphics.Color.parseColor("#9E9E9E")
+        val gray = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.gray)
 
         if (isHome) {
             iconHome.setColorFilter(orange)

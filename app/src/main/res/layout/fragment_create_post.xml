@@ -45,7 +45,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Close"
                         android:src="@drawable/ic_close"
-                        app:tint="@color/gray_500" />
+                        app:tint="@color/gray_400" />
 
                     <TextView
                         android:id="@+id/textSubtitle"
@@ -54,7 +54,7 @@
                         android:layout_below="@id/textTitle"
                         android:layout_marginTop="8dp"
                         android:text="Share rescue alerts, care tips, or equipment donations with the community"
-                        android:textColor="@color/gray_500"
+                        android:textColor="@color/gray_400"
                         android:textSize="14sp" />
                 </RelativeLayout>
 
@@ -255,7 +255,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="PNG, JPG up to 10MB"
-                        android:textColor="@color/gray_500"
+                        android:textColor="@color/gray_400"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -294,7 +294,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Separate hashtags with spaces"
-                    android:textColor="@color/gray_500"
+                    android:textColor="@color/gray_400"
                     android:textSize="11sp" />
 
                 <!-- Action Buttons -->
@@ -315,7 +315,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/gray_600"
                         app:cornerRadius="8dp"
-                        app:strokeColor="@color/gray_200" />
+                        app:strokeColor="@color/gray_400" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCreatePost"

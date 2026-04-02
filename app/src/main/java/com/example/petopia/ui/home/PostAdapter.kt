@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.petopia.R
-import com.example.petopia.data.PostDisplayItem
+import com.example.petopia.data.model.PostDisplayItem
 import com.example.petopia.data.model.Post
-import com.example.petopia.data.PostType
+import com.example.petopia.data.model.PostType
 import com.example.petopia.databinding.RowPostItemBinding
 
 class PostAdapter(

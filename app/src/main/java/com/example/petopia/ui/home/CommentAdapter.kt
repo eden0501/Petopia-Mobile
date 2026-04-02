@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.petopia.data.CommentPreview
+import com.example.petopia.data.model.CommentPreview
 import com.example.petopia.databinding.RowCommentItemBinding
 
 class CommentAdapter : ListAdapter<CommentPreview, CommentAdapter.CommentViewHolder>(DiffCallback) {

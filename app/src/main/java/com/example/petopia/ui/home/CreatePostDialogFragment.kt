@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 
 import com.example.petopia.R
-import com.example.petopia.data.PostType
+import com.example.petopia.data.model.PostType
 import com.example.petopia.databinding.FragmentCreatePostBinding
 
 class CreatePostDialogFragment : DialogFragment() {
@@ -31,6 +31,7 @@ class CreatePostDialogFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
+        dialog?.setCanceledOnTouchOutside(true)
         dialog?.window?.apply {
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -90,7 +91,7 @@ class CreatePostDialogFragment : DialogFragment() {
         val inactiveBg = null
         
         val textColorActive = ContextCompat.getColor(requireContext(), R.color.gray_900)
-        val textColorInactive = ContextCompat.getColor(requireContext(), R.color.gray_500)
+        val textColorInactive = ContextCompat.getColor(requireContext(), R.color.gray_400)
 
         // Reset all
         binding.tabRescue.background = inactiveBg

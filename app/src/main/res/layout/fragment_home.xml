@@ -25,6 +25,12 @@
             app:titleTextColor="@color/black"
             app:navigationIcon="@drawable/ic_paw_logo"
             app:titleCentered="false" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:elevation="1dp"
+            android:background="@color/gray_200" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout

@@ -3,7 +3,7 @@ package com.example.petopia.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.petopia.data.PostType
+import com.example.petopia.data.model.PostType
 
 class CreatePostViewModel : ViewModel() {
 

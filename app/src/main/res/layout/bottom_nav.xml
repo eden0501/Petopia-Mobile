@@ -7,6 +7,12 @@
     android:clipToPadding="false"
     android:background="@android:color/transparent">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_200"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavContainer" />
+
     <LinearLayout
         android:id="@+id/bottomNavContainer"
         android:layout_width="match_parent"
@@ -78,7 +84,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_nav_profile"
-                    app:tint="#9E9E9E"
+                    app:tint="@color/gray"
                     android:contentDescription="@null" />
 
                 <TextView
@@ -88,7 +94,7 @@
                     android:layout_marginTop="2dp"
                     android:text="@string/menu_profile"
                     android:textSize="12sp"
-                    android:textColor="#9E9E9E" />
+                    android:textColor="@color/gray" />
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>

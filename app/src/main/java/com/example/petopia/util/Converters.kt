@@ -1,7 +1,7 @@
 package com.example.petopia.util
 
 import androidx.room.TypeConverter
-import com.example.petopia.data.PostType
+import com.example.petopia.data.model.PostType
 class Converters {
     @TypeConverter
     fun fromStringList(value: List<String>?): String? {
@@ -10,7 +10,8 @@ class Converters {
 
     @TypeConverter
     fun toStringList(value: String?): List<String>? {
-        return value?.split(",") ?: emptyList()
+        if (value.isNullOrEmpty()) return emptyList()
+        return value.split(",")
     }
 
     @TypeConverter

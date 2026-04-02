@@ -1,25 +1,18 @@
 package com.example.petopia.data.repository
 
-import com.example.petopia.dao.UserDao
+import com.example.petopia.data.local.dao.UserDao
 import com.example.petopia.data.model.User
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
+import com.example.petopia.data.remote.FirebaseAuthModel
 
 class UserRepository(private val userDao: UserDao) {
-    private val firebaseAuth = FirebaseAuth.getInstance()
-    private val firestore = FirebaseFirestore.getInstance()
-    private val usersCollection = firestore.collection("users")
 
     suspend fun signup(user: User, pass: String): Result<User> {
         return try {
-            val authResult = firebaseAuth.createUserWithEmailAndPassword(user.email, pass).await()
-            val firebaseUser = authResult.user ?: return Result.failure(Exception("Signup failed"))
+            val uid = FirebaseAuthModel.signup(user.email, pass)
+                ?: return Result.failure(Exception("Signup failed - UID is null"))
 
-            val newUser = user.copy(id = firebaseUser.uid)
-
-            usersCollection.document(newUser.id).set(newUser).await()
-
+            val newUser = user.copy(id = uid)
+            FirebaseAuthModel.addUser(newUser)
             userDao.registerUser(newUser)
 
             Result.success(newUser)
@@ -30,15 +23,13 @@ class UserRepository(private val userDao: UserDao) {
 
     suspend fun login(email: String, pass: String): Result<User> {
         return try {
-            val authResult = firebaseAuth.signInWithEmailAndPassword(email, pass).await()
-            val firebaseUser = authResult.user ?: return Result.failure(Exception("Login failed"))
+            val uid = FirebaseAuthModel.login(email, pass)
+                ?: return Result.failure(Exception("Login failed - UID is null"))
 
-            var localUser = userDao.getUserById(firebaseUser.uid)
+            var localUser = userDao.getUserById(uid)
 
             if (localUser == null) {
-                val document = usersCollection.document(firebaseUser.uid).get().await()
-                localUser = document.toObject(User::class.java)
-
+                localUser = FirebaseAuthModel.getUser(uid)
                 if (localUser != null) {
                     userDao.registerUser(localUser)
                 }
@@ -59,8 +50,7 @@ class UserRepository(private val userDao: UserDao) {
         if (localUser != null) return localUser
 
         return try {
-            val document = usersCollection.document(id).get().await()
-            val remoteUser = document.toObject(User::class.java)
+            val remoteUser = FirebaseAuthModel.getUser(id)
             if (remoteUser != null) {
                 userDao.registerUser(remoteUser)
             }
@@ -70,11 +60,15 @@ class UserRepository(private val userDao: UserDao) {
         }
     }
 
-    fun getCurrentUserId(): String? = firebaseAuth.currentUser?.uid
+    fun getCurrentUserId(): String? = FirebaseAuthModel.getCurrentUserId()
 
     suspend fun getCurrentUser(): User? {
         val userId = getCurrentUserId() ?: return null
         return getUser(userId)
+    }
+
+    fun logout() {
+        FirebaseAuthModel.logout()
     }
 }
 

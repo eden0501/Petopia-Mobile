@@ -1,4 +1,4 @@
-package com.example.petopia.dao
+package com.example.petopia.data.local.dao
 
 import androidx.room.*
 import com.example.petopia.data.model.Post
