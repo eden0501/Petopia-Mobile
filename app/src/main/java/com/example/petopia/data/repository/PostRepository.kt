@@ -10,10 +10,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.petopia.base.Constants
 import com.example.petopia.data.remote.FirebaseModel
+import com.example.petopia.data.remote.FirebaseAuthModel
 
 class PostRepository private constructor(context: Context) {
     private val postDao = AppLocalDB.getDatabase(context).postDao()
     private val commentDao = AppLocalDB.getDatabase(context).commentDao()
+    private val userDao = AppLocalDB.getDatabase(context).userDao()
 
     private val sharedPrefs = context.getSharedPreferences(Constants.SharedPrefs.PREFS_NAME, Context.MODE_PRIVATE)
 
@@ -35,10 +37,15 @@ class PostRepository private constructor(context: Context) {
     suspend fun getAllPostsWithPreviews(currentUserId: String?): List<PostDisplayItem> = withContext(Dispatchers.IO) {
         val posts = postDao.getAllPosts()
         posts.map { post ->
+            val resolvedAuthorName = resolveAuthorName(post.authorId)
             val comments = commentDao.getCommentsByPostId(post.id)
-            val previews = comments.map { CommentPreview(it.authorName, it.content, it.createdAt) }
+            val previews = comments.map {
+                val commentAuthor = resolveAuthorName(it.authorId)
+                CommentPreview(commentAuthor, it.content, it.createdAt)
+            }
             PostDisplayItem(
                 post = post,
+                authorName = resolvedAuthorName,
                 commentCount = comments.size,
                 previewComments = previews,
                 isLiked = currentUserId != null && post.likes.contains(currentUserId),
@@ -99,5 +106,65 @@ class PostRepository private constructor(context: Context) {
 
     suspend fun getPostById(postId: String): Post? = withContext(Dispatchers.IO) {
         postDao.getPostById(postId)
+    }
+
+    suspend fun getPostsByUser(userId: String, currentUserId: String?): List<PostDisplayItem> = withContext(Dispatchers.IO) {
+        val posts = postDao.getPostsByUserId(userId)
+        posts.map { post ->
+            val resolvedAuthorName = resolveAuthorName(post.authorId)
+            val comments = commentDao.getCommentsByPostId(post.id)
+            val previews = comments.map {
+                val commentAuthor = resolveAuthorName(it.authorId)
+                CommentPreview(commentAuthor, it.content, it.createdAt)
+            }
+            PostDisplayItem(
+                post = post,
+                authorName = resolvedAuthorName,
+                commentCount = comments.size,
+                previewComments = previews,
+                isLiked = currentUserId != null && post.likes.contains(currentUserId),
+                isCommentsVisible = false
+            )
+        }
+    }
+
+    suspend fun refreshUserPosts(userId: String) = withContext(Dispatchers.IO) {
+        val remotePosts = FirebaseModel.getPostsByAuthor(userId)
+        for (post in remotePosts) {
+            postDao.insertPosts(post)
+            // Also sync comments for each post
+            val remoteComments = FirebaseModel.getAllComments(post.id)
+            for (comment in remoteComments) {
+                commentDao.insertComments(comment)
+            }
+        }
+    }
+
+    suspend fun getTotalLikesForUser(userId: String): Int = withContext(Dispatchers.IO) {
+        val posts = postDao.getPostsByUserId(userId)
+        posts.sumOf { it.likes.size }
+    }
+
+    suspend fun getTotalCommentsForUser(userId: String): Int = withContext(Dispatchers.IO) {
+        commentDao.getCommentCountByUserId(userId)
+    }
+
+    private suspend fun resolveAuthorName(authorId: String): String {
+        // Try local DB first
+        val localUser = userDao.getUserById(authorId)
+        if (localUser != null) return localUser.username
+
+        // Fallback to Firebase
+        return try {
+            val remoteUser = FirebaseAuthModel.getUser(authorId)
+            if (remoteUser != null) {
+                userDao.registerUser(remoteUser)
+                remoteUser.username
+            } else {
+                "Unknown"
+            }
+        } catch (e: Exception) {
+            "Unknown"
+        }
     }
 }

@@ -45,4 +45,13 @@
     <string name="pet_owner_since">Pet Owner Since</string>
     <string name="n_a">N/A</string>
     <string name="logout">Log Out</string>
+
+    <string name="active_volunteer">Active Volunteer</string>
+    <string name="pets_badge_format">%d Pets</string>
+    <string name="stat_posts">Posts</string>
+    <string name="stat_likes">Likes</string>
+    <string name="stat_comments">Comments</string>
+    <string name="my_posts">My Posts</string>
+    <string name="no_posts_yet">No posts yet</string>
+    <string name="profile_subtitle_format">%s · %s</string>
 </resources>

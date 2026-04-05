@@ -1,83 +1,123 @@
 package com.example.petopia.ui.profile
 
-import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
-import com.example.petopia.data.local.dao.AppLocalDB
-import com.example.petopia.data.repository.UserRepository
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.launch
+import com.example.petopia.databinding.FragmentProfileBinding
+import com.example.petopia.ui.home.PostAdapter
 
-class ProfileFragment : Fragment(R.layout.fragment_profile) {
+class ProfileFragment : Fragment() {
+
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: ProfileViewModel by viewModels {
+        ProfileViewModelFactory(requireContext())
+    }
+
+    private lateinit var postAdapter: PostAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val tvUsername = view.findViewById<TextView>(R.id.tvUsername)
-        val tvEmail = view.findViewById<TextView>(R.id.tvEmail)
-        val tvPetsCount = view.findViewById<TextView>(R.id.tvPetsCount)
-        val tvPetOwnerSince = view.findViewById<TextView>(R.id.tvPetOwnerSince)
-        val btnLogout = view.findViewById<Button>(R.id.btnLogout)
+        setupAppBar()
+        setupPostsFeed()
+        setupBottomNav()
+        observeViewModel()
+    }
 
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser == null) {
-            findNavController().navigate(R.id.authFragment)
-            return
+    private fun setupAppBar() {
+        val toolbar = binding.includeAppBar.topAppBar
+        toolbar.inflateMenu(R.menu.menu_profile)
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_settings -> {
+                    // TODO: open settings
+                    true
+                }
+                else -> false
+            }
         }
+    }
 
-        val db = AppLocalDB.getDatabase(requireContext())
-        val repository = UserRepository(db.userDao())
+    private fun setupPostsFeed() {
+        postAdapter = PostAdapter(
+            onLikeClick = { item -> viewModel.toggleLike(item.post.id) },
+            onCommentClick = { item -> viewModel.toggleComments(item.post.id) },
+            onAddCommentClick = { item, text -> viewModel.addComment(item.post.id, text) }
+        )
+        binding.recyclerMyPosts.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerMyPosts.adapter = postAdapter
+        binding.recyclerMyPosts.isNestedScrollingEnabled = false
+    }
 
-        // Fetch and display user info
-        viewLifecycleOwner.lifecycleScope.launch {
-            val user = repository.getUser(currentUser.uid)
+    private fun observeViewModel() {
+        viewModel.user.observe(viewLifecycleOwner) { user ->
             user?.let {
-                tvUsername.text = it.username
-                tvEmail.text = it.email
-                tvPetsCount.text = it.petsCount.toString()
-                tvPetOwnerSince.text = it.petOwnerSince ?: "N/A"
+                binding.tvUsername.text = it.username
+                binding.tvSubtitle.text = getString(
+                    R.string.profile_subtitle_format,
+                    getString(R.string.pet_owner_since),
+                    it.petOwnerSince ?: getString(R.string.n_a)
+                )
+                binding.tvPetsBadge.text = getString(R.string.pets_badge_format, it.petsCount)
             }
         }
 
-        btnLogout.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            // Redirect to Auth and clear backstack
-            findNavController().navigate(R.id.authFragment)
+        viewModel.posts.observe(viewLifecycleOwner) { posts ->
+            postAdapter.submitList(posts)
+            binding.tvEmptyPosts.visibility = if (posts.isEmpty()) View.VISIBLE else View.GONE
         }
 
-        setupBottomNav(view)
+        viewModel.postCount.observe(viewLifecycleOwner) { count ->
+            binding.tvPostsCount.text = count.toString()
+        }
+
+        viewModel.likesCount.observe(viewLifecycleOwner) { count ->
+            binding.tvLikesCount.text = count.toString()
+        }
+
+        viewModel.commentsCount.observe(viewLifecycleOwner) { count ->
+            binding.tvCommentsCount.text = count.toString()
+        }
     }
 
-    private fun setupBottomNav(view: View) {
+    private fun setupBottomNav() {
+        val includeNav = binding.includeBottomNav
+        val orange = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.petopia_orange)
         val gray = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.gray)
-        view.findViewById<ImageView>(R.id.iconHome)?.let {
-            it.setColorFilter(gray)
-        }
-        view.findViewById<TextView>(R.id.textHome)?.let {
-            it.setTextColor(gray)
-        }
 
-        val orange = resources.getColor(R.color.petopia_orange, null)
-        view.findViewById<ImageView>(R.id.iconProfile)?.let {
-            it.setColorFilter(orange)
-        }
-        view.findViewById<TextView>(R.id.textProfile)?.let {
-            it.setTextColor(orange)
-        }
+        includeNav.iconHome.setColorFilter(gray)
+        includeNav.textHome.setTextColor(gray)
+        includeNav.iconProfile.setColorFilter(orange)
+        includeNav.textProfile.setTextColor(orange)
 
-        view.findViewById<View>(R.id.navHome)?.setOnClickListener {
+        includeNav.navHome.setOnClickListener {
             findNavController().navigate(R.id.action_profile_to_home)
         }
 
-        view.findViewById<View>(R.id.fabAddPost)?.setOnClickListener {
-            findNavController().navigate(R.id.createPostDialogFragment)
+        includeNav.fabAddPost.setOnClickListener {
+            // TODO: navigate to create post
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
