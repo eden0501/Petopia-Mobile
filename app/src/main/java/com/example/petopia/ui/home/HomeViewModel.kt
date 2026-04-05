@@ -1,63 +1,100 @@
 package com.example.petopia.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.petopia.data.CommentPreview
-import com.example.petopia.data.Post
-import com.example.petopia.data.PostDisplayItem
-import com.example.petopia.data.PostType
+import androidx.lifecycle.*
+import com.example.petopia.data.model.CommentPreview
+import com.example.petopia.data.model.PostDisplayItem
+import com.example.petopia.data.model.Post
+import com.example.petopia.data.model.PostType
+import com.example.petopia.data.repository.PostRepository
+import com.example.petopia.data.repository.UserRepository
+import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    private val repository: PostRepository,
+    private val userRepository: UserRepository
+) : ViewModel() {
 
-    private val _posts = MutableLiveData<List<PostDisplayItem>>(dummyPostItems())
+    private val _posts = MutableLiveData<List<PostDisplayItem>>(emptyList())
     val posts: LiveData<List<PostDisplayItem>> = _posts
 
     private val _selectedFilter = MutableLiveData(PostFilter.ALL)
     val selectedFilter: LiveData<PostFilter> = _selectedFilter
 
+    init {
+        loadPosts()
+    }
+
+    fun loadPosts() {
+        viewModelScope.launch {
+            val userId = userRepository.getCurrentUserId()
+            val list = repository.getAllPostsWithPreviews(userId)
+            _posts.value = list
+            
+            repository.refreshAllPosts()
+            val refreshedList = repository.getAllPostsWithPreviews(userId)
+            _posts.value = refreshedList
+        }
+    }
+
     fun setFilter(filter: PostFilter) {
         _selectedFilter.value = filter
     }
 
-    private fun dummyPostItems(): List<PostDisplayItem> {
-        return listOf(
-            PostDisplayItem(
-                post = Post(
-                    id = "post1",
-                    title = "URGENT: Injured Dog Found Near Highway",
-                    description = "Found a limping dog near Route 40. Appears to have injured leg. Need immediate help with transport to vet! Located near the gas station.",
-                    imageUrl = "stub",
-                    authorName = "Danielle_Volunteer",
-                    authorId = "user1",
-                    postType = PostType.RESCUE,
-                    hashtags = listOf("#urgent", "#rescue", "#doginjury"),
-                    createdAt = System.currentTimeMillis()
-                ),
-                likeCount = 2,
-                commentCount = 2,
-                previewComments = listOf(
-                    CommentPreview("Ruth_DogMom", "I can help! DMing you now with my contact info.", "about 2 months ago"),
-                    CommentPreview("PetRescuer_Mike", "There is an emergency vet clinic nearby. I can meet you there if needed!", "about 2 months ago")
-                )
-            ),
-            PostDisplayItem(
-                post = Post(
-                    id = "post2",
-                    title = "Donating gently used carrier",
-                    description = "Medium-sized carrier in great condition, used only twice. Free for pickup in city center.",
-                    imageUrl = "stub",
-                    authorName = "Ruth_DogMom",
-                    authorId = "user2",
-                    postType = PostType.SUPPLIES,
-                    hashtags = listOf("#donation", "#carrier"),
-                    createdAt = System.currentTimeMillis()
-                ),
-                likeCount = 0,
-                commentCount = 0,
-                previewComments = emptyList()
-            )
-        )
+    fun toggleLike(postId: String) {
+        viewModelScope.launch {
+            val userId = userRepository.getCurrentUserId() ?: return@launch
+            
+            repository.toggleLike(userId, postId)
+            
+            _posts.value = _posts.value?.map { item ->
+                if (item.post.id == postId) {
+                    val currentLikes = item.post.likes.toMutableList()
+                    if (currentLikes.contains(userId)) {
+                        currentLikes.remove(userId)
+                    } else {
+                        currentLikes.add(userId)
+                    }
+                    val updatedPost = item.post.copy(likes = currentLikes)
+                    item.copy(post = updatedPost, isLiked = currentLikes.contains(userId))
+                } else {
+                    item
+                }
+            }
+        }
+    }
+
+    fun toggleComments(postId: String) {
+        _posts.value = _posts.value?.map { item ->
+            if (item.post.id == postId) {
+                item.copy(isCommentsVisible = !item.isCommentsVisible)
+            } else {
+                item
+            }
+        }
+    }
+
+    fun addComment(postId: String, text: String) {
+        viewModelScope.launch {
+            val user = userRepository.getCurrentUser() ?: return@launch
+            
+            // 1. Update Room & Firestore
+            repository.addComment(postId, user.id, user.username, text)
+            
+            // 2. Update LiveData manually
+            _posts.value = _posts.value?.map { item ->
+                if (item.post.id == postId) {
+                    val newCommentPreview = CommentPreview(user.username, text, System.currentTimeMillis())
+                    val updatedPreviews = item.previewComments.toMutableList()
+                    updatedPreviews.add(0, newCommentPreview) // Newest first
+                    item.copy(
+                        commentCount = item.commentCount + 1,
+                        previewComments = updatedPreviews
+                    )
+                } else {
+                    item
+                }
+            }
+        }
     }
 }
 

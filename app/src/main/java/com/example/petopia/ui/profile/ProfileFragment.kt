@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.petopia.R
-import com.example.petopia.dao.AppLocalDB
+import com.example.petopia.data.local.dao.AppLocalDB
 import com.example.petopia.data.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -56,12 +56,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun setupBottomNav(view: View) {
-        // Highlight profile, unhighlight home
+        val gray = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.gray)
         view.findViewById<ImageView>(R.id.iconHome)?.let {
-            it.setColorFilter(Color.parseColor("#9E9E9E"))
+            it.setColorFilter(gray)
         }
         view.findViewById<TextView>(R.id.textHome)?.let {
-            it.setTextColor(Color.parseColor("#9E9E9E"))
+            it.setTextColor(gray)
         }
 
         val orange = resources.getColor(R.color.petopia_orange, null)
@@ -77,7 +77,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         view.findViewById<View>(R.id.fabAddPost)?.setOnClickListener {
-            // TODO: navigate to create post
+            findNavController().navigate(R.id.createPostDialogFragment)
         }
     }
 }

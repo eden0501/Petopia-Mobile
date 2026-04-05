@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.petopia.R
-import com.example.petopia.dao.AppLocalDB
+import com.example.petopia.data.local.dao.AppLocalDB
 import com.example.petopia.data.model.User
 import com.example.petopia.data.repository.UserRepository
 import com.google.android.material.tabs.TabLayout
