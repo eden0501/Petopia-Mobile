@@ -78,4 +78,17 @@ object FirebaseModel {
             Log.e("FirebaseModel", "Error deleting document", e)
         }
     }
+
+    suspend fun getPostsByAuthor(authorId: String): List<Post> {
+        return try {
+            val result = db.collection(Constants.POSTS_COLLECTION)
+                .whereEqualTo(Post.AUTHOR_ID_KEY, authorId)
+                .get()
+                .await()
+            result.map { Post.fromJson(it.data) }
+        } catch (e: Exception) {
+            Log.e("FirebaseModel", "Error getting user posts.", e)
+            emptyList()
+        }
+    }
 }

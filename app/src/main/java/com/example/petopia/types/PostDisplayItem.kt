@@ -10,6 +10,7 @@ data class CommentPreview(
 
 data class PostDisplayItem(
     val post: Post,
+    val authorName: String,
     val commentCount: Int,
     val previewComments: List<CommentPreview>,
     val isLiked: Boolean = false,
