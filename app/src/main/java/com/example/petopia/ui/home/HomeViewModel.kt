@@ -33,6 +33,8 @@ class HomeViewModel(
         addSource(_factUpdatedTrigger) { value = applyFilterAndInterleave(_posts.value ?: emptyList(), _selectedFilter.value) }
     }
 
+    private var hasLoadedOnce = false
+
     init {
         loadPosts()
     }
@@ -42,7 +44,9 @@ class HomeViewModel(
 
     fun loadPosts() {
         viewModelScope.launch {
-            _isLoading.value = true
+            if (!hasLoadedOnce) {
+                _isLoading.value = true
+            }
 
             val userId = userRepository.getCurrentUserId()
             repository.refreshAllPosts()
@@ -50,6 +54,7 @@ class HomeViewModel(
             _posts.value = refreshedList
 
             _isLoading.value = false
+            hasLoadedOnce = true
         }
     }
 

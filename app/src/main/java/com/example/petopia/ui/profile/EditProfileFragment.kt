@@ -64,8 +64,8 @@ class EditProfileFragment : Fragment() {
 
         includeNav.iconHome.setColorFilter(gray)
         includeNav.textHome.setTextColor(gray)
-        includeNav.iconProfile.setColorFilter(orange)
-        includeNav.textProfile.setTextColor(orange)
+        includeNav.iconProfile.setColorFilter(gray)
+        includeNav.textProfile.setTextColor(gray)
         includeNav.fabAddPost.visibility = View.GONE
 
         includeNav.navHome.setOnClickListener {
