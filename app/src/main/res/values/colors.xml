@@ -3,7 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="error">#fa5a5a</color>
-    <color name="petopia_orange">#FF8A65</color>
+    <color name="petopia_orange">#FF6F43</color>
     <color name="auth_background">#FFFBF0</color>
     <color name="text_primary">#333333</color>
     <color name="text_secondary">#777777</color>
