@@ -11,6 +11,12 @@
         <item name="colorAccent">@color/petopia_orange</item>
         <item name="android:colorAccent">@color/petopia_orange</item>
         <item name="android:colorPrimary">@color/petopia_orange</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/DatePickerButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/DatePickerButton</item>
+    </style>
+
+    <style name="DatePickerButton" parent="android:Widget.Material.Button.Borderless">
+        <item name="android:textColor">@color/petopia_orange</item>
     </style>
 
     <style name="LabelStyle">

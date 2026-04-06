@@ -23,13 +23,17 @@ class HomeViewModel(
     private val _isLoading = MutableLiveData(true)
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private var hasLoadedOnce = false
+
     init {
         loadPosts()
     }
 
     fun loadPosts() {
         viewModelScope.launch {
-            _isLoading.value = true
+            if (!hasLoadedOnce) {
+                _isLoading.value = true
+            }
 
             val userId = userRepository.getCurrentUserId()
             val list = repository.getAllPostsWithPreviews(userId)
@@ -40,6 +44,7 @@ class HomeViewModel(
             _posts.value = refreshedList
 
             _isLoading.value = false
+            hasLoadedOnce = true
         }
     }
 
