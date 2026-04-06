@@ -1,17 +1,20 @@
 package com.example.petopia.ui.profile
 
 import android.app.DatePickerDialog
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.petopia.R
 import com.example.petopia.databinding.FragmentEditProfileBinding
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.Calendar
 
 class EditProfileFragment : Fragment() {
@@ -56,6 +59,9 @@ class EditProfileFragment : Fragment() {
         includeNav.iconProfile.setColorFilter(orange)
         includeNav.textProfile.setTextColor(orange)
 
+        // Hide the FAB on edit profile page
+        includeNav.fabAddPost.visibility = View.GONE
+
         includeNav.navHome.setOnClickListener {
             findNavController().navigate(R.id.action_editProfile_to_home)
         }
@@ -95,15 +101,28 @@ class EditProfileFragment : Fragment() {
         }
 
         binding.btnDeleteAccount.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(getString(R.string.delete_account))
-                .setMessage(getString(R.string.delete_account_confirm))
-                .setNegativeButton(getString(R.string.cancel), null)
-                .setPositiveButton(getString(R.string.confirm)) { _, _ ->
-                    viewModel.deleteAccount()
-                }
-                .show()
+            showDeleteDialog()
         }
+    }
+
+    private fun showDeleteDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_delete_account)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.85).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        dialog.findViewById<View>(R.id.btnClose).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.btnKeepAccount).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.btnConfirmDelete).setOnClickListener {
+            dialog.dismiss()
+            viewModel.deleteAccount()
+        }
+
+        dialog.show()
     }
 
     private fun observeViewModel() {

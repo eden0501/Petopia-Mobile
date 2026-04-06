@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog_rounded"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <!-- Close button -->
+    <ImageView
+        android:id="@+id/btnClose"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="end"
+        android:src="@drawable/ic_close"
+        android:contentDescription="Close"
+        app:tint="@color/gray" />
+
+    <!-- Warning icon -->
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_warning_triangle_red"
+        android:contentDescription="Warning" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Are you absolutely sure?"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"
+        android:lineSpacingExtra="4dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnKeepAccount"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:text="No, keep my account"
+        android:textAllCaps="false"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConfirmDelete"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="@color/rescue_red"
+        android:text="Yes, delete account"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:cornerRadius="8dp" />
+
+</LinearLayout>

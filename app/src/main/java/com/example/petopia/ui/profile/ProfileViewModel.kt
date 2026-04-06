@@ -80,4 +80,8 @@ class ProfileViewModel(
             loadUserData(currentUser.id)
         }
     }
+
+    fun logout() {
+        userRepository.logout()
+    }
 }

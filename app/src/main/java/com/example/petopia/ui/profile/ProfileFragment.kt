@@ -1,9 +1,13 @@
 package com.example.petopia.ui.profile
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -50,9 +54,34 @@ class ProfileFragment : Fragment() {
                     findNavController().navigate(R.id.action_profile_to_editProfile)
                     true
                 }
+                R.id.action_logout -> {
+                    showLogoutDialog()
+                    true
+                }
                 else -> false
             }
         }
+    }
+
+    private fun showLogoutDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_logout)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.85).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        dialog.findViewById<View>(R.id.btnClose).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.btnCancelLogout).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.btnConfirmLogout).setOnClickListener {
+            dialog.dismiss()
+            viewModel.logout()
+            findNavController().navigate(R.id.action_profile_to_auth)
+        }
+
+        dialog.show()
     }
 
     private fun setupPostsFeed() {
