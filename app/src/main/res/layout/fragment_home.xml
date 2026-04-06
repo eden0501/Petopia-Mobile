@@ -48,7 +48,7 @@
         android:id="@+id/loadingOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/petopia_orange"
+        android:background="@color/loading_orange"
         android:elevation="100dp"
         android:visibility="visible">
 

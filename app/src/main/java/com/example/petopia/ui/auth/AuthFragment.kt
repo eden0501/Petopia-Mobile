@@ -1,5 +1,6 @@
 package com.example.petopia.ui.auth
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -14,11 +15,8 @@ import com.example.petopia.R
 import com.example.petopia.data.local.dao.AppLocalDB
 import com.example.petopia.data.model.User
 import com.example.petopia.data.repository.UserRepository
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.tabs.TabLayout
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.Calendar
 
 class AuthFragment : Fragment(R.layout.fragment_auth) {
 
@@ -45,20 +43,29 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         val etOwnerSince = view.findViewById<EditText>(R.id.etOwnerSince)
 
         etOwnerSince.setOnClickListener {
+            val calendar = Calendar.getInstance()
             val existingDate = etOwnerSince.text.toString()
-            val selection = parseDateToMillis(existingDate) ?: MaterialDatePicker.todayInUtcMilliseconds()
-
-            val picker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(getString(R.string.select_date))
-                .setSelection(selection)
-                .build()
-
-            picker.addOnPositiveButtonClickListener { sel ->
-                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                etOwnerSince.setText(sdf.format(Date(sel)))
+            if (existingDate.isNotBlank()) {
+                try {
+                    val parts = existingDate.split("/")
+                    calendar.set(Calendar.DAY_OF_MONTH, parts[0].toInt())
+                    calendar.set(Calendar.MONTH, parts[1].toInt() - 1)
+                    calendar.set(Calendar.YEAR, parts[2].toInt())
+                } catch (_: Exception) { }
             }
 
-            picker.show(parentFragmentManager, "date_picker")
+            DatePickerDialog(
+                requireContext(),
+                R.style.DatePickerTheme,
+                { _, year, month, day ->
+                    etOwnerSince.setText("$day/${month + 1}/$year")
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).apply {
+                datePicker.maxDate = System.currentTimeMillis()
+            }.show()
         }
 
         authTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -119,21 +126,6 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                     val errorMsg = it.exceptionOrNull()?.message ?: "Authentication failed"
                     Toast.makeText(context, errorMsg, Toast.LENGTH_LONG).show()
                 }
-            }
-        }
-    }
-
-    private fun parseDateToMillis(dateStr: String): Long? {
-        if (dateStr.isBlank()) return null
-        return try {
-            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            sdf.parse(dateStr)?.time
-        } catch (e: Exception) {
-            try {
-                val sdf = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
-                sdf.parse(dateStr)?.time
-            } catch (e2: Exception) {
-                null
             }
         }
     }
