@@ -45,6 +45,11 @@ class ProfileFragment : Fragment() {
         observeViewModel()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadProfile()
+    }
+
     private fun setupAppBar() {
         val toolbar = binding.includeAppBar.topAppBar
         toolbar.inflateMenu(R.menu.menu_profile)

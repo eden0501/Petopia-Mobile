@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Logging out?"
+        android:text="@string/logout_title"
         android:textColor="@color/text_primary"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="Are you sure you want to log out? You will need to enter your credentials again to access your Petopia account."
+        android:text="@string/logout_message"
         android:textColor="@color/text_secondary"
         android:textSize="14sp"
         android:lineSpacingExtra="4dp" />
@@ -59,7 +59,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="Yes, Log Me Out"
+            android:text="@string/logout_confirm"
             android:textAllCaps="false"
             android:textColor="@color/petopia_orange"
             app:cornerRadius="8dp"

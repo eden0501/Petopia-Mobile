@@ -8,7 +8,6 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
-    <!-- App Bar -->
     <include
         android:id="@+id/includeAppBar"
         layout="@layout/layout_top_app_bar"
@@ -30,7 +29,6 @@
             android:paddingHorizontal="20dp"
             android:paddingTop="24dp">
 
-            <!-- Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Update your personal information and how others see you"
+                android:text="@string/edit_profile_subtitle"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
@@ -70,7 +68,6 @@
                         app:strokeColor="@color/white"
                         app:strokeWidth="2dp" />
 
-                    <!-- Camera badge -->
                     <FrameLayout
                         android:layout_width="26dp"
                         android:layout_height="26dp"
@@ -96,7 +93,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Profile Picture"
+                        android:text="@string/profile_picture"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -105,7 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="JPEG, PNG, GIF, and WebP images"
+                        android:text="@string/profile_picture_formats"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -134,13 +131,6 @@
                 android:textColorHint="@color/gray_400"
                 android:textSize="15sp" />
 
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/divider" />
-
             <!-- Number of Pets -->
             <TextView
                 android:layout_width="wrap_content"
@@ -157,19 +147,12 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_input_field"
-                android:hint="0"
+                android:hint="@string/pet_count_default_hint"
                 android:inputType="number"
                 android:paddingHorizontal="14dp"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/gray_400"
                 android:textSize="15sp" />
-
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/divider" />
 
             <!-- Pet Owner Since -->
             <TextView
@@ -181,36 +164,22 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <FrameLayout
+            <EditText
+                android:id="@+id/etOwnerSince"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input_field"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="@string/select_date"
+                android:inputType="none"
+                android:paddingHorizontal="14dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/gray_400"
+                android:textSize="15sp" />
 
-                <EditText
-                    android:id="@+id/etOwnerSince"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_input_field"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:hint="Select Date"
-                    android:inputType="none"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="44dp"
-                    android:textColor="@color/text_primary"
-                    android:textColorHint="@color/gray_400"
-                    android:textSize="15sp" />
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center_vertical|end"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_calendar"
-                    android:contentDescription="Pick date" />
-            </FrameLayout>
-
-            <!-- Cancel + Save buttons -->
+            <!-- Cancel + Save buttons matching Figma -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -220,20 +189,24 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCancel"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="44dp"
-                    android:layout_marginEnd="16dp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/cancel"
                     android:textAllCaps="false"
                     android:textColor="@color/petopia_orange"
-                    app:rippleColor="#20FF8A65" />
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/petopia_orange" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSave"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="44dp"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
                     android:text="@string/save_changes"
                     android:textAllCaps="false"
                     android:textColor="@color/gray_400"
@@ -241,18 +214,11 @@
                     app:strokeColor="@color/gray_200" />
             </LinearLayout>
 
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="24dp"
-                android:background="@color/divider" />
-
             <!-- Delete Account section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="28dp"
                 android:layout_marginBottom="20dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -275,7 +241,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Permanently remove all your data"
+                        android:text="@string/delete_data_description"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -285,7 +251,7 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:text="Delete Profile"
+                    android:text="@string/delete_profile"
                     android:textAllCaps="false"
                     android:textColor="@color/rescue_red"
                     android:textSize="12sp"
@@ -297,7 +263,6 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom nav -->
     <include
         android:id="@+id/includeBottomNav"
         layout="@layout/bottom_nav"

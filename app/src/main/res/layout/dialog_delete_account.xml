@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Are you absolutely sure?"
+        android:text="@string/delete_title"
         android:textColor="@color/text_primary"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+        android:text="@string/delete_message"
         android:textColor="@color/text_secondary"
         android:textSize="14sp"
         android:lineSpacingExtra="4dp" />
@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="24dp"
-        android:text="No, keep my account"
+        android:text="@string/delete_keep"
         android:textAllCaps="false"
         android:textColor="@color/text_primary"
         android:textStyle="bold" />
@@ -62,7 +62,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="4dp"
         android:backgroundTint="@color/rescue_red"
-        android:text="Yes, delete account"
+        android:text="@string/delete_confirm"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:cornerRadius="8dp" />

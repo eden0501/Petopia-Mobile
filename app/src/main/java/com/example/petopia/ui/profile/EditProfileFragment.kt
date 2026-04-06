@@ -92,7 +92,7 @@ class EditProfileFragment : Fragment() {
         binding.btnSave.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
             if (username.isEmpty()) {
-                Toast.makeText(context, "Username is required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.username_required), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val petsCount = binding.etPetCount.text.toString().toIntOrNull() ?: 0
@@ -140,7 +140,7 @@ class EditProfileFragment : Fragment() {
                     Toast.makeText(context, getString(R.string.profile_updated), Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                 } else {
-                    Toast.makeText(context, it.exceptionOrNull()?.message ?: "Error", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, it.exceptionOrNull()?.message ?: getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -151,7 +151,7 @@ class EditProfileFragment : Fragment() {
                     Toast.makeText(context, getString(R.string.account_deleted), Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_editProfile_to_auth)
                 } else {
-                    Toast.makeText(context, it.exceptionOrNull()?.message ?: "Error", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, it.exceptionOrNull()?.message ?: getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
