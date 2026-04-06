@@ -27,4 +27,5 @@
     <color name="profile_bg">#FAFAFA</color>
     <color name="badge_orange_bg">#FFF3E0</color>
     <color name="badge_orange_border">#FFCC80</color>
+    <color name="loading_orange">#FF6D00</color>
 </resources>

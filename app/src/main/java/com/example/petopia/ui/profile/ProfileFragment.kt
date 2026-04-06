@@ -129,10 +129,6 @@ class ProfileFragment : Fragment() {
         viewModel.commentsCount.observe(viewLifecycleOwner) { count ->
             binding.tvCommentsCount.text = count.toString()
         }
-
-        viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
-            binding.loadingOverlay.visibility = if (loading) View.VISIBLE else View.GONE
-        }
     }
 
     private fun setupBottomNav() {

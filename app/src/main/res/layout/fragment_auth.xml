@@ -135,7 +135,9 @@
                     <FrameLayout
                         android:id="@+id/profileImageContainer"
                         android:layout_width="70dp"
-                        android:layout_height="70dp">
+                        android:layout_height="70dp"
+                        android:clipChildren="false"
+                        android:clipToPadding="false">
 
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/ivProfilePicture"
@@ -148,6 +150,20 @@
                             app:shapeAppearanceOverlay="@style/CircleImage"
                             app:strokeColor="@color/white"
                             app:strokeWidth="2dp" />
+
+                        <FrameLayout
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="bottom|end"
+                            android:background="@drawable/bg_camera_badge">
+
+                            <ImageView
+                                android:layout_width="13dp"
+                                android:layout_height="13dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_camera"
+                                android:contentDescription="Change photo" />
+                        </FrameLayout>
                     </FrameLayout>
                 </LinearLayout>
 

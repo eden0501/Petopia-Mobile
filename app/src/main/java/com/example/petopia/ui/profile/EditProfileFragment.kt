@@ -1,5 +1,6 @@
 package com.example.petopia.ui.profile
 
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -16,10 +17,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.petopia.R
 import com.example.petopia.databinding.FragmentEditProfileBinding
-import com.google.android.material.datepicker.MaterialDatePicker
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.Calendar
 
 class EditProfileFragment : Fragment() {
 
@@ -84,21 +82,30 @@ class EditProfileFragment : Fragment() {
         binding.etPetCount.addTextChangedListener { updateSaveButtonState() }
 
         binding.etOwnerSince.setOnClickListener {
+            val calendar = Calendar.getInstance()
             val existingDate = binding.etOwnerSince.text.toString()
-            val selection = parseDateToMillis(existingDate) ?: MaterialDatePicker.todayInUtcMilliseconds()
-
-            val picker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(getString(R.string.select_date))
-                .setSelection(selection)
-                .build()
-
-            picker.addOnPositiveButtonClickListener { sel ->
-                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                binding.etOwnerSince.setText(sdf.format(Date(sel)))
-                updateSaveButtonState()
+            if (existingDate.isNotBlank()) {
+                try {
+                    val parts = existingDate.split("/")
+                    calendar.set(Calendar.DAY_OF_MONTH, parts[0].toInt())
+                    calendar.set(Calendar.MONTH, parts[1].toInt() - 1)
+                    calendar.set(Calendar.YEAR, parts[2].toInt())
+                } catch (_: Exception) { }
             }
 
-            picker.show(parentFragmentManager, "date_picker")
+            DatePickerDialog(
+                requireContext(),
+                R.style.DatePickerTheme,
+                { _, year, month, day ->
+                    binding.etOwnerSince.setText("$day/${month + 1}/$year")
+                    updateSaveButtonState()
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).apply {
+                datePicker.maxDate = System.currentTimeMillis()
+            }.show()
         }
 
         binding.btnCancel.setOnClickListener {
@@ -199,22 +206,6 @@ class EditProfileFragment : Fragment() {
                 } else {
                     Toast.makeText(context, it.exceptionOrNull()?.message ?: getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
                 }
-            }
-        }
-    }
-
-    private fun parseDateToMillis(dateStr: String): Long? {
-        if (dateStr.isBlank()) return null
-        return try {
-            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            sdf.parse(dateStr)?.time
-        } catch (e: Exception) {
-            // Try alternate format d/M/yyyy
-            try {
-                val sdf = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
-                sdf.parse(dateStr)?.time
-            } catch (e2: Exception) {
-                null
             }
         }
     }

@@ -9,6 +9,8 @@
 
     <style name="DatePickerTheme" parent="@android:style/Theme.Material.Light.Dialog">
         <item name="colorAccent">@color/petopia_orange</item>
+        <item name="android:colorAccent">@color/petopia_orange</item>
+        <item name="android:colorPrimary">@color/petopia_orange</item>
     </style>
 
     <style name="LabelStyle">
