@@ -14,7 +14,6 @@ data class Post(
     val content: String,
     val imageUrl: String?,
     val authorId: String,
-    val authorName: String,
     val createdAt: Long,
     val postType: PostType,
     val hashtags: List<String> = emptyList(),
@@ -31,7 +30,6 @@ data class Post(
         const val CONTENT_KEY = "content"
         const val IMAGE_URL_KEY = "imageUrl"
         const val AUTHOR_ID_KEY = "authorId"
-        const val AUTHOR_NAME_KEY = "authorName"
         const val CREATED_AT_KEY = "createdAt"
         const val POST_TYPE_KEY = "postType"
         const val HASHTAGS_KEY = "hashtags"
@@ -47,10 +45,10 @@ data class Post(
                 content = json[CONTENT_KEY] as? String ?: "",
                 imageUrl = json[IMAGE_URL_KEY] as? String,
                 authorId = json[AUTHOR_ID_KEY] as? String ?: "",
-                authorName = json[AUTHOR_NAME_KEY] as? String ?: "",
                 createdAt = json[CREATED_AT_KEY] as? Long ?: 0L,
                 postType = PostType.valueOf(json[POST_TYPE_KEY] as? String ?: PostType.RESCUE.name),
-                hashtags = (json[HASHTAGS_KEY] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
+                hashtags = (json[HASHTAGS_KEY] as? List<*>)?.filterIsInstance<String>()
+                    ?: emptyList(),
                 likes = (json[LIKES_KEY] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
                 lastUpdated = timestamp?.toDate()?.time,
                 isDeleted = json[IS_DELETED_KEY] as? Boolean ?: false
@@ -65,7 +63,6 @@ data class Post(
             CONTENT_KEY to content,
             IMAGE_URL_KEY to imageUrl,
             AUTHOR_ID_KEY to authorId,
-            AUTHOR_NAME_KEY to authorName,
             CREATED_AT_KEY to createdAt,
             POST_TYPE_KEY to postType.name,
             HASHTAGS_KEY to hashtags,

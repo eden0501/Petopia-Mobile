@@ -49,6 +49,19 @@ object FirebaseAuthModel {
         }
     }
 
+    suspend fun deleteUser() {
+        try {
+            val uid = auth.currentUser?.uid
+            if (uid != null) {
+                db.collection(Constants.USERS_COLLECTION).document(uid).delete().await()
+            }
+            auth.currentUser?.delete()?.await()
+        } catch (e: Exception) {
+            Log.e("FirebaseAuthModel", "Error deleting user", e)
+            throw e
+        }
+    }
+
     suspend fun getUser(userId: String): User? {
         return try {
             val document = db.collection(Constants.USERS_COLLECTION)

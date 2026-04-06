@@ -76,7 +76,7 @@ class ProfileViewModel(
     fun addComment(postId: String, text: String) {
         viewModelScope.launch {
             val currentUser = userRepository.getCurrentUser() ?: return@launch
-            postRepository.addComment(postId, currentUser.id, currentUser.username, text)
+            postRepository.addComment(postId, currentUser.id, text)
             loadUserData(currentUser.id)
         }
     }

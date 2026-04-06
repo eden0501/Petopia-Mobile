@@ -82,8 +82,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupFilterDropdown() {
-        val filterContainer = binding.root.findViewById<View>(R.id.includeFilter) ?: return
-        val filterText = filterContainer.findViewById<android.widget.TextView>(R.id.filterDropdown) ?: return
+        // Accessing via binding.includeFilter
+        val filterContainer = binding.includeFilter.filterDropdownContainer
+        val filterText = binding.includeFilter.filterDropdown
 
         filterContainer.setOnClickListener {
             if (System.currentTimeMillis() - lastFilterPopupDismissTime < 300) {
@@ -157,47 +158,38 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupBottomNav() {
-        binding.root.findViewById<View>(R.id.fabAddPost)?.setOnClickListener {
+        // Accessing views through the included layout binding
+        binding.includeBottomNav.fabAddPost.setOnClickListener {
             findNavController().navigate(R.id.createPostDialogFragment)
         }
         
-        val navHome = binding.root.findViewById<View>(R.id.navHome)
-        val navProfile = binding.root.findViewById<View>(R.id.navProfile)
-        
-        navHome?.setOnClickListener {
+        binding.includeBottomNav.navHome.setOnClickListener {
             setActiveTab(isHome = true)
         }
         
-        navProfile?.setOnClickListener {
+        binding.includeBottomNav.navProfile.setOnClickListener {
             setActiveTab(isHome = false)
             findNavController().navigate(R.id.action_home_to_profile)
         }
     }
 
     private fun setActiveTab(isHome: Boolean) {
-        val navHome = binding.root.findViewById<View>(R.id.navHome) ?: return
-        val iconHome = binding.root.findViewById<android.widget.ImageView>(R.id.iconHome) ?: return
-        val textHome = binding.root.findViewById<android.widget.TextView>(R.id.textHome) ?: return
-
-        val navProfile = binding.root.findViewById<View>(R.id.navProfile) ?: return
-        val iconProfile = binding.root.findViewById<android.widget.ImageView>(R.id.iconProfile) ?: return
-        val textProfile = binding.root.findViewById<android.widget.TextView>(R.id.textProfile) ?: return
-
+        val nav = binding.includeBottomNav
         val orange = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.petopia_orange)
         val gray = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.gray)
 
         if (isHome) {
-            iconHome.setColorFilter(orange)
-            textHome.setTextColor(orange)
+            nav.iconHome.setColorFilter(orange)
+            nav.textHome.setTextColor(orange)
 
-            iconProfile.setColorFilter(gray)
-            textProfile.setTextColor(gray)
+            nav.iconProfile.setColorFilter(gray)
+            nav.textProfile.setTextColor(gray)
         } else {
-            iconProfile.setColorFilter(orange)
-            textProfile.setTextColor(orange)
+            nav.iconProfile.setColorFilter(orange)
+            nav.textProfile.setTextColor(orange)
 
-            iconHome.setColorFilter(gray)
-            textHome.setTextColor(gray)
+            nav.iconHome.setColorFilter(gray)
+            nav.textHome.setTextColor(gray)
         }
     }
 

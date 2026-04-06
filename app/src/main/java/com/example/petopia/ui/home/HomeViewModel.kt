@@ -148,7 +148,7 @@ class HomeViewModel(
         viewModelScope.launch {
             val user = userRepository.getCurrentUser() ?: return@launch
 
-            repository.addComment(postId, user.id, user.username, text)
+            repository.addComment(postId, user.id, text)
 
             _posts.value = _posts.value?.map { item ->
                 if (item.post.id == postId) {
