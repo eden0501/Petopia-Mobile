@@ -1,6 +1,5 @@
 package com.example.petopia.ui.auth
 
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -15,8 +14,11 @@ import com.example.petopia.R
 import com.example.petopia.data.local.dao.AppLocalDB
 import com.example.petopia.data.model.User
 import com.example.petopia.data.repository.UserRepository
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.tabs.TabLayout
-import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AuthFragment : Fragment(R.layout.fragment_auth) {
 
@@ -43,18 +45,17 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         val etOwnerSince = view.findViewById<EditText>(R.id.etOwnerSince)
 
         etOwnerSince.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            DatePickerDialog(
-                requireContext(),
-                R.style.DatePickerTheme,
-                { _, year, month, day ->
-                    val date = "$day/${month + 1}/$year"
-                    etOwnerSince.setText(date)
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            val picker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText(getString(R.string.select_date))
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build()
+
+            picker.addOnPositiveButtonClickListener { selection ->
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                etOwnerSince.setText(sdf.format(Date(selection)))
+            }
+
+            picker.show(parentFragmentManager, "date_picker")
         }
 
         authTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

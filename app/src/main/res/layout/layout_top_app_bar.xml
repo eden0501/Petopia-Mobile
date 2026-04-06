@@ -14,8 +14,10 @@
         android:background="@color/white"
         app:title="@string/app_name"
         app:titleTextColor="@color/black"
-        app:navigationIcon="@drawable/ic_paw_logo"
-        app:titleCentered="false" />
+        app:navigationIcon="@drawable/ic_paw_logo_toolbar"
+        app:navigationIconTint="@null"
+        app:titleCentered="false"
+        app:contentInsetStartWithNavigation="0dp" />
 
     <View
         android:layout_width="match_parent"

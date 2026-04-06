@@ -1,6 +1,5 @@
 package com.example.petopia.ui.profile
 
-import android.app.DatePickerDialog
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -10,12 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.petopia.R
 import com.example.petopia.databinding.FragmentEditProfileBinding
-import java.util.Calendar
+import com.google.android.material.datepicker.MaterialDatePicker
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class EditProfileFragment : Fragment() {
 
@@ -25,6 +29,11 @@ class EditProfileFragment : Fragment() {
     private val viewModel: EditProfileViewModel by viewModels {
         EditProfileViewModelFactory(requireContext())
     }
+
+    // Track original values to detect changes
+    private var originalUsername = ""
+    private var originalPetCount = ""
+    private var originalOwnerSince = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +51,7 @@ class EditProfileFragment : Fragment() {
         setupBottomNav()
         setupListeners()
         observeViewModel()
+        updateSaveButtonState()
     }
 
     private fun setupAppBar() {
@@ -51,15 +61,13 @@ class EditProfileFragment : Fragment() {
 
     private fun setupBottomNav() {
         val includeNav = binding.includeBottomNav
-        val orange = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.petopia_orange)
-        val gray = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.gray)
+        val orange = ContextCompat.getColor(requireContext(), R.color.petopia_orange)
+        val gray = ContextCompat.getColor(requireContext(), R.color.gray)
 
         includeNav.iconHome.setColorFilter(gray)
         includeNav.textHome.setTextColor(gray)
         includeNav.iconProfile.setColorFilter(orange)
         includeNav.textProfile.setTextColor(orange)
-
-        // Hide the FAB on edit profile page
         includeNav.fabAddPost.visibility = View.GONE
 
         includeNav.navHome.setOnClickListener {
@@ -71,18 +79,23 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun setupListeners() {
+        // Track text changes to enable/disable save button
+        binding.etUsername.addTextChangedListener { updateSaveButtonState() }
+        binding.etPetCount.addTextChangedListener { updateSaveButtonState() }
+
         binding.etOwnerSince.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            DatePickerDialog(
-                requireContext(),
-                R.style.DatePickerTheme,
-                { _, year, month, day ->
-                    binding.etOwnerSince.setText("$day/${month + 1}/$year")
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            val picker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText(getString(R.string.select_date))
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build()
+
+            picker.addOnPositiveButtonClickListener { selection ->
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                binding.etOwnerSince.setText(sdf.format(Date(selection)))
+                updateSaveButtonState()
+            }
+
+            picker.show(parentFragmentManager, "date_picker")
         }
 
         binding.btnCancel.setOnClickListener {
@@ -102,6 +115,30 @@ class EditProfileFragment : Fragment() {
 
         binding.btnDeleteAccount.setOnClickListener {
             showDeleteDialog()
+        }
+    }
+
+    private fun hasChanges(): Boolean {
+        return binding.etUsername.text.toString() != originalUsername ||
+                binding.etPetCount.text.toString() != originalPetCount ||
+                binding.etOwnerSince.text.toString() != originalOwnerSince
+    }
+
+    private fun updateSaveButtonState() {
+        val changed = hasChanges()
+        binding.btnSave.isEnabled = changed
+        if (changed) {
+            binding.btnSave.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.petopia_orange))
+            binding.btnSave.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.btnSave.strokeColor = android.content.res.ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.petopia_orange)
+            )
+        } else {
+            binding.btnSave.setBackgroundColor(Color.TRANSPARENT)
+            binding.btnSave.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_400))
+            binding.btnSave.strokeColor = android.content.res.ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.gray_200)
+            )
         }
     }
 
@@ -128,9 +165,15 @@ class EditProfileFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.user.observe(viewLifecycleOwner) { user ->
             user?.let {
+                originalUsername = it.username
+                originalPetCount = it.petsCount.toString()
+                originalOwnerSince = it.petOwnerSince ?: ""
+
                 binding.etUsername.setText(it.username)
                 binding.etPetCount.setText(it.petsCount.toString())
                 binding.etOwnerSince.setText(it.petOwnerSince ?: "")
+
+                updateSaveButtonState()
             }
         }
 
