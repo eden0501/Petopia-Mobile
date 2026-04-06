@@ -36,14 +36,32 @@ class EditProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupAppBar()
+        setupBottomNav()
         setupListeners()
         observeViewModel()
     }
 
     private fun setupAppBar() {
         val toolbar = binding.includeAppBar.topAppBar
-        toolbar.title = getString(R.string.edit_profile)
-        toolbar.navigationIcon = null
+        toolbar.title = getString(R.string.app_name)
+    }
+
+    private fun setupBottomNav() {
+        val includeNav = binding.includeBottomNav
+        val orange = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.petopia_orange)
+        val gray = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.gray)
+
+        includeNav.iconHome.setColorFilter(gray)
+        includeNav.textHome.setTextColor(gray)
+        includeNav.iconProfile.setColorFilter(orange)
+        includeNav.textProfile.setTextColor(orange)
+
+        includeNav.navHome.setOnClickListener {
+            findNavController().navigate(R.id.action_editProfile_to_home)
+        }
+        includeNav.navProfile.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun setupListeners() {
@@ -61,6 +79,10 @@ class EditProfileFragment : Fragment() {
             ).show()
         }
 
+        binding.btnCancel.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
         binding.btnSave.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
             if (username.isEmpty()) {
@@ -70,11 +92,6 @@ class EditProfileFragment : Fragment() {
             val petsCount = binding.etPetCount.text.toString().toIntOrNull() ?: 0
             val ownerSince = binding.etOwnerSince.text.toString().ifBlank { null }
             viewModel.saveProfile(username, petsCount, ownerSince)
-        }
-
-        binding.btnLogout.setOnClickListener {
-            viewModel.logout()
-            findNavController().navigate(R.id.action_editProfile_to_auth)
         }
 
         binding.btnDeleteAccount.setOnClickListener {
@@ -93,7 +110,6 @@ class EditProfileFragment : Fragment() {
         viewModel.user.observe(viewLifecycleOwner) { user ->
             user?.let {
                 binding.etUsername.setText(it.username)
-                binding.etEmail.setText(it.email)
                 binding.etPetCount.setText(it.petsCount.toString())
                 binding.etOwnerSince.setText(it.petOwnerSince ?: "")
             }
