@@ -61,6 +61,7 @@
     <string name="stat_comments">Comments</string>
     <string name="my_posts">My Posts</string>
     <string name="no_posts_yet">No posts yet</string>
+    <string name="no_posts_subtitle">Share your first post with the community!</string>
     <string name="profile_subtitle_format">%s · %s</string>
 
     <string name="edit_profile">Edit Profile</string>
