@@ -140,8 +140,7 @@ class PostRepository private constructor(context: Context) {
     }
 
     suspend fun getTotalLikesForUser(userId: String): Int = withContext(Dispatchers.IO) {
-        val posts = postDao.getPostsByUserId(userId)
-        posts.sumOf { it.likes.size }
+        postDao.getLikesGivenByUser(userId)
     }
 
     suspend fun getTotalCommentsForUser(userId: String): Int = withContext(Dispatchers.IO) {

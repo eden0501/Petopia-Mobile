@@ -146,7 +146,7 @@ class ProfileFragment : Fragment() {
         }
 
         includeNav.fabAddPost.setOnClickListener {
-            // TODO: navigate to create post
+            findNavController().navigate(R.id.createPostDialogFragment)
         }
     }
 
