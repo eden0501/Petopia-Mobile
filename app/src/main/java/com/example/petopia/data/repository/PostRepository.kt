@@ -76,12 +76,11 @@ class PostRepository private constructor(context: Context) {
         }
     }
 
-    suspend fun addComment(postId: String, authorId: String, authorName: String, content: String) = withContext(Dispatchers.IO) {
+    suspend fun addComment(postId: String, authorId: String, content: String) = withContext(Dispatchers.IO) {
         val comment = Comment(
             id = System.currentTimeMillis().toString(),
             postId = postId,
             authorId = authorId,
-            authorName = authorName,
             content = content,
             createdAt = System.currentTimeMillis()
         )

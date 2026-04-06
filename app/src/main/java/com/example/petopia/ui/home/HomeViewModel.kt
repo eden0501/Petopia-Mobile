@@ -78,7 +78,7 @@ class HomeViewModel(
             val user = userRepository.getCurrentUser() ?: return@launch
             
             // 1. Update Room & Firestore
-            repository.addComment(postId, user.id, user.username, text)
+            repository.addComment(postId, user.id, text)
             
             // 2. Update LiveData manually
             _posts.value = _posts.value?.map { item ->

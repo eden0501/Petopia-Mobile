@@ -38,6 +38,23 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_profile_to_editProfile"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.petopia.ui.profile.EditProfileFragment"
+        android:label="Edit Profile"
+        tools:layout="@layout/fragment_edit_profile">
+
+        <action
+            android:id="@+id/action_editProfile_to_auth"
+            app:destination="@id/authFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <dialog

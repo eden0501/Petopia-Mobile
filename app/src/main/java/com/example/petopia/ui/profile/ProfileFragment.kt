@@ -47,7 +47,7 @@ class ProfileFragment : Fragment() {
         toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.action_settings -> {
-                    // TODO: open settings
+                    findNavController().navigate(R.id.action_profile_to_editProfile)
                     true
                 }
                 else -> false
