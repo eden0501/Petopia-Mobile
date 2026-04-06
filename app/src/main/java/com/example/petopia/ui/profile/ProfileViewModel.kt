@@ -27,13 +27,22 @@ class ProfileViewModel(
     private val _commentsCount = MutableLiveData(0)
     val commentsCount: LiveData<Int> = _commentsCount
 
+    private val _isLoading = MutableLiveData(true)
+    val isLoading: LiveData<Boolean> = _isLoading
+
     init {
         loadProfile()
     }
 
     fun loadProfile() {
         viewModelScope.launch {
-            val currentUser = userRepository.getCurrentUser() ?: return@launch
+            _isLoading.value = true
+
+            val currentUser = userRepository.getCurrentUser()
+            if (currentUser == null) {
+                _isLoading.value = false
+                return@launch
+            }
             _user.value = currentUser
 
             val userId = currentUser.id
@@ -41,9 +50,11 @@ class ProfileViewModel(
             // Load from local first
             loadUserData(userId)
 
-            // Fetch this user's posts from Firestore, cache locally, then reload
+            // Fetch from remote then reload
             postRepository.refreshUserPosts(userId)
             loadUserData(userId)
+
+            _isLoading.value = false
         }
     }
 
