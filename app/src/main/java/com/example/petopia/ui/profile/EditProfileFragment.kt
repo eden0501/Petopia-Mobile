@@ -84,14 +84,17 @@ class EditProfileFragment : Fragment() {
         binding.etPetCount.addTextChangedListener { updateSaveButtonState() }
 
         binding.etOwnerSince.setOnClickListener {
+            val existingDate = binding.etOwnerSince.text.toString()
+            val selection = parseDateToMillis(existingDate) ?: MaterialDatePicker.todayInUtcMilliseconds()
+
             val picker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText(getString(R.string.select_date))
-                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .setSelection(selection)
                 .build()
 
-            picker.addOnPositiveButtonClickListener { selection ->
+            picker.addOnPositiveButtonClickListener { sel ->
                 val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                binding.etOwnerSince.setText(sdf.format(Date(selection)))
+                binding.etOwnerSince.setText(sdf.format(Date(sel)))
                 updateSaveButtonState()
             }
 
@@ -196,6 +199,22 @@ class EditProfileFragment : Fragment() {
                 } else {
                     Toast.makeText(context, it.exceptionOrNull()?.message ?: getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
                 }
+            }
+        }
+    }
+
+    private fun parseDateToMillis(dateStr: String): Long? {
+        if (dateStr.isBlank()) return null
+        return try {
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            sdf.parse(dateStr)?.time
+        } catch (e: Exception) {
+            // Try alternate format d/M/yyyy
+            try {
+                val sdf = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
+                sdf.parse(dateStr)?.time
+            } catch (e2: Exception) {
+                null
             }
         }
     }

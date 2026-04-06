@@ -78,7 +78,7 @@
 
     <string name="logout_title">Logging out?</string>
     <string name="logout_message">Are you sure you want to log out? You will need to enter your credentials again to access your Petopia account.</string>
-    <string name="logout_confirm">Yes, Log Me Out</string>
+    <string name="logout_confirm">Log Me Out</string>
 
     <string name="delete_title">Are you absolutely sure?</string>
     <string name="delete_message">This action cannot be undone. This will permanently delete your account and remove your data from our servers.</string>

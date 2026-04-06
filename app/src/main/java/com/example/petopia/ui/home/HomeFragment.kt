@@ -51,6 +51,10 @@ class HomeFragment : Fragment() {
             updateFilteredPosts(viewModel.posts.value ?: emptyList())
         }
 
+        viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
+            binding.loadingOverlay.visibility = if (loading) View.VISIBLE else View.GONE
+        }
+
         setupFilterDropdown()
         setupBottomNav()
     }

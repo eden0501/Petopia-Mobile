@@ -20,12 +20,17 @@ class HomeViewModel(
     private val _selectedFilter = MutableLiveData(PostFilter.ALL)
     val selectedFilter: LiveData<PostFilter> = _selectedFilter
 
+    private val _isLoading = MutableLiveData(true)
+    val isLoading: LiveData<Boolean> = _isLoading
+
     init {
         loadPosts()
     }
 
     fun loadPosts() {
         viewModelScope.launch {
+            _isLoading.value = true
+
             val userId = userRepository.getCurrentUserId()
             val list = repository.getAllPostsWithPreviews(userId)
             _posts.value = list
@@ -33,6 +38,8 @@ class HomeViewModel(
             repository.refreshAllPosts()
             val refreshedList = repository.getAllPostsWithPreviews(userId)
             _posts.value = refreshedList
+
+            _isLoading.value = false
         }
     }
 
