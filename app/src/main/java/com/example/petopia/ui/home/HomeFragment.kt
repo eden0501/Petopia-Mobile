@@ -77,6 +77,10 @@ class HomeFragment : Fragment() {
             }
         }
 
+        viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
+            binding.loadingOverlay.visibility = if (loading) View.VISIBLE else View.GONE
+        }
+
         setupFilterDropdown()
         setupBottomNav()
     }

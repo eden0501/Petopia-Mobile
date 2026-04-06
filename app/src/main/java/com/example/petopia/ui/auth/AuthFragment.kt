@@ -45,14 +45,17 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         val etOwnerSince = view.findViewById<EditText>(R.id.etOwnerSince)
 
         etOwnerSince.setOnClickListener {
+            val existingDate = etOwnerSince.text.toString()
+            val selection = parseDateToMillis(existingDate) ?: MaterialDatePicker.todayInUtcMilliseconds()
+
             val picker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText(getString(R.string.select_date))
-                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .setSelection(selection)
                 .build()
 
-            picker.addOnPositiveButtonClickListener { selection ->
+            picker.addOnPositiveButtonClickListener { sel ->
                 val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                etOwnerSince.setText(sdf.format(Date(selection)))
+                etOwnerSince.setText(sdf.format(Date(sel)))
             }
 
             picker.show(parentFragmentManager, "date_picker")
@@ -116,6 +119,21 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                     val errorMsg = it.exceptionOrNull()?.message ?: "Authentication failed"
                     Toast.makeText(context, errorMsg, Toast.LENGTH_LONG).show()
                 }
+            }
+        }
+    }
+
+    private fun parseDateToMillis(dateStr: String): Long? {
+        if (dateStr.isBlank()) return null
+        return try {
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            sdf.parse(dateStr)?.time
+        } catch (e: Exception) {
+            try {
+                val sdf = SimpleDateFormat("d/M/yyyy", Locale.getDefault())
+                sdf.parse(dateStr)?.time
+            } catch (e2: Exception) {
+                null
             }
         }
     }
