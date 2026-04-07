@@ -74,7 +74,9 @@ class UserRepository(
 
     suspend fun logout() {
         FirebaseAuthModel.logout()
-        database?.clearAllTables()
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            database?.clearAllTables()
+        }
     }
 
     suspend fun updateUser(user: User): Result<User> {
@@ -90,7 +92,9 @@ class UserRepository(
     suspend fun deleteAccount(password: String): Result<Unit> {
         return try {
             FirebaseAuthModel.deleteUser(password)
-            database?.clearAllTables()
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                database?.clearAllTables()
+            }
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

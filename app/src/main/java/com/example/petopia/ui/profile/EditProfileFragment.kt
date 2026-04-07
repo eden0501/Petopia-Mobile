@@ -219,7 +219,11 @@ class EditProfileFragment : Fragment() {
             result?.let {
                 if (it.isSuccess) {
                     Toast.makeText(context, getString(R.string.account_deleted), Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_editProfile_to_auth)
+                    try {
+                        findNavController().navigate(R.id.action_editProfile_to_auth)
+                    } catch (_: Exception) {
+                        // Fragment may already be detached
+                    }
                 } else {
                     Toast.makeText(context, it.exceptionOrNull()?.message ?: getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
                 }
