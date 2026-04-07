@@ -94,6 +94,7 @@ class ProfileViewModel(
 
     fun logout() {
         viewModelScope.launch {
+            postRepository.resetSyncTimestamp()
             userRepository.logout()
         }
     }

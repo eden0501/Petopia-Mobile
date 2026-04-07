@@ -23,6 +23,10 @@ class PostRepository private constructor(context: Context) {
         get() = sharedPrefs.getLong(Constants.SharedPrefs.LAST_UPDATED_POSTS, 0)
         set(value) = sharedPrefs.edit().putLong(Constants.SharedPrefs.LAST_UPDATED_POSTS, value).apply()
 
+    fun resetSyncTimestamp() {
+        lastUpdatedPosts = 0
+    }
+
     companion object {
         @Volatile
         private var instance: PostRepository? = null
@@ -60,6 +64,11 @@ class PostRepository private constructor(context: Context) {
         var time = lastUpdated
         for (post in posts) {
             postDao.insertPosts(post)
+            // Sync comments for each post
+            val comments = FirebaseModel.getAllComments(post.id)
+            for (comment in comments) {
+                commentDao.insertComments(comment)
+            }
             post.lastUpdated?.let { postLastUpdated ->
                 if (time < postLastUpdated) {
                     time = postLastUpdated
