@@ -2,11 +2,13 @@ package com.example.petopia.ui.profile
 
 import androidx.lifecycle.*
 import com.example.petopia.data.model.User
+import com.example.petopia.data.repository.PostRepository
 import com.example.petopia.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
 class EditProfileViewModel(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val postRepository: PostRepository
 ) : ViewModel() {
 
     private val _user = MutableLiveData<User?>()
@@ -51,6 +53,7 @@ class EditProfileViewModel(
 
     fun logout() {
         viewModelScope.launch {
+            postRepository.resetSyncTimestamp()
             userRepository.logout()
         }
     }
@@ -58,6 +61,7 @@ class EditProfileViewModel(
     fun deleteAccount(password: String) {
         viewModelScope.launch {
             _isSaving.value = true
+            postRepository.resetSyncTimestamp()
             val result = userRepository.deleteAccount(password)
             _isSaving.value = false
             _deleteResult.value = result
