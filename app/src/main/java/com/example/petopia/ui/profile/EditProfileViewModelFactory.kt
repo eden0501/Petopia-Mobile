@@ -11,7 +11,7 @@ class EditProfileViewModelFactory(private val context: Context) : ViewModelProvi
         if (modelClass.isAssignableFrom(EditProfileViewModel::class.java)) {
             val db = AppLocalDB.getDatabase(context)
             @Suppress("UNCHECKED_CAST")
-            return EditProfileViewModel(UserRepository(db.userDao())) as T
+            return EditProfileViewModel(UserRepository(db.userDao(), db)) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

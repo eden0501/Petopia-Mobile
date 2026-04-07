@@ -14,7 +14,7 @@ class ProfileViewModelFactory(private val context: Context) : ViewModelProvider.
             @Suppress("UNCHECKED_CAST")
             return ProfileViewModel(
                 PostRepository.getInstance(context),
-                UserRepository(db.userDao())
+                UserRepository(db.userDao(), db)
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

@@ -14,7 +14,7 @@ class HomeViewModelFactory(private val context: Context) : ViewModelProvider.Fac
             @Suppress("UNCHECKED_CAST")
             return HomeViewModel(
                 PostRepository.getInstance(context),
-                UserRepository(db.userDao())
+                UserRepository(db.userDao(), db)
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

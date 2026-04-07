@@ -50,7 +50,9 @@ class EditProfileViewModel(
     }
 
     fun logout() {
-        userRepository.logout()
+        viewModelScope.launch {
+            userRepository.logout()
+        }
     }
 
     fun deleteAccount(password: String) {
