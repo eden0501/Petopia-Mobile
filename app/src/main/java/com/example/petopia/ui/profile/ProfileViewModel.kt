@@ -97,4 +97,4 @@ class ProfileViewModel(
             postRepository.resetSyncTimestamp()
             userRepository.logout()
         }
-    }
+    }}
