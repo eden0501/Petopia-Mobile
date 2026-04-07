@@ -71,10 +71,6 @@ class ProfileFragment : Fragment() {
                     showLogoutDialog()
                     true
                 }
-                R.id.action_logout -> {
-                    showLogoutDialog()
-                    true
-                }
                 else -> false
             }
         }

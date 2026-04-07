@@ -18,6 +18,9 @@ class EditProfileViewModel(
     private val _deleteResult = MutableLiveData<Result<Unit>?>()
     val deleteResult: LiveData<Result<Unit>?> = _deleteResult
 
+    private val _isSaving = MutableLiveData(false)
+    val isSaving: LiveData<Boolean> = _isSaving
+
     init {
         loadUser()
     }
@@ -30,6 +33,7 @@ class EditProfileViewModel(
 
     fun saveProfile(username: String, petsCount: Int, petOwnerSince: String?) {
         viewModelScope.launch {
+            _isSaving.value = true
             val current = _user.value ?: return@launch
             val updated = current.copy(
                 username = username,
@@ -37,6 +41,7 @@ class EditProfileViewModel(
                 petOwnerSince = petOwnerSince
             )
             val result = userRepository.updateUser(updated)
+            _isSaving.value = false
             _saveResult.value = result
             if (result.isSuccess) {
                 _user.value = updated
@@ -48,9 +53,11 @@ class EditProfileViewModel(
         userRepository.logout()
     }
 
-    fun deleteAccount() {
+    fun deleteAccount(password: String) {
         viewModelScope.launch {
-            val result = userRepository.deleteAccount()
+            _isSaving.value = true
+            val result = userRepository.deleteAccount(password)
+            _isSaving.value = false
             _deleteResult.value = result
         }
     }

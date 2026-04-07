@@ -3,6 +3,7 @@ package com.example.petopia.data.remote
 import android.util.Log
 import com.example.petopia.base.Constants
 import com.example.petopia.data.model.User
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -49,13 +50,47 @@ object FirebaseAuthModel {
         }
     }
 
-    suspend fun deleteUser() {
+    suspend fun deleteUser(password: String) {
         try {
-            val uid = auth.currentUser?.uid
-            if (uid != null) {
-                db.collection(Constants.USERS_COLLECTION).document(uid).delete().await()
+            val user = auth.currentUser ?: return
+            val uid = user.uid
+
+            // Re-authenticate before sensitive operation
+            val credential = EmailAuthProvider.getCredential(user.email!!, password)
+            user.reauthenticate(credential).await()
+
+            // Delete user's posts
+            val posts = db.collection(Constants.POSTS_COLLECTION)
+                .whereEqualTo("authorId", uid)
+                .get().await()
+            for (doc in posts.documents) {
+                doc.reference.delete().await()
             }
-            auth.currentUser?.delete()?.await()
+
+            // Delete user's comments
+            val comments = db.collection(Constants.COMMENTS_COLLECTION)
+                .whereEqualTo("authorId", uid)
+                .get().await()
+            for (doc in comments.documents) {
+                doc.reference.delete().await()
+            }
+
+            // Remove user's likes from all posts
+            val allPosts = db.collection(Constants.POSTS_COLLECTION)
+                .get().await()
+            for (doc in allPosts.documents) {
+                val likes = (doc.get("likes") as? List<*>)?.filterIsInstance<String>() ?: continue
+                if (likes.contains(uid)) {
+                    val updated = likes.filter { it != uid }
+                    doc.reference.update("likes", updated).await()
+                }
+            }
+
+            // Delete user profile
+            db.collection(Constants.USERS_COLLECTION).document(uid).delete().await()
+
+            // Delete Firebase Auth account
+            user.delete().await()
         } catch (e: Exception) {
             Log.e("FirebaseAuthModel", "Error deleting user", e)
             throw e

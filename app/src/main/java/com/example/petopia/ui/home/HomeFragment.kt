@@ -173,7 +173,10 @@ class HomeFragment : Fragment() {
         
         binding.includeBottomNav.navProfile.setOnClickListener {
             setActiveTab(isHome = false)
-            findNavController().navigate(R.id.action_home_to_profile)
+            val action = HomeFragmentDirections.actionHomeToProfile(
+                userId = viewModel.getCurrentUserId() ?: ""
+            )
+            findNavController().navigate(action)
         }
     }
 

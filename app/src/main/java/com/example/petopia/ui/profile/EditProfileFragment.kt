@@ -15,6 +15,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.petopia.R
 import com.example.petopia.databinding.FragmentEditProfileBinding
 import java.util.Calendar
@@ -23,6 +24,8 @@ class EditProfileFragment : Fragment() {
 
     private var _binding: FragmentEditProfileBinding? = null
     private val binding get() = _binding!!
+
+    private val args: EditProfileFragmentArgs by navArgs()
 
     private val viewModel: EditProfileViewModel by viewModels {
         EditProfileViewModelFactory(requireContext())
@@ -162,11 +165,18 @@ class EditProfileFragment : Fragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
+        val etPassword = dialog.findViewById<android.widget.EditText>(R.id.etPassword)
+
         dialog.findViewById<View>(R.id.btnClose).setOnClickListener { dialog.dismiss() }
         dialog.findViewById<View>(R.id.btnKeepAccount).setOnClickListener { dialog.dismiss() }
         dialog.findViewById<View>(R.id.btnConfirmDelete).setOnClickListener {
+            val password = etPassword.text.toString()
+            if (password.isEmpty()) {
+                Toast.makeText(context, getString(R.string.password_required), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             dialog.dismiss()
-            viewModel.deleteAccount()
+            viewModel.deleteAccount(password)
         }
 
         dialog.show()
@@ -185,6 +195,13 @@ class EditProfileFragment : Fragment() {
 
                 updateSaveButtonState()
             }
+        }
+
+        viewModel.isSaving.observe(viewLifecycleOwner) { saving ->
+            binding.savingOverlay.visibility = if (saving) View.VISIBLE else View.GONE
+            binding.btnSave.isEnabled = !saving
+            binding.btnCancel.isEnabled = !saving
+            binding.btnDeleteAccount.isEnabled = !saving
         }
 
         viewModel.saveResult.observe(viewLifecycleOwner) { result ->

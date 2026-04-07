@@ -82,6 +82,7 @@
     <string name="select_date">Select Date</string>
     <string name="pet_count_default_hint">0</string>
     <string name="username_required">Username is required</string>
+    <string name="password_required">Password is required to delete your account</string>
     <string name="generic_error">Error</string>
 
     <string name="logout_title">Logging out?</string>

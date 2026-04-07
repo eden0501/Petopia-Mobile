@@ -86,9 +86,9 @@ class UserRepository(private val userDao: UserDao) {
         }
     }
 
-    suspend fun deleteAccount(): Result<Unit> {
+    suspend fun deleteAccount(password: String): Result<Unit> {
         return try {
-            FirebaseAuthModel.deleteUser()
+            FirebaseAuthModel.deleteUser(password)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

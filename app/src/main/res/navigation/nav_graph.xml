@@ -33,6 +33,11 @@
         android:label="Profile"
         tools:layout="@layout/fragment_profile">
 
+        <argument
+            android:name="userId"
+            app:argType="string"
+            android:defaultValue="" />
+
         <action
             android:id="@+id/action_profile_to_home"
             app:destination="@id/homeFragment"
@@ -55,6 +60,10 @@
         android:name="com.example.petopia.ui.profile.EditProfileFragment"
         android:label="Edit Profile"
         tools:layout="@layout/fragment_edit_profile">
+
+        <argument
+            android:name="userId"
+            app:argType="string" />
 
         <action
             android:id="@+id/action_editProfile_to_auth"
