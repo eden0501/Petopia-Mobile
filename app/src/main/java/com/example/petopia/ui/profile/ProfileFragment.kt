@@ -11,6 +11,7 @@ import android.view.Window
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
 import com.example.petopia.databinding.FragmentProfileBinding
@@ -20,6 +21,8 @@ class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+
+    private val args: ProfileFragmentArgs by navArgs()
 
     private val viewModel: ProfileViewModel by viewModels {
         ProfileViewModelFactory(requireContext())
@@ -56,7 +59,10 @@ class ProfileFragment : Fragment() {
         toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.action_settings -> {
-                    findNavController().navigate(R.id.action_profile_to_editProfile)
+                    val action = ProfileFragmentDirections.actionProfileToEditProfile(
+                        userId = args.userId
+                    )
+                    findNavController().navigate(action)
                     true
                 }
                 R.id.action_logout -> {

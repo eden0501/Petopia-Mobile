@@ -52,6 +52,8 @@ class HomeViewModel(
         _selectedFilter.value = filter
     }
 
+    fun getCurrentUserId(): String? = userRepository.getCurrentUserId()
+
     fun toggleLike(postId: String) {
         viewModelScope.launch {
             val userId = userRepository.getCurrentUserId() ?: return@launch
