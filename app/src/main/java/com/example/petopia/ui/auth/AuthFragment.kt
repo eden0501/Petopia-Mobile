@@ -26,7 +26,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         super.onViewCreated(view, savedInstanceState)
 
         val db = AppLocalDB.getDatabase(requireContext())
-        val repository = UserRepository(db.userDao())
+        val repository = UserRepository(db.userDao(), db)
         val factory = AuthViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
