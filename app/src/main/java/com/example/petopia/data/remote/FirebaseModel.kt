@@ -38,14 +38,16 @@ object FirebaseModel {
     suspend fun getAllComments(postId: String): List<Comment> {
         return try {
             val task = db.collection(Constants.COMMENTS_COLLECTION)
-                .whereEqualTo("postId", postId)
+                .whereEqualTo(Comment.POST_ID_KEY, postId)
                 .get()
                 .await()
             val comments = mutableListOf<Comment>()
             for (document in task.documents) {
                 try {
-                    val comment = document.toObject(Comment::class.java)
-                    if (comment != null) comments.add(comment)
+                    val data = document.data
+                    if (data != null) {
+                        comments.add(Comment.fromJson(data))
+                    }
                 } catch (e: Exception) {
                     Log.e("FirebaseModel", "Error parsing comment", e)
                 }
@@ -60,7 +62,7 @@ object FirebaseModel {
     suspend fun addComment(comment: Comment) {
         try {
             db.collection(Constants.COMMENTS_COLLECTION).document(comment.id)
-                .set(comment)
+                .set(comment.toJson)
                 .await()
         } catch (e: Exception) {
             Log.e("FirebaseModel", "Error adding comment", e)
