@@ -59,9 +59,13 @@ class PostRepository private constructor(context: Context) {
     }
 
     suspend fun refreshAllPosts() = withContext(Dispatchers.IO) {
-        val lastUpdated = lastUpdatedPosts
-        val posts = FirebaseModel.getAllPosts(lastUpdated)
-        var time = lastUpdated
+        // Full sync: clear local and re-fetch everything from Firestore
+        val posts = FirebaseModel.getAllPosts(0)
+
+        postDao.deleteAllPosts()
+        commentDao.deleteAllComments()
+
+        var time = 0L
         for (post in posts) {
             if (post.isDeleted) {
                 postDao.deletePost(post)
@@ -72,11 +76,7 @@ class PostRepository private constructor(context: Context) {
                     commentDao.insertComments(comment)
                 }
             }
-            post.lastUpdated?.let { postLastUpdated ->
-                if (time < postLastUpdated) {
-                    time = postLastUpdated
-                }
-            }
+            post.lastUpdated?.let { if (time < it) time = it }
         }
         lastUpdatedPosts = time
     }
