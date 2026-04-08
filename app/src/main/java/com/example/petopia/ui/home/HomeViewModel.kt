@@ -169,7 +169,7 @@ class HomeViewModel(
                     val newCommentPreview =
                         CommentPreview(user.username, text, System.currentTimeMillis())
                     val updatedPreviews = item.previewComments.toMutableList()
-                    updatedPreviews.add(0, newCommentPreview)
+                    updatedPreviews.add(newCommentPreview)
                     item.copy(
                         commentCount = item.commentCount + 1,
                         previewComments = updatedPreviews
