@@ -230,16 +230,16 @@
                     android:layout_height="160dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_upload_dashed"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:background="@drawable/bg_nav_active"
-                        android:padding="12dp"
-                        android:src="@drawable/ic_upload"
-                        app:tint="@color/care_blue" />
+                        android:padding="4dp"
+                        android:src="@drawable/ic_upload_image" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -254,7 +254,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="PNG, JPG up to 10MB"
+                        android:text="PNG, JPG, GIF, WEBP, BMP up to 10MB"
                         android:textColor="@color/gray_400"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -276,11 +276,17 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupHashtags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" />
+
                 <EditText
                     android:id="@+id/editHashtags"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/bg_input_field"
                     android:hint="#rescue #urgent #help"
                     android:inputType="text"
@@ -313,9 +319,9 @@
                         android:layout_marginEnd="12dp"
                         android:text="Cancel"
                         android:textAllCaps="false"
-                        android:textColor="@color/gray_600"
+                        android:textColor="@color/petopia_orange"
                         app:cornerRadius="8dp"
-                        app:strokeColor="@color/gray_400" />
+                        app:strokeColor="@color/petopia_orange" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCreatePost"

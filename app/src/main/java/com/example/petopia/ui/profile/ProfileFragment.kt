@@ -43,8 +43,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 tvEmail.text = it.email
                 tvPetsCount.text = it.petsCount.toString()
                 tvPetOwnerSince.text = it.petOwnerSince ?: "N/A"
+                }
             }
-        }
 
         btnLogout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()

@@ -12,6 +12,9 @@
     <string name="share">Share</string>
     <string name="write_comment">Write a comment...</string>
     <string name="post_button">Post</string>
+    <string name="sponsored">Sponsored</string>
+    <string name="fun_dog_fact">Fun Dog Fact</string>
+    <string name="fun_cat_fact">Fun Cat Fact</string>
 
     <string name="rescue_alert">Rescue Alert</string>
     <string name="care_tip">Care Tips</string>

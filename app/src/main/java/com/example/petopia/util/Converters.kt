@@ -1,7 +1,8 @@
 package com.example.petopia.util
 
 import androidx.room.TypeConverter
-import com.example.petopia.data.model.PostType
+import com.example.petopia.types.PostType
+
 class Converters {
     @TypeConverter
     fun fromStringList(value: List<String>?): String? {

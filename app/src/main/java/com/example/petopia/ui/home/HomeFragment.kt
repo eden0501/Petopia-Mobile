@@ -4,14 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
-import com.example.petopia.data.model.PostDisplayItem
-import com.example.petopia.data.model.PostType
+import com.example.petopia.types.HomeItem
+import com.example.petopia.types.PostType
+import com.example.petopia.types.PostDisplayItem
+import com.example.petopia.types.PostFilter
 import com.example.petopia.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -24,6 +25,8 @@ class HomeFragment : Fragment() {
     }
     private lateinit var adapter: PostAdapter
     private var lastFilterPopupDismissTime = 0L
+
+    private var shouldScrollToTop = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,31 +43,42 @@ class HomeFragment : Fragment() {
         adapter = PostAdapter(
             onLikeClick = { item -> viewModel.toggleLike(item.post.id) },
             onCommentClick = { item -> viewModel.toggleComments(item.post.id) },
-            onAddCommentClick = { item, text -> viewModel.addComment(item.post.id, text) }
+            onAddCommentClick = { item, text -> viewModel.addComment(item.post.id, text) },
+            onRefreshFactClick = { viewModel.refreshFact() },
+            onFactVisible = { factId -> viewModel.loadFact(factId) }
         )
         binding.recyclerFeed.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerFeed.adapter = adapter
 
-        viewModel.posts.observe(viewLifecycleOwner) { posts ->
-            updateFilteredPosts(posts)
+        viewModel.filteredHomeItems.observe(viewLifecycleOwner) { items ->
+            val layoutManager = binding.recyclerFeed.layoutManager as? LinearLayoutManager
+            val firstPos = layoutManager?.findFirstVisibleItemPosition() ?: -1
+            val firstVisibleId = if (firstPos != -1 && firstPos < adapter.itemCount) {
+                val item = adapter.currentList[firstPos]
+                if (item is HomeItem.PostItem) item.displayItem.post.id else null
+            } else null
+
+            adapter.submitList(items) {
+                val postStillExists = firstVisibleId?.let { id ->
+                    items.any { it is HomeItem.PostItem && it.displayItem.post.id == id }
+                } ?: true
+
+                if (shouldScrollToTop || !postStillExists) {
+                    binding.recyclerFeed.scrollToPosition(0)
+                    shouldScrollToTop = false
+                }
+            }
         }
-        viewModel.selectedFilter.observe(viewLifecycleOwner) { _ ->
-            updateFilteredPosts(viewModel.posts.value ?: emptyList())
+
+        parentFragmentManager.setFragmentResultListener("create_post_result", viewLifecycleOwner) { _, bundle ->
+            if (bundle.getBoolean("success")) {
+                shouldScrollToTop = true
+                viewModel.loadPosts()
+            }
         }
 
         setupFilterDropdown()
         setupBottomNav()
-    }
-
-    private fun updateFilteredPosts(posts: List<PostDisplayItem>) {
-        val filter = viewModel.selectedFilter.value ?: PostFilter.ALL
-        val filtered = when (filter) {
-            PostFilter.ALL -> posts
-            PostFilter.RESCUE -> posts.filter { it.post.postType == PostType.RESCUE }
-            PostFilter.CARE_TIPS -> posts.filter { it.post.postType == PostType.KNOWLEDGE }
-            PostFilter.SUPPLIES -> posts.filter { it.post.postType == PostType.SUPPLIES }
-        }
-        adapter.submitList(filtered)
     }
 
     private fun setupFilterDropdown() {
@@ -152,7 +166,6 @@ class HomeFragment : Fragment() {
         
         navHome?.setOnClickListener {
             setActiveTab(isHome = true)
-            // TODO: navigate to home
         }
         
         navProfile?.setOnClickListener {

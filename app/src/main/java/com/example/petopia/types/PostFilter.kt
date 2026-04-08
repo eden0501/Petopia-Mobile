@@ -1,7 +1,8 @@
 package com.example.petopia.types
 
-enum class PostType {
+enum class PostFilter {
+    ALL,
     RESCUE,
-    KNOWLEDGE,
+    CARE_TIPS,
     SUPPLIES
 }

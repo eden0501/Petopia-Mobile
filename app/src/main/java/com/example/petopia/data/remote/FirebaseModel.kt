@@ -5,6 +5,7 @@ import com.example.petopia.base.Constants
 import com.example.petopia.data.model.Comment
 import com.example.petopia.data.model.Post
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -64,6 +65,18 @@ object FirebaseModel {
                 .await()
         } catch (e: Exception) {
             Log.e("FirebaseModel", "Error adding comment", e)
+        }
+    }
+
+    // Soft delete approach
+    suspend fun deletePost(post: Post) {
+        try {
+            db.collection(Constants.POSTS_COLLECTION)
+                .document(post.id)
+                .update(Post.IS_DELETED_KEY, true, Post.LAST_UPDATED_KEY, FieldValue.serverTimestamp())
+                .await()
+        } catch (e: Exception) {
+            Log.e("FirebaseModel", "Error deleting document", e)
         }
     }
 }
