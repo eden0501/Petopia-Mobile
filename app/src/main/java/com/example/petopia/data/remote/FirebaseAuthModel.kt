@@ -3,7 +3,6 @@ package com.example.petopia.data.remote
 import android.util.Log
 import com.example.petopia.base.Constants
 import com.example.petopia.data.model.User
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -56,8 +55,7 @@ object FirebaseAuthModel {
             val uid = user.uid
 
             // Re-authenticate before sensitive operation
-            val credential = EmailAuthProvider.getCredential(user.email!!, password)
-            user.reauthenticate(credential).await()
+            auth.signInWithEmailAndPassword(user.email!!, password).await()
 
             // Delete user's posts
             val posts = db.collection(Constants.POSTS_COLLECTION)
