@@ -44,12 +44,21 @@ class HomeViewModel(
 
     fun loadPosts() {
         viewModelScope.launch {
-            if (!hasLoadedOnce) {
+            val isFirstLoad = !hasLoadedOnce
+            if (isFirstLoad) {
                 _isLoading.value = true
             }
 
             val userId = userRepository.getCurrentUserId()
-            repository.refreshAllPosts()
+
+            if (isFirstLoad) {
+                repository.refreshAllPosts()
+            } else {
+                val list = repository.getAllPostsWithPreviews(userId)
+                _posts.value = list
+                repository.refreshPostsIncremental()
+            }
+
             val refreshedList = repository.getAllPostsWithPreviews(userId)
             _posts.value = refreshedList
 

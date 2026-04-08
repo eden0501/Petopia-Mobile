@@ -86,6 +86,24 @@ class PostRepository private constructor(context: Context) {
         FirebaseModel.deletePost(post)
     }
 
+    suspend fun refreshPostsIncremental() = withContext(Dispatchers.IO) {
+        val posts = FirebaseModel.getAllPosts(lastUpdatedPosts)
+        var time = lastUpdatedPosts
+        for (post in posts) {
+            if (post.isDeleted) {
+                postDao.deletePost(post)
+            } else {
+                postDao.insertPosts(post)
+                val comments = FirebaseModel.getAllComments(post.id)
+                for (comment in comments) {
+                    commentDao.insertComments(comment)
+                }
+            }
+            post.lastUpdated?.let { if (time < it) time = it }
+        }
+        lastUpdatedPosts = time
+    }
+
     suspend fun insertPosts(posts: List<Post>) = withContext(Dispatchers.IO) {
         postDao.insertPosts(*posts.toTypedArray())
         posts.forEach { post ->
