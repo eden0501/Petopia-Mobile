@@ -99,7 +99,7 @@ class HomeViewModel(
                 if (item.post.id == postId) {
                     val newCommentPreview = CommentPreview(user.username, text, System.currentTimeMillis())
                     val updatedPreviews = item.previewComments.toMutableList()
-                    updatedPreviews.add(0, newCommentPreview) // Newest first
+                    updatedPreviews.add(newCommentPreview) // Newest at bottom
                     item.copy(
                         commentCount = item.commentCount + 1,
                         previewComments = updatedPreviews

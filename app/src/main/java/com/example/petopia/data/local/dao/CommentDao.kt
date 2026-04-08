@@ -5,7 +5,7 @@ import com.example.petopia.data.model.Comment
 
 @Dao
 interface CommentDao {
-    @Query("SELECT * FROM comments WHERE postId = :postId ORDER BY createdAt DESC")
+    @Query("SELECT * FROM comments WHERE postId = :postId ORDER BY createdAt ASC")
     fun getCommentsByPostId(postId: String): List<Comment>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
