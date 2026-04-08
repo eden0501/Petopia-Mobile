@@ -25,6 +25,7 @@ class HomeViewModel(
     private val _isLoading = MutableLiveData(true)
     val isLoading: LiveData<Boolean> = _isLoading
 
+<<<<<<< HEAD
     private val _factUpdatedTrigger = MutableLiveData<Unit>()
 
     val filteredHomeItems: LiveData<List<HomeItem>> = MediatorLiveData<List<HomeItem>>().apply {
@@ -32,8 +33,6 @@ class HomeViewModel(
         addSource(_selectedFilter) { filter -> value = applyFilterAndInterleave(_posts.value ?: emptyList(), filter) }
         addSource(_factUpdatedTrigger) { value = applyFilterAndInterleave(_posts.value ?: emptyList(), _selectedFilter.value) }
     }
-
-    private var hasLoadedOnce = false
 
     init {
         loadPosts()
@@ -44,26 +43,22 @@ class HomeViewModel(
 
     fun loadPosts() {
         viewModelScope.launch {
-            val isFirstLoad = !hasLoadedOnce
-            if (isFirstLoad) {
+            val needsFullSync = !PostRepository.hasCompletedFullSync
+
+            if (needsFullSync) {
                 _isLoading.value = true
-            }
-
-            val userId = userRepository.getCurrentUserId()
-
-            if (isFirstLoad) {
                 repository.refreshAllPosts()
             } else {
+                val userId = userRepository.getCurrentUserId()
                 val list = repository.getAllPostsWithPreviews(userId)
                 _posts.value = list
                 repository.refreshPostsIncremental()
             }
 
+            val userId = userRepository.getCurrentUserId()
             val refreshedList = repository.getAllPostsWithPreviews(userId)
             _posts.value = refreshedList
-
             _isLoading.value = false
-            hasLoadedOnce = true
         }
     }
 

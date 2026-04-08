@@ -25,16 +25,26 @@ class PostRepository private constructor(context: Context) {
 
     fun resetSyncTimestamp() {
         lastUpdatedPosts = 0
+        resetFullSync()
     }
 
     companion object {
         @Volatile
         private var instance: PostRepository? = null
 
+        // Tracks whether a full sync has been done this session
+        @Volatile
+        var hasCompletedFullSync = false
+            private set
+
         fun getInstance(context: Context): PostRepository {
             return instance ?: synchronized(this) {
                 instance ?: PostRepository(context).also { instance = it }
             }
+        }
+
+        fun resetFullSync() {
+            hasCompletedFullSync = false
         }
     }
 
@@ -79,6 +89,7 @@ class PostRepository private constructor(context: Context) {
             post.lastUpdated?.let { if (time < it) time = it }
         }
         lastUpdatedPosts = time
+        hasCompletedFullSync = true
     }
 
     suspend fun deletePost(post: Post) = withContext(Dispatchers.IO) {
