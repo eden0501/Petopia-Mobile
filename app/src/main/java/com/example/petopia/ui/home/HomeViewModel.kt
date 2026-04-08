@@ -31,15 +31,23 @@ class HomeViewModel(
 
     fun loadPosts() {
         viewModelScope.launch {
-            if (!hasLoadedOnce) {
+            val isFirstLoad = !hasLoadedOnce
+            if (isFirstLoad) {
                 _isLoading.value = true
             }
 
             val userId = userRepository.getCurrentUserId()
-            val list = repository.getAllPostsWithPreviews(userId)
-            _posts.value = list
-            
-            repository.refreshAllPosts()
+
+            if (isFirstLoad) {
+                // Full sync on first load
+                repository.refreshAllPosts()
+            } else {
+                // Show local data immediately, then sync in background
+                val list = repository.getAllPostsWithPreviews(userId)
+                _posts.value = list
+                repository.refreshPostsIncremental()
+            }
+
             val refreshedList = repository.getAllPostsWithPreviews(userId)
             _posts.value = refreshedList
 

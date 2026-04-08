@@ -77,6 +77,21 @@ class PostRepository private constructor(context: Context) {
         lastUpdatedPosts = time
     }
 
+    suspend fun refreshPostsIncremental() = withContext(Dispatchers.IO) {
+        // Only fetch posts updated since last sync, no clearing
+        val posts = FirebaseModel.getAllPosts(lastUpdatedPosts)
+        var time = lastUpdatedPosts
+        for (post in posts) {
+            postDao.insertPosts(post)
+            val comments = FirebaseModel.getAllComments(post.id)
+            for (comment in comments) {
+                commentDao.insertComments(comment)
+            }
+            post.lastUpdated?.let { if (time < it) time = it }
+        }
+        lastUpdatedPosts = time
+    }
+
     suspend fun insertPosts(posts: List<Post>) = withContext(Dispatchers.IO) {
         postDao.insertPosts(*posts.toTypedArray())
         posts.forEach { post ->
