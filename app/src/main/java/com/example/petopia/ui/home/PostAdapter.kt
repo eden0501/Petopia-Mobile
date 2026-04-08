@@ -62,7 +62,7 @@ class PostAdapter(
             binding.textAuthorName.text = item.authorName
             binding.textTitle.text = post.title
             binding.textDescription.text = post.content
-            binding.textHashtags.text = post.hashtags.joinToString(" ")
+            binding.textHashtags.text = "#" + post.hashtags.joinToString(" #")
             binding.textTimestamp.text = android.text.format.DateUtils.getRelativeTimeSpanString(
                 post.createdAt,
                 System.currentTimeMillis(),
@@ -82,23 +82,23 @@ class PostAdapter(
                 PostType.RESCUE -> {
                     binding.layoutPostTypeTag.setBackgroundResource(R.drawable.bg_tag_rescue)
                     binding.textPostType.text = binding.root.context.getString(R.string.rescue_alert)
-                    binding.textPostType.setTextColor(android.graphics.Color.parseColor("#C62828"))
+                    binding.textPostType.setTextColor(androidx.core.content.ContextCompat.getColor(binding.root.context, R.color.tag_rescue_text))
                     binding.iconPostType.setImageResource(R.drawable.ic_circle_alert)
-                    binding.iconPostType.setColorFilter(android.graphics.Color.parseColor("#C62828"))
+                    binding.iconPostType.setColorFilter(androidx.core.content.ContextCompat.getColor(binding.root.context, R.color.tag_rescue_text))
                 }
                 PostType.KNOWLEDGE -> {
                     binding.layoutPostTypeTag.setBackgroundResource(R.drawable.bg_tag_care)
                     binding.textPostType.text = binding.root.context.getString(R.string.care_tip)
-                    binding.textPostType.setTextColor(android.graphics.Color.parseColor("#1565C0"))
+                    binding.textPostType.setTextColor(androidx.core.content.ContextCompat.getColor(binding.root.context, R.color.tag_care_text))
                     binding.iconPostType.setImageResource(R.drawable.ic_lightbulb)
-                    binding.iconPostType.setColorFilter(android.graphics.Color.parseColor("#1565C0"))
+                    binding.iconPostType.setColorFilter(androidx.core.content.ContextCompat.getColor(binding.root.context, R.color.tag_care_text))
                 }
                 PostType.SUPPLIES -> {
                     binding.layoutPostTypeTag.setBackgroundResource(R.drawable.bg_tag_equipment)
                     binding.textPostType.text = binding.root.context.getString(R.string.equipment_donation)
-                    binding.textPostType.setTextColor(android.graphics.Color.parseColor("#00695C"))
+                    binding.textPostType.setTextColor(androidx.core.content.ContextCompat.getColor(binding.root.context, R.color.tag_supplies_text))
                     binding.iconPostType.setImageResource(R.drawable.ic_package)
-                    binding.iconPostType.setColorFilter(android.graphics.Color.parseColor("#00695C"))
+                    binding.iconPostType.setColorFilter(androidx.core.content.ContextCompat.getColor(binding.root.context, R.color.tag_supplies_text))
                 }
             }
             binding.iconPostType.visibility = View.VISIBLE
@@ -117,6 +117,7 @@ class PostAdapter(
             val petopiaOrange = androidx.core.content.ContextCompat.getColor(binding.root.context, R.color.petopia_orange)
             val defaultColor = android.graphics.Color.BLACK
             binding.iconComment.setColorFilter(if (item.isCommentsVisible) petopiaOrange else defaultColor)
+            binding.textComments.setTextColor(if (item.isCommentsVisible) petopiaOrange else defaultColor)
 
             if (item.isLiked) {
                 binding.iconLike.setImageResource(R.drawable.ic_heart_filled)

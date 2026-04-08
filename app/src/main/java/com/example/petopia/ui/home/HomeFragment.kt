@@ -122,7 +122,7 @@ class HomeFragment : Fragment() {
                         iconCheck.setColorFilter(androidx.core.content.ContextCompat.getColor(context, R.color.petopia_orange))
                     } else {
                         innerContainer.setBackgroundResource(0)
-                        tv.setTextColor(android.graphics.Color.parseColor("#424242"))
+                        tv.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.text_body))
                         iconCheck.visibility = View.GONE
                     }
                     return view
