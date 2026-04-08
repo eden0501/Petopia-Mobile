@@ -16,6 +16,7 @@ interface CommentDao {
 
     @Query("SELECT COUNT(*) FROM comments WHERE authorId = :userId")
     fun getCommentCountByUserId(userId: String): Int
+    
     @Query("DELETE FROM comments")
     fun deleteAllComments()
 }
