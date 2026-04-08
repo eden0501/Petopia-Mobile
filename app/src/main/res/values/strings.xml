@@ -93,4 +93,26 @@
     <string name="delete_message">This action cannot be undone. This will permanently delete your account and remove your data from our servers.</string>
     <string name="delete_keep">No, keep my account</string>
     <string name="delete_confirm">Yes, delete account</string>
+
+    <string name="create_new_post">Create New Post</string>
+    <string name="create_post_subtitle">Share rescue alerts, care tips, or equipment donations with the community</string>
+    <string name="tab_rescue">Rescue</string>
+    <string name="tab_care_tips">Care Tips</string>
+    <string name="tab_supplies">Supplies</string>
+    <string name="rescue_alert_description">Report urgent animal distress situations that need immediate community help</string>
+    <string name="title_required">Title *</string>
+    <string name="description_required">Description *</string>
+    <string name="post_image_optional">Post Image (optional)</string>
+    <string name="click_to_upload">Click to upload photo</string>
+    <string name="upload_formats">PNG, JPG up to 10MB</string>
+    <string name="hashtags_optional">Hashtags (optional)</string>
+    <string name="hashtags_hint_text">Separate hashtags with spaces</string>
+    <string name="enter_title_hint">Enter post title…</string>
+    <string name="provide_details_hint">Provide details…</string>
+    <string name="hashtags_placeholder">#rescue #urgent #help</string>
+    <string name="create_post_button">Create Post</string>
+    <string name="unique_name_hint">Unique name</string>
+    <string name="email_address_label">Email Address</string>
+    <string name="email_password_required">Email and password are required</string>
+    <string name="auth_failed_default">Authentication failed</string>
 </resources>

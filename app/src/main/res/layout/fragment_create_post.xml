@@ -32,7 +32,7 @@
                         android:id="@+id/textTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Create New Post"
+                        android:text="@string/create_new_post"
                         android:textColor="@color/gray_900"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -53,12 +53,11 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/textTitle"
                         android:layout_marginTop="8dp"
-                        android:text="Share rescue alerts, care tips, or equipment donations with the community"
+                        android:text="@string/create_post_subtitle"
                         android:textColor="@color/gray_400"
                         android:textSize="14sp" />
                 </RelativeLayout>
 
-                <!-- Tabs -->
                 <LinearLayout
                     android:id="@+id/layoutTabs"
                     android:layout_width="match_parent"
@@ -89,7 +88,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="Rescue"
+                            android:text="@string/tab_rescue"
                             android:textColor="@color/gray_900"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -115,7 +114,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="Care Tips"
+                            android:text="@string/tab_care_tips"
                             android:textColor="@color/gray_900"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -140,13 +139,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="Supplies"
+                            android:text="@string/tab_supplies"
                             android:textColor="@color/gray_900"
                             android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Alert Box -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardAlertBox"
                     android:layout_width="match_parent"
@@ -163,17 +161,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="16dp"
-                        android:text="Report urgent animal distress situations that need immediate community help"
+                        android:text="@string/rescue_alert_description"
                         android:textColor="@color/rescue_red"
                         android:textSize="14sp" />
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Form Fields -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="Title *"
+                    android:text="@string/title_required"
                     android:textColor="@color/gray_900"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -184,7 +181,7 @@
                     android:layout_height="48dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_input_field"
-                    android:hint="Enter post title..."
+                    android:hint="@string/enter_title_hint"
                     android:inputType="textCapSentences"
                     android:paddingHorizontal="12dp"
                     android:textColor="@color/gray_900"
@@ -195,7 +192,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Description *"
+                    android:text="@string/description_required"
                     android:textColor="@color/gray_900"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -207,7 +204,7 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_input_field"
                     android:gravity="top"
-                    android:hint="Provide details..."
+                    android:hint="@string/provide_details_hint"
                     android:inputType="textMultiLine"
                     android:minLines="3"
                     android:padding="12dp"
@@ -219,7 +216,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Post Image (optional)"
+                    android:text="@string/post_image_optional"
                     android:textColor="@color/gray_900"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -245,7 +242,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Click to upload photo"
+                        android:text="@string/click_to_upload"
                         android:textColor="@color/gray_900"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -254,7 +251,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="PNG, JPG, GIF, WEBP, BMP up to 10MB"
+                        android:text="@string/upload_formats"
                         android:textColor="@color/gray_400"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -271,7 +268,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Hashtags (optional)"
+                    android:text="@string/hashtags_optional"
                     android:textColor="@color/gray_900"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -288,7 +285,7 @@
                     android:layout_height="48dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/bg_input_field"
-                    android:hint="#rescue #urgent #help"
+                    android:hint="@string/hashtags_placeholder"
                     android:inputType="text"
                     android:paddingHorizontal="12dp"
                     android:textColor="@color/gray_900"
@@ -299,11 +296,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Separate hashtags with spaces"
+                    android:text="@string/hashtags_hint_text"
                     android:textColor="@color/gray_400"
                     android:textSize="11sp" />
 
-                <!-- Action Buttons -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -317,7 +313,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="12dp"
-                        android:text="Cancel"
+                        android:text="@string/cancel"
                         android:textAllCaps="false"
                         android:textColor="@color/petopia_orange"
                         app:cornerRadius="8dp"
@@ -328,7 +324,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/petopia_orange"
-                        android:text="Create Post"
+                        android:text="@string/create_post_button"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         app:cornerRadius="8dp" />

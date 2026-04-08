@@ -91,7 +91,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             val password = etPass.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(context, "Email and password are required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.email_password_required), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -102,7 +102,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             } else {
                 val username = etUser.text.toString().trim()
                 if (username.isEmpty()) {
-                    Toast.makeText(context, "Username is required", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.username_required), Toast.LENGTH_SHORT).show()
                     btnSubmit.isEnabled = true
                     return@setOnClickListener
                 }
@@ -123,7 +123,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 if (it.isSuccess) {
                     findNavController().navigate(R.id.action_auth_to_home)
                 } else {
-                    val errorMsg = it.exceptionOrNull()?.message ?: "Authentication failed"
+                    val errorMsg = it.exceptionOrNull()?.message ?: getString(R.string.auth_failed_default)
                     Toast.makeText(context, errorMsg, Toast.LENGTH_LONG).show()
                 }
             }
