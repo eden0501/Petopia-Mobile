@@ -23,36 +23,30 @@ class HomeViewModel(
     private val _isLoading = MutableLiveData(true)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private var hasLoadedOnce = false
-
     init {
         loadPosts()
     }
 
     fun loadPosts() {
         viewModelScope.launch {
-            val isFirstLoad = !hasLoadedOnce
-            if (isFirstLoad) {
+            val needsFullSync = !PostRepository.hasCompletedFullSync
+
+            if (needsFullSync) {
                 _isLoading.value = true
-            }
-
-            val userId = userRepository.getCurrentUserId()
-
-            if (isFirstLoad) {
-                // Full sync on first load
                 repository.refreshAllPosts()
             } else {
-                // Show local data immediately, then sync in background
+                // Show local data immediately
+                val userId = userRepository.getCurrentUserId()
                 val list = repository.getAllPostsWithPreviews(userId)
                 _posts.value = list
+                // Background incremental sync
                 repository.refreshPostsIncremental()
             }
 
+            val userId = userRepository.getCurrentUserId()
             val refreshedList = repository.getAllPostsWithPreviews(userId)
             _posts.value = refreshedList
-
             _isLoading.value = false
-            hasLoadedOnce = true
         }
     }
 
