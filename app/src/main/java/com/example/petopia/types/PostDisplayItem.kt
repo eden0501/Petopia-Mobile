@@ -11,6 +11,7 @@ data class CommentPreview(
 data class PostDisplayItem(
     val post: Post,
     val authorName: String,
+    val authorProfileImageUrl: String? = null,
     val commentCount: Int,
     val previewComments: List<CommentPreview>,
     val isLiked: Boolean = false,

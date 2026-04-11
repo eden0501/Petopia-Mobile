@@ -3,13 +3,18 @@ package com.example.petopia.ui.profile
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.graphics.Color
+import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -18,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.petopia.R
 import com.example.petopia.databinding.FragmentEditProfileBinding
+import com.squareup.picasso.Picasso
 import java.util.Calendar
 
 class EditProfileFragment : Fragment() {
@@ -34,6 +40,21 @@ class EditProfileFragment : Fragment() {
     private var originalUsername = ""
     private var originalPetCount = ""
     private var originalOwnerSince = ""
+
+    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            val bitmap = if (Build.VERSION.SDK_INT < 28) {
+                @Suppress("DEPRECATION")
+                MediaStore.Images.Media.getBitmap(requireContext().contentResolver, it)
+            } else {
+                val source = ImageDecoder.createSource(requireContext().contentResolver, it)
+                ImageDecoder.decodeBitmap(source)
+            }
+            viewModel.setProfileImageBitmap(bitmap)
+            binding.ivProfilePicture.setImageBitmap(bitmap)
+            updateSaveButtonState()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,6 +103,10 @@ class EditProfileFragment : Fragment() {
         binding.etUsername.addTextChangedListener { updateSaveButtonState() }
         binding.etPetCount.addTextChangedListener { updateSaveButtonState() }
 
+        binding.ivProfilePicture.setOnClickListener {
+            pickImage.launch("image/*")
+        }
+
         binding.etOwnerSince.setOnClickListener {
             val calendar = Calendar.getInstance()
             val existingDate = binding.etOwnerSince.text.toString()
@@ -121,7 +146,7 @@ class EditProfileFragment : Fragment() {
             }
             val petsCount = binding.etPetCount.text.toString().toIntOrNull() ?: 0
             val ownerSince = binding.etOwnerSince.text.toString().ifBlank { null }
-            viewModel.saveProfile(username, petsCount, ownerSince)
+            viewModel.saveProfile(username, petsCount, ownerSince, requireContext())
         }
 
         binding.btnDeleteAccount.setOnClickListener {
@@ -132,7 +157,8 @@ class EditProfileFragment : Fragment() {
     private fun hasChanges(): Boolean {
         return binding.etUsername.text.toString() != originalUsername ||
                 binding.etPetCount.text.toString() != originalPetCount ||
-                binding.etOwnerSince.text.toString() != originalOwnerSince
+                binding.etOwnerSince.text.toString() != originalOwnerSince ||
+                viewModel.hasImageChanged()
     }
 
     private fun updateSaveButtonState() {
@@ -190,6 +216,14 @@ class EditProfileFragment : Fragment() {
                 binding.etUsername.setText(it.username)
                 binding.etPetCount.setText(it.petsCount.toString())
                 binding.etOwnerSince.setText(it.petOwnerSince ?: "")
+
+                if (!it.profileImageUrl.isNullOrEmpty()) {
+                    Picasso.get()
+                        .load(it.profileImageUrl)
+                        .placeholder(R.drawable.bg_stub_avatar)
+                        .error(R.drawable.bg_stub_avatar)
+                        .into(binding.ivProfilePicture)
+                }
 
                 updateSaveButtonState()
             }
