@@ -40,7 +40,7 @@ class PostViewHolder(
         currentItem = item
         val post = item.post
 
-        binding.textAuthorName.text = post.authorName
+        binding.textAuthorName.text = item.authorName
         binding.textTitle.text = post.title
         binding.textDescription.text = post.content
         binding.textHashtags.text = post.hashtags.joinToString(" ") { if (it.startsWith("#")) it else "#$it" }
