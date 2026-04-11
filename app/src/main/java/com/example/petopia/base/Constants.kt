@@ -14,6 +14,7 @@ object Constants {
     const val POSTS_COLLECTION = "posts"
     const val COMMENTS_COLLECTION = "comments"
     const val USERS_COLLECTION = "users"
+    const val POSTS_PER_FACT = 3
     
     object SharedPrefs {
         const val PREFS_NAME = "PETOPIA_PREFS"

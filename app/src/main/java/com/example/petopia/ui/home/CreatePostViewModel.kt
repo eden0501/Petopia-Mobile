@@ -35,7 +35,6 @@ class CreatePostViewModel(
     val imageUrl: LiveData<String?> = _imageUrl
 
     private val _hashtags = MutableLiveData<String>("")
-    val hashtags: LiveData<String> = _hashtags
 
     private val _postCreated = MutableLiveData<Boolean>()
     val postCreated: LiveData<Boolean> = _postCreated
@@ -93,11 +92,9 @@ class CreatePostViewModel(
         
         if (hasError) return
 
-        // Ensure each hashtag is prefixed with '#'
         val currentHashtags = _hashtags.value
             ?.split(Regex("\\s+"))
             ?.filter { it.isNotBlank() }
-            ?.map { if (it.startsWith("#")) it else "#$it" }
             ?: emptyList()
             
         _isUploading.value = true

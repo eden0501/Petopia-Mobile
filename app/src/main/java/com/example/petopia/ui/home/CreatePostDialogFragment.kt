@@ -195,7 +195,7 @@ class CreatePostDialogFragment : DialogFragment() {
                 binding.textRescueTab.setTextColor(textColorActive)
                 binding.cardAlertBox.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.rescue_bg))
                 binding.cardAlertBox.strokeColor = ContextCompat.getColor(requireContext(), R.color.rescue_border)
-                binding.textAlertMessage.text = "Report urgent animal distress situations that need immediate community help"
+                binding.textAlertMessage.text = getString(R.string.rescue_alert_message)
                 binding.textAlertMessage.setTextColor(ContextCompat.getColor(requireContext(), R.color.rescue_red))
             }
             PostType.KNOWLEDGE -> {
@@ -203,7 +203,7 @@ class CreatePostDialogFragment : DialogFragment() {
                 binding.textCareTab.setTextColor(textColorActive)
                 binding.cardAlertBox.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.care_bg))
                 binding.cardAlertBox.strokeColor = ContextCompat.getColor(requireContext(), R.color.care_border)
-                binding.textAlertMessage.text = "Share your expertise and knowledge to help others care for their pets"
+                binding.textAlertMessage.text = getString(R.string.care_tip_alert_message)
                 binding.textAlertMessage.setTextColor(ContextCompat.getColor(requireContext(), R.color.care_blue))
             }
             PostType.SUPPLIES -> {
@@ -211,7 +211,7 @@ class CreatePostDialogFragment : DialogFragment() {
                 binding.textSuppliesTab.setTextColor(textColorActive)
                 binding.cardAlertBox.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.supplies_bg))
                 binding.cardAlertBox.strokeColor = ContextCompat.getColor(requireContext(), R.color.supplies_border)
-                binding.textAlertMessage.text = "Offer pet equipment and supplies for donation to help animals in need"
+                binding.textAlertMessage.text = getString(R.string.equipment_donation_alert_message)
                 binding.textAlertMessage.setTextColor(ContextCompat.getColor(requireContext(), R.color.supplies_green))
             }
         }
@@ -221,21 +221,9 @@ class CreatePostDialogFragment : DialogFragment() {
 
     private fun applyChipStyles(type: PostType) {
         val chipGroup = binding.chipGroupHashtags
-        val bgColor = when (type) {
-            PostType.RESCUE -> R.color.rescue_bg
-            PostType.KNOWLEDGE -> R.color.care_bg
-            PostType.SUPPLIES -> R.color.supplies_bg
-        }
-        val strokeColor = when (type) {
-            PostType.RESCUE -> R.color.rescue_border
-            PostType.KNOWLEDGE -> R.color.care_border
-            PostType.SUPPLIES -> R.color.supplies_border
-        }
-        val textColor = when (type) {
-            PostType.RESCUE -> R.color.rescue_red
-            PostType.KNOWLEDGE -> R.color.care_blue
-            PostType.SUPPLIES -> R.color.supplies_green
-        }
+        val bgColor = R.color.bg_orange
+        val strokeColor = R.color.petopia_orange
+        val textColor = R.color.petopia_orange
 
         val bgStateList = ContextCompat.getColorStateList(requireContext(), bgColor)
         val strokeStateList = ContextCompat.getColorStateList(requireContext(), strokeColor)
@@ -252,27 +240,16 @@ class CreatePostDialogFragment : DialogFragment() {
     }
 
     private fun addHashtagChip(word: String) {
-        val finalWord = if (word.startsWith("#")) word else "#$word"
+        val displayWord = if (word.startsWith("#")) word else "#$word"
         val chip = com.google.android.material.chip.Chip(requireContext())
-        chip.text = finalWord
+        chip.text = displayWord
+        chip.tag = word
         chip.isCloseIconVisible = true
 
         val currentType = viewModel.postType.value ?: PostType.RESCUE
-        val textColor = when (currentType) {
-            PostType.RESCUE -> R.color.rescue_red
-            PostType.KNOWLEDGE -> R.color.care_blue
-            PostType.SUPPLIES -> R.color.supplies_green
-        }
-        val bgColor = when (currentType) {
-            PostType.RESCUE -> R.color.rescue_bg
-            PostType.KNOWLEDGE -> R.color.care_bg
-            PostType.SUPPLIES -> R.color.supplies_bg
-        }
-        val strokeColor = when (currentType) {
-            PostType.RESCUE -> R.color.rescue_border
-            PostType.KNOWLEDGE -> R.color.care_border
-            PostType.SUPPLIES -> R.color.supplies_border
-        }
+        val textColor = R.color.petopia_orange
+        val bgColor = R.color.bg_orange
+        val strokeColor = R.color.petopia_orange
 
         val textColorStateList = ContextCompat.getColorStateList(requireContext(), textColor)
         chip.chipBackgroundColor = ContextCompat.getColorStateList(requireContext(), bgColor)
@@ -294,7 +271,8 @@ class CreatePostDialogFragment : DialogFragment() {
         val hashtagsBuilder = StringBuilder()
         for (i in 0 until binding.chipGroupHashtags.childCount) {
             val chip = binding.chipGroupHashtags.getChildAt(i) as com.google.android.material.chip.Chip
-            hashtagsBuilder.append(chip.text.toString()).append(" ")
+            val rawValue = (chip.tag as? String) ?: chip.text.toString()
+            hashtagsBuilder.append(rawValue).append(" ")
         }
         viewModel.setHashtags(hashtagsBuilder.toString().trim())
     }

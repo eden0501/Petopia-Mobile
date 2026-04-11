@@ -43,7 +43,7 @@ class PostViewHolder(
         binding.textAuthorName.text = post.authorName
         binding.textTitle.text = post.title
         binding.textDescription.text = post.content
-        binding.textHashtags.text = post.hashtags.joinToString(" ")
+        binding.textHashtags.text = post.hashtags.joinToString(" ") { if (it.startsWith("#")) it else "#$it" }
         binding.textTimestamp.text = android.text.format.DateUtils.getRelativeTimeSpanString(
             post.createdAt,
             System.currentTimeMillis(),

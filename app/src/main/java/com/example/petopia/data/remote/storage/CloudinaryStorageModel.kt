@@ -16,9 +16,9 @@ class CloudinaryStorageModel {
         fun initCloudinary(context: Context) {
             if (isInitialized) return
             val config = mapOf(
-                "cloud_name" to "dptpnlxtw",
-                "api_key" to "425322147648144",
-                "api_secret" to "hOejfOMOK0zX8E9ihJjPtNG0n9Y"
+                "cloud_name" to com.example.petopia.BuildConfig.CLOUDINARY_CLOUD_NAME,
+                "api_key" to com.example.petopia.BuildConfig.CLOUDINARY_API_KEY,
+                "api_secret" to com.example.petopia.BuildConfig.CLOUDINARY_API_SECRET
             )
             MediaManager.init(context.applicationContext, config)
             MediaManager.get().globalUploadPolicy = GlobalUploadPolicy.Builder()
@@ -51,7 +51,7 @@ class CloudinaryStorageModel {
     }
 
     private fun bitmapToFile(image: Bitmap, context: Context): File {
-        val file = File(context.cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
+        val file = File(context.cacheDir, "${System.currentTimeMillis()}.jpg")
         file.outputStream().use {
             image.compress(Bitmap.CompressFormat.JPEG, 100, it)
             it.flush()

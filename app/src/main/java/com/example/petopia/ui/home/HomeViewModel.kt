@@ -1,6 +1,8 @@
 package com.example.petopia.ui.home
 
 import androidx.lifecycle.*
+import com.example.petopia.R
+import com.example.petopia.base.Constants
 import com.example.petopia.types.PostDisplayItem
 import com.example.petopia.types.HomeItem
 import com.example.petopia.data.networking.Networking
@@ -12,9 +14,9 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val repository: PostRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val defaultFact: String
 ) : ViewModel() {
-
     private val _posts = MutableLiveData<List<PostDisplayItem>>(emptyList())
 
     private val _selectedFilter = MutableLiveData(PostFilter.ALL)
@@ -63,7 +65,7 @@ class HomeViewModel(
         val result = mutableListOf<HomeItem>()
         filtered.forEachIndexed { index, post ->
             result.add(HomeItem.PostItem(post))
-            if ((index + 1) % POSTS_PER_FACT == 0) {
+            if ((index + 1) % Constants.POSTS_PER_FACT == 0) {
                 val factId = "fact_${index + 1}"
                 val fact = loadedFacts[factId] ?: HomeItem.FactItem("Loading fact...", true, isLoading = true, factId)
                 result.add(fact)
@@ -85,12 +87,12 @@ class HomeViewModel(
                     Networking.catService.getCatFact().fact
                 }
                 
-                val fact = HomeItem.FactItem(factContent ?: DEFAULT_FACT, isDog, isLoading = false, factId)
+                val fact = HomeItem.FactItem(factContent ?: defaultFact, isDog, isLoading = false, factId)
                 loadedFacts[factId] = fact
                 _factUpdatedTrigger.value = Unit
             } catch (e: Exception) {
                 e.printStackTrace()
-                val fallbackFact = HomeItem.FactItem(DEFAULT_FACT, true, isLoading = false, factId)
+                val fallbackFact = HomeItem.FactItem(defaultFact, true, isLoading = false, factId)
                 loadedFacts[factId] = fallbackFact
                 _factUpdatedTrigger.value = Unit
             } finally {
@@ -145,12 +147,13 @@ class HomeViewModel(
     fun addComment(postId: String, text: String) {
         viewModelScope.launch {
             val user = userRepository.getCurrentUser() ?: return@launch
-            
+
             repository.addComment(postId, user.id, user.username, text)
-            
+
             _posts.value = _posts.value?.map { item ->
                 if (item.post.id == postId) {
-                    val newCommentPreview = CommentPreview(user.username, text, System.currentTimeMillis())
+                    val newCommentPreview =
+                        CommentPreview(user.username, text, System.currentTimeMillis())
                     val updatedPreviews = item.previewComments.toMutableList()
                     updatedPreviews.add(0, newCommentPreview)
                     item.copy(
@@ -162,11 +165,6 @@ class HomeViewModel(
                 }
             }
         }
-    }
-
-    companion object {
-        const val POSTS_PER_FACT = 3
-        const val DEFAULT_FACT = "Did you know? Pets bring joy and companionship to millions of people worldwide!"
     }
 }
 

@@ -24,6 +24,6 @@
     <color name="gray_400">#6B7280</color>
     <color name="gray_600">#4B5563</color>
     <color name="gray_900">#111827</color>
-    <color name="fact_bg">#FFF9ED</color>
+    <color name="bg_orange">#FFF9ED</color>
     <color name="fact_orange">#F57C00</color>
 </resources>

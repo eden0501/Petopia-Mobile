@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="email_label">Email Address</string>
     <string name="email_hint">email@example.com</string>
@@ -15,7 +16,11 @@
     <string name="sponsored">Sponsored</string>
     <string name="fun_dog_fact">Fun Dog Fact</string>
     <string name="fun_cat_fact">Fun Cat Fact</string>
+    <string name="default_fact">Did you know? Pets bring joy and companionship to millions of people worldwide!</string>
 
+    <string name="rescue_alert_message">Report urgent animal distress situations that need immediate community help</string>
+    <string name="care_tip_alert_message">Share your expertise and knowledge to help others care for their pets</string>
+    <string name="equipment_donation_alert_message">Offer pet equipment and supplies for donation to help animals in need</string>
     <string name="rescue_alert">Rescue Alert</string>
     <string name="care_tip">Care Tips</string>
     <string name="equipment_donation">Equipment Donations</string>

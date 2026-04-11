@@ -68,7 +68,6 @@ object FirebaseModel {
         }
     }
 
-    // Soft delete approach
     suspend fun deletePost(post: Post) {
         try {
             db.collection(Constants.POSTS_COLLECTION)
