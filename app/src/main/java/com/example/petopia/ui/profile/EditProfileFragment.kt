@@ -31,7 +31,6 @@ class EditProfileFragment : Fragment() {
         EditProfileViewModelFactory(requireContext())
     }
 
-    // Track original values to detect changes
     private var originalUsername = ""
     private var originalPetCount = ""
     private var originalOwnerSince = ""
@@ -80,7 +79,6 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        // Track text changes to enable/disable save button
         binding.etUsername.addTextChangedListener { updateSaveButtonState() }
         binding.etPetCount.addTextChangedListener { updateSaveButtonState() }
 
@@ -222,7 +220,6 @@ class EditProfileFragment : Fragment() {
                     try {
                         findNavController().navigate(R.id.action_editProfile_to_auth)
                     } catch (_: Exception) {
-                        // Fragment may already be detached
                     }
                 } else {
                     Toast.makeText(context, it.exceptionOrNull()?.message ?: getString(R.string.generic_error), Toast.LENGTH_SHORT).show()

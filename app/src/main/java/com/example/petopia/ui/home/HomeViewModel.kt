@@ -25,7 +25,6 @@ class HomeViewModel(
     private val _isLoading = MutableLiveData(true)
     val isLoading: LiveData<Boolean> = _isLoading
 
-<<<<<<< HEAD
     private val _factUpdatedTrigger = MutableLiveData<Unit>()
 
     val filteredHomeItems: LiveData<List<HomeItem>> = MediatorLiveData<List<HomeItem>>().apply {

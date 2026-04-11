@@ -18,10 +18,8 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Check if user is logged in
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser != null) {
-            // User is signed in, skip AuthFragment and go straight to Home
             val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
             navGraph.setStartDestination(R.id.homeFragment)
             navController.graph = navGraph
