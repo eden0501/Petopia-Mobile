@@ -130,7 +130,6 @@ class CreatePostViewModel(
                 content = content,
                 imageUrl = imageUrl,
                 authorId = user.id,
-                authorName = user.username,
                 createdAt = System.currentTimeMillis(),
                 postType = type,
                 hashtags = hashtags,
