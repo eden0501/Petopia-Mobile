@@ -50,7 +50,7 @@ class PostRepository private constructor(context: Context) {
     suspend fun getAllPostsWithPreviews(currentUserId: String?): List<PostDisplayItem> = withContext(Dispatchers.IO) {
         val posts = postDao.getAllPosts()
         posts.map { post ->
-            val resolvedAuthorName = resolveAuthorName(post.authorId)
+            val author = resolveAuthor(post.authorId)
             val comments = commentDao.getCommentsByPostId(post.id)
             val previews = comments.map {
                 val commentAuthor = resolveAuthorName(it.authorId)
@@ -58,7 +58,8 @@ class PostRepository private constructor(context: Context) {
             }
             PostDisplayItem(
                 post = post,
-                authorName = resolvedAuthorName,
+                authorName = author?.username ?: "Unknown",
+                authorProfileImageUrl = author?.profileImageUrl,
                 commentCount = comments.size,
                 previewComments = previews,
                 isLiked = currentUserId != null && post.likes.contains(currentUserId),
@@ -154,7 +155,7 @@ class PostRepository private constructor(context: Context) {
     suspend fun getPostsByUser(userId: String, currentUserId: String?): List<PostDisplayItem> = withContext(Dispatchers.IO) {
         val posts = postDao.getPostsByUserId(userId)
         posts.map { post ->
-            val resolvedAuthorName = resolveAuthorName(post.authorId)
+            val author = resolveAuthor(post.authorId)
             val comments = commentDao.getCommentsByPostId(post.id)
             val previews = comments.map {
                 val commentAuthor = resolveAuthorName(it.authorId)
@@ -162,7 +163,8 @@ class PostRepository private constructor(context: Context) {
             }
             PostDisplayItem(
                 post = post,
-                authorName = resolvedAuthorName,
+                authorName = author?.username ?: "Unknown",
+                authorProfileImageUrl = author?.profileImageUrl,
                 commentCount = comments.size,
                 previewComments = previews,
                 isLiked = currentUserId != null && post.likes.contains(currentUserId),
@@ -190,20 +192,22 @@ class PostRepository private constructor(context: Context) {
         commentDao.getCommentCountByUserId(userId)
     }
 
-    private suspend fun resolveAuthorName(authorId: String): String {
+    private suspend fun resolveAuthor(authorId: String): com.example.petopia.data.model.User? {
         val localUser = userDao.getUserById(authorId)
-        if (localUser != null) return localUser.username
+        if (localUser != null) return localUser
 
         return try {
             val remoteUser = FirebaseAuthModel.getUser(authorId)
             if (remoteUser != null) {
                 userDao.registerUser(remoteUser)
-                remoteUser.username
-            } else {
-                "Unknown"
             }
+            remoteUser
         } catch (e: Exception) {
-            "Unknown"
+            null
         }
+    }
+
+    private suspend fun resolveAuthorName(authorId: String): String {
+        return resolveAuthor(authorId)?.username ?: "Unknown"
     }
 }

@@ -17,6 +17,7 @@ import com.example.petopia.R
 import com.example.petopia.databinding.FragmentProfileBinding
 import com.example.petopia.ui.home.PostAdapter
 import com.example.petopia.types.HomeItem
+import com.squareup.picasso.Picasso
 
 class ProfileFragment : Fragment() {
 
@@ -117,6 +118,14 @@ class ProfileFragment : Fragment() {
                     it.petOwnerSince ?: getString(R.string.n_a)
                 )
                 binding.tvPetsBadge.text = getString(R.string.pets_badge_format, it.petsCount)
+
+                if (!it.profileImageUrl.isNullOrEmpty()) {
+                    Picasso.get()
+                        .load(it.profileImageUrl)
+                        .placeholder(R.drawable.bg_stub_avatar)
+                        .error(R.drawable.bg_stub_avatar)
+                        .into(binding.ivProfilePicture)
+                }
             }
         }
 

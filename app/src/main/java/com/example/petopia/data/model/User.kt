@@ -8,7 +8,7 @@ data class User(
     @PrimaryKey val id: String = "",
     val email: String = "",
     val username: String = "",
-    val profileImageUrl: String? = null, // TODO: implement the profile image upload portion later
+    val profileImageUrl: String? = null,
     val petsCount: Int = 0,
     val petOwnerSince: String? = null
 )

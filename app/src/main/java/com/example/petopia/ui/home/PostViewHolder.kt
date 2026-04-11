@@ -99,6 +99,13 @@ class PostViewHolder(
         }
         
         binding.imageAuthor.setImageResource(R.drawable.bg_stub_avatar)
+        if (!item.authorProfileImageUrl.isNullOrEmpty()) {
+            Picasso.get()
+                .load(item.authorProfileImageUrl)
+                .placeholder(R.drawable.bg_stub_avatar)
+                .error(R.drawable.bg_stub_avatar)
+                .into(binding.imageAuthor)
+        }
         binding.imageCurrentUser.setImageResource(R.drawable.bg_stub_avatar)
 
         commentAdapter.submitList(item.previewComments)
