@@ -32,7 +32,6 @@ class PostRepository private constructor(context: Context) {
         @Volatile
         private var instance: PostRepository? = null
 
-        // Tracks whether a full sync has been done this session
         @Volatile
         var hasCompletedFullSync = false
             private set
@@ -69,7 +68,6 @@ class PostRepository private constructor(context: Context) {
     }
 
     suspend fun refreshAllPosts() = withContext(Dispatchers.IO) {
-        // Full sync: clear local and re-fetch everything from Firestore
         val posts = FirebaseModel.getAllPosts(0)
 
         postDao.deleteAllPosts()
@@ -89,7 +87,6 @@ class PostRepository private constructor(context: Context) {
     }
 
     suspend fun refreshPostsIncremental() = withContext(Dispatchers.IO) {
-        // Only fetch posts updated since last sync, no clearing
         val posts = FirebaseModel.getAllPosts(lastUpdatedPosts)
         var time = lastUpdatedPosts
         for (post in posts) {
@@ -165,7 +162,6 @@ class PostRepository private constructor(context: Context) {
         val remotePosts = FirebaseModel.getPostsByAuthor(userId)
         for (post in remotePosts) {
             postDao.insertPosts(post)
-            // Also sync comments for each post
             val remoteComments = FirebaseModel.getAllComments(post.id)
             for (comment in remoteComments) {
                 commentDao.insertComments(comment)
@@ -182,11 +178,9 @@ class PostRepository private constructor(context: Context) {
     }
 
     private suspend fun resolveAuthorName(authorId: String): String {
-        // Try local DB first
         val localUser = userDao.getUserById(authorId)
         if (localUser != null) return localUser.username
 
-        // Fallback to Firebase
         return try {
             val remoteUser = FirebaseAuthModel.getUser(authorId)
             if (remoteUser != null) {

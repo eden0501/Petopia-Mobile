@@ -35,11 +35,9 @@ class HomeViewModel(
                 _isLoading.value = true
                 repository.refreshAllPosts()
             } else {
-                // Show local data immediately
                 val userId = userRepository.getCurrentUserId()
                 val list = repository.getAllPostsWithPreviews(userId)
                 _posts.value = list
-                // Background incremental sync
                 repository.refreshPostsIncremental()
             }
 
@@ -93,15 +91,13 @@ class HomeViewModel(
         viewModelScope.launch {
             val user = userRepository.getCurrentUser() ?: return@launch
             
-            // 1. Update Room & Firestore
             repository.addComment(postId, user.id, text)
             
-            // 2. Update LiveData manually
             _posts.value = _posts.value?.map { item ->
                 if (item.post.id == postId) {
                     val newCommentPreview = CommentPreview(user.username, text, System.currentTimeMillis())
                     val updatedPreviews = item.previewComments.toMutableList()
-                    updatedPreviews.add(newCommentPreview) // Newest at bottom
+                    updatedPreviews.add(newCommentPreview)  
                     item.copy(
                         commentCount = item.commentCount + 1,
                         previewComments = updatedPreviews

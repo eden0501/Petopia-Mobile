@@ -63,9 +63,7 @@ class CreatePostDialogFragment : DialogFragment() {
             dismiss()
         }
         
-        // Mocking upload for now
         binding.layoutUpload.setOnClickListener {
-            // Stub for image selection
         }
     }
 
@@ -93,7 +91,6 @@ class CreatePostDialogFragment : DialogFragment() {
         val textColorActive = ContextCompat.getColor(requireContext(), R.color.gray_900)
         val textColorInactive = ContextCompat.getColor(requireContext(), R.color.gray_400)
 
-        // Reset all
         binding.tabRescue.background = inactiveBg
         binding.tabCareTips.background = inactiveBg
         binding.tabSupplies.background = inactiveBg

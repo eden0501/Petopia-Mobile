@@ -71,7 +71,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupFilterDropdown() {
-        // Accessing via binding.includeFilter
         val filterContainer = binding.includeFilter.filterDropdownContainer
         val filterText = binding.includeFilter.filterDropdown
 
@@ -147,14 +146,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupBottomNav() {
-        // Accessing views through the included layout binding
         binding.includeBottomNav.fabAddPost.setOnClickListener {
             findNavController().navigate(R.id.createPostDialogFragment)
         }
         
         binding.includeBottomNav.navHome.setOnClickListener {
             setActiveTab(isHome = true)
-            // Already on Home
         }
         
         binding.includeBottomNav.navProfile.setOnClickListener {

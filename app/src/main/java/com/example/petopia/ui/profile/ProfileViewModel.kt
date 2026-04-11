@@ -47,10 +47,8 @@ class ProfileViewModel(
 
             val userId = currentUser.id
 
-            // Load from local first
             loadUserData(userId)
 
-            // Fetch from remote then reload
             postRepository.refreshUserPosts(userId)
             loadUserData(userId)
 
