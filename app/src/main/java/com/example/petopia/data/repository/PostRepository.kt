@@ -2,10 +2,10 @@ package com.example.petopia.data.repository
 
 import android.content.Context
 import com.example.petopia.data.local.dao.AppLocalDB
-import com.example.petopia.data.model.CommentPreview
+import com.example.petopia.types.CommentPreview
+import com.example.petopia.types.PostDisplayItem
 import com.example.petopia.data.model.Comment
 import com.example.petopia.data.model.Post
-import com.example.petopia.data.model.PostDisplayItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.petopia.base.Constants
@@ -52,7 +52,11 @@ class PostRepository private constructor(context: Context) {
         val posts = FirebaseModel.getAllPosts(lastUpdated)
         var time = lastUpdated
         for (post in posts) {
-            postDao.insertPosts(post)
+            if (post.isDeleted) {
+                postDao.deletePost(post)
+            } else {
+                postDao.insertPosts(post)
+            }
             post.lastUpdated?.let { postLastUpdated ->
                 if (time < postLastUpdated) {
                     time = postLastUpdated
@@ -60,6 +64,11 @@ class PostRepository private constructor(context: Context) {
             }
         }
         lastUpdatedPosts = time
+    }
+
+    suspend fun deletePost(post: Post) = withContext(Dispatchers.IO) {
+        postDao.deletePost(post)
+        FirebaseModel.deletePost(post)
     }
 
     suspend fun insertPosts(posts: List<Post>) = withContext(Dispatchers.IO) {

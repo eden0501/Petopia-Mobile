@@ -67,6 +67,11 @@ class UserRepository(private val userDao: UserDao) {
         return getUser(userId)
     }
 
+    suspend fun updateUser(user: User) {
+        FirebaseAuthModel.addUser(user)
+        userDao.registerUser(user)
+    }
+
     fun logout() {
         FirebaseAuthModel.logout()
     }

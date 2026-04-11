@@ -2,14 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="error">#fa5a5a</color>
     <color name="petopia_orange">#FF8A65</color>
     <color name="auth_background">#FFFBF0</color>
-    <!-- check if necessary -->
     <color name="text_primary">#333333</color>
     <color name="text_secondary">#777777</color>
     <color name="button_primary">#FF6F43</color>
     <color name="tab_background">#F1F3F4</color>
-    <!-- check if necessary -->
     <color name="rescue_red">#DC2626</color>
     <color name="rescue_bg">#FEF2F2</color>
     <color name="rescue_border">#FEE2E2</color>
@@ -25,4 +24,6 @@
     <color name="gray_400">#6B7280</color>
     <color name="gray_600">#4B5563</color>
     <color name="gray_900">#111827</color>
+    <color name="bg_orange">#FFF9ED</color>
+    <color name="fact_orange">#F57C00</color>
 </resources>

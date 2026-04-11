@@ -104,19 +104,20 @@
             android:lineSpacingExtra="4dp"
             tools:text="Found a limping dog near Route 40. Appears to have injured leg. Need immediate help with transport to vet! Located near the gas station." />
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardPostImage"
             android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_height="320dp"
             android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
             app:strokeWidth="0dp"
-            android:backgroundTint="@android:color/transparent">
+            android:backgroundTint="@color/gray_200">
             <ImageView
                 android:id="@+id/imagePost"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:background="@drawable/bg_stub_post_image"
+                android:scaleType="fitCenter"
+                android:background="@color/gray_200"
                 android:contentDescription="@null"
                 tools:ignore="ContentDescription" />
         </com.google.android.material.card.MaterialCardView>
