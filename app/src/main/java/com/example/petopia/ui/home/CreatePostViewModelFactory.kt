@@ -3,21 +3,18 @@ package com.example.petopia.ui.home
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.petopia.R
 import com.example.petopia.data.local.dao.AppLocalDB
 import com.example.petopia.data.repository.PostRepository
 import com.example.petopia.data.repository.UserRepository
 
-@Suppress("UNCHECKED_CAST")
-class HomeViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+class CreatePostViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(CreatePostViewModel::class.java)) {
             val db = AppLocalDB.getDatabase(context)
-            val defaultFact = context.getString(R.string.default_fact)
-            return HomeViewModel(
+            @Suppress("UNCHECKED_CAST")
+            return CreatePostViewModel(
                 PostRepository.getInstance(context),
-                UserRepository(db.userDao(), db),
-                defaultFact
+                UserRepository(db.userDao())
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

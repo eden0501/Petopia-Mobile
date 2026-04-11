@@ -1,4 +1,4 @@
-package com.example.petopia.data.model
+package com.example.petopia.types
 
 import com.example.petopia.data.model.Post
 

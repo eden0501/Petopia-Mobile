@@ -2,10 +2,10 @@ package com.example.petopia.data.repository
 
 import android.content.Context
 import com.example.petopia.data.local.dao.AppLocalDB
-import com.example.petopia.data.model.CommentPreview
+import com.example.petopia.types.CommentPreview
+import com.example.petopia.types.PostDisplayItem
 import com.example.petopia.data.model.Comment
 import com.example.petopia.data.model.Post
-import com.example.petopia.data.model.PostDisplayItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.petopia.base.Constants
@@ -75,10 +75,14 @@ class PostRepository private constructor(context: Context) {
 
         var time = 0L
         for (post in posts) {
-            postDao.insertPosts(post)
-            val comments = FirebaseModel.getAllComments(post.id)
-            for (comment in comments) {
-                commentDao.insertComments(comment)
+            if (post.isDeleted) {
+                postDao.deletePost(post)
+            } else {
+                postDao.insertPosts(post)
+                val comments = FirebaseModel.getAllComments(post.id)
+                for (comment in comments) {
+                    commentDao.insertComments(comment)
+                }
             }
             post.lastUpdated?.let { if (time < it) time = it }
         }
@@ -90,14 +94,23 @@ class PostRepository private constructor(context: Context) {
         val posts = FirebaseModel.getAllPosts(lastUpdatedPosts)
         var time = lastUpdatedPosts
         for (post in posts) {
-            postDao.insertPosts(post)
-            val comments = FirebaseModel.getAllComments(post.id)
-            for (comment in comments) {
-                commentDao.insertComments(comment)
+            if (post.isDeleted) {
+                postDao.deletePost(post)
+            } else {
+                postDao.insertPosts(post)
+                val comments = FirebaseModel.getAllComments(post.id)
+                for (comment in comments) {
+                    commentDao.insertComments(comment)
+                }
             }
             post.lastUpdated?.let { if (time < it) time = it }
         }
         lastUpdatedPosts = time
+    }
+
+    suspend fun deletePost(post: Post) = withContext(Dispatchers.IO) {
+        postDao.deletePost(post)
+        FirebaseModel.deletePost(post)
     }
 
     suspend fun insertPosts(posts: List<Post>) = withContext(Dispatchers.IO) {

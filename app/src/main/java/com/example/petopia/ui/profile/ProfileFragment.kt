@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
 import com.example.petopia.databinding.FragmentProfileBinding
 import com.example.petopia.ui.home.PostAdapter
+import com.example.petopia.types.HomeItem
 
 class ProfileFragment : Fragment() {
 
@@ -120,7 +121,8 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.posts.observe(viewLifecycleOwner) { posts ->
-            postAdapter.submitList(posts)
+            val homeItems = posts.map { HomeItem.PostItem(it) }
+            postAdapter.submitList(homeItems)
             binding.tvEmptyPosts.visibility = if (posts.isEmpty()) View.VISIBLE else View.GONE
         }
 

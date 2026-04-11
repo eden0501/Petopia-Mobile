@@ -2,7 +2,7 @@ package com.example.petopia.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.petopia.data.model.PostType
+import com.example.petopia.types.PostType
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
@@ -18,7 +18,8 @@ data class Post(
     val postType: PostType,
     val hashtags: List<String> = emptyList(),
     var likes: List<String> = emptyList(),
-    var lastUpdated: Long? = null
+    var lastUpdated: Long? = null,
+    val isDeleted: Boolean = false
 ) {
     val likeCount: Int
         get() = likes.size
@@ -34,6 +35,7 @@ data class Post(
         const val HASHTAGS_KEY = "hashtags"
         const val LIKES_KEY = "likes"
         const val LAST_UPDATED_KEY = "lastUpdated"
+        const val IS_DELETED_KEY = "isDeleted"
 
         fun fromJson(json: Map<String, Any?>): Post {
             val timestamp = json[LAST_UPDATED_KEY] as? Timestamp
@@ -48,7 +50,8 @@ data class Post(
                 hashtags = (json[HASHTAGS_KEY] as? List<*>)?.filterIsInstance<String>()
                     ?: emptyList(),
                 likes = (json[LIKES_KEY] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
-                lastUpdated = timestamp?.toDate()?.time
+                lastUpdated = timestamp?.toDate()?.time,
+                isDeleted = json[IS_DELETED_KEY] as? Boolean ?: false
             )
         }
     }
@@ -64,6 +67,7 @@ data class Post(
             POST_TYPE_KEY to postType.name,
             HASHTAGS_KEY to hashtags,
             LIKES_KEY to likes,
-            LAST_UPDATED_KEY to FieldValue.serverTimestamp()
+            LAST_UPDATED_KEY to FieldValue.serverTimestamp(),
+            IS_DELETED_KEY to isDeleted
         )
 }

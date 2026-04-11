@@ -1,7 +1,7 @@
 package com.example.petopia.ui.profile
 
 import androidx.lifecycle.*
-import com.example.petopia.data.model.PostDisplayItem
+import com.example.petopia.types.PostDisplayItem
 import com.example.petopia.data.model.User
 import com.example.petopia.data.repository.PostRepository
 import com.example.petopia.data.repository.UserRepository

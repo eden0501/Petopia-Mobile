@@ -2,7 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="petopia_orange">#FF6F43</color>
+    <color name="error">#fa5a5a</color>
+    <color name="petopia_orange">#FF8A65</color>
     <color name="auth_background">#FFFBF0</color>
     <color name="text_primary">#333333</color>
     <color name="text_secondary">#777777</color>
@@ -35,4 +36,6 @@
     <color name="text_hint">#888888</color>
     <color name="overlay_white">#80FFFFFF</color>
     <color name="loading_subtitle">#DDFFFFFF</color>
+    <color name="bg_orange">#FFF9ED</color>
+    <color name="fact_orange">#F57C00</color>
 </resources>
