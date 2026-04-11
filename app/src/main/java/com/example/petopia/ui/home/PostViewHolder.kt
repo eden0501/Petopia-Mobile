@@ -112,6 +112,7 @@ class PostViewHolder(
 
         binding.layoutCommentSection.visibility = if (item.isCommentsVisible) View.VISIBLE else View.GONE
         binding.iconComment.setColorFilter(if (item.isCommentsVisible) petopiaOrange else defaultColor)
+        binding.textComments.setTextColor(if (item.isCommentsVisible) petopiaOrange else defaultColor)
 
         if (item.isLiked) {
             binding.iconLike.setImageResource(R.drawable.ic_heart_filled)
