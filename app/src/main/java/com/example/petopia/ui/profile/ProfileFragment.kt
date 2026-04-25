@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
+import com.example.petopia.base.Constants
 import com.example.petopia.databinding.FragmentProfileBinding
 import com.example.petopia.ui.home.PostAdapter
 import com.example.petopia.types.HomeItem
@@ -49,8 +50,8 @@ class ProfileFragment : Fragment() {
         setupBottomNav()
         observeViewModel()
 
-        parentFragmentManager.setFragmentResultListener("create_post_result", viewLifecycleOwner) { _, bundle ->
-            if (bundle.getBoolean("success")) {
+        parentFragmentManager.setFragmentResultListener(Constants.ResultKeys.CREATE_POST_RESULT, viewLifecycleOwner) { _, bundle ->
+            if (bundle.getBoolean(Constants.ResultKeys.SUCCESS)) {
                 viewModel.loadProfile()
             }
         }

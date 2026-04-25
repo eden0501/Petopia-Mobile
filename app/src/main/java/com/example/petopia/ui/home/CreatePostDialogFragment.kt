@@ -20,6 +20,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 
 import com.example.petopia.R
+import com.example.petopia.base.Constants
 import com.example.petopia.types.PostType
 import com.example.petopia.databinding.FragmentCreatePostBinding
 
@@ -151,8 +152,8 @@ class CreatePostDialogFragment : DialogFragment() {
         viewModel.postCreated.observe(viewLifecycleOwner) { created ->
             if (created) {
                 val bundle = Bundle()
-                bundle.putBoolean("success", true)
-                parentFragmentManager.setFragmentResult("create_post_result", bundle)
+                bundle.putBoolean(Constants.ResultKeys.SUCCESS, true)
+                parentFragmentManager.setFragmentResult(Constants.ResultKeys.CREATE_POST_RESULT, bundle)
                 dismiss()
             }
         }

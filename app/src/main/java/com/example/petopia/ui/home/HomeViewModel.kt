@@ -42,22 +42,27 @@ class HomeViewModel(
 
     fun loadPosts() {
         viewModelScope.launch {
-            val needsFullSync = !PostRepository.hasCompletedFullSync
+            try {
+                val needsFullSync = !repository.hasCompletedFullSync
 
-            if (needsFullSync) {
-                _isLoading.value = true
-                repository.refreshAllPosts()
-            } else {
+                if (needsFullSync) {
+                    _isLoading.value = true
+                    repository.refreshAllPosts()
+                } else {
+                    val userId = userRepository.getCurrentUserId()
+                    val list = repository.getAllPostsWithPreviews(userId)
+                    _posts.value = list
+                    repository.refreshPostsIncremental()
+                }
+
                 val userId = userRepository.getCurrentUserId()
-                val list = repository.getAllPostsWithPreviews(userId)
-                _posts.value = list
-                repository.refreshPostsIncremental()
+                val refreshedList = repository.getAllPostsWithPreviews(userId)
+                _posts.value = refreshedList
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
             }
-
-            val userId = userRepository.getCurrentUserId()
-            val refreshedList = repository.getAllPostsWithPreviews(userId)
-            _posts.value = refreshedList
-            _isLoading.value = false
         }
     }
 
@@ -184,4 +189,3 @@ class HomeViewModel(
         }
     }
 }
-

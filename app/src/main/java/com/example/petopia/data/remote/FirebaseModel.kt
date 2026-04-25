@@ -14,7 +14,7 @@ object FirebaseModel {
 
     suspend fun getAllPosts(since: Long): List<Post> {
         return try {
-            val result = db.collection(Constants.POSTS_COLLECTION)
+            val result = db.collection(Constants.Collections.POSTS)
                 .whereGreaterThanOrEqualTo(Post.LAST_UPDATED_KEY, Timestamp(since / 1000, 0))
                 .get()
                 .await()
@@ -27,7 +27,7 @@ object FirebaseModel {
 
     suspend fun addPost(post: Post) {
         try {
-            db.collection(Constants.POSTS_COLLECTION)
+            db.collection(Constants.Collections.POSTS)
                 .document(post.id)
                 .set(post.toJson)
                 .await()
@@ -38,7 +38,7 @@ object FirebaseModel {
     
     suspend fun getAllComments(postId: String): List<Comment> {
         return try {
-            val task = db.collection(Constants.COMMENTS_COLLECTION)
+            val task = db.collection(Constants.Collections.COMMENTS)
                 .whereEqualTo(Comment.POST_ID_KEY, postId)
                 .get()
                 .await()
@@ -62,7 +62,7 @@ object FirebaseModel {
 
     suspend fun addComment(comment: Comment) {
         try {
-            db.collection(Constants.COMMENTS_COLLECTION).document(comment.id)
+            db.collection(Constants.Collections.COMMENTS).document(comment.id)
                 .set(comment.toJson)
                 .await()
         } catch (e: Exception) {
@@ -72,7 +72,7 @@ object FirebaseModel {
 
     suspend fun deletePost(post: Post) {
         try {
-            db.collection(Constants.POSTS_COLLECTION)
+            db.collection(Constants.Collections.POSTS)
                 .document(post.id)
                 .update(Post.IS_DELETED_KEY, true, Post.LAST_UPDATED_KEY, FieldValue.serverTimestamp())
                 .await()
@@ -83,7 +83,7 @@ object FirebaseModel {
 
     suspend fun getPostsByAuthor(authorId: String): List<Post> {
         return try {
-            val result = db.collection(Constants.POSTS_COLLECTION)
+            val result = db.collection(Constants.Collections.POSTS)
                 .whereEqualTo(Post.AUTHOR_ID_KEY, authorId)
                 .get()
                 .await()

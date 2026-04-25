@@ -24,27 +24,23 @@ class PostRepository private constructor(context: Context) {
         get() = sharedPrefs.getLong(Constants.SharedPrefs.LAST_UPDATED_POSTS, 0)
         set(value) = sharedPrefs.edit { putLong(Constants.SharedPrefs.LAST_UPDATED_POSTS, value) }
 
+    var hasCompletedFullSync: Boolean
+        get() = sharedPrefs.getBoolean(Constants.SharedPrefs.HAS_COMPLETED_FULL_SYNC, false)
+        private set(value) = sharedPrefs.edit { putBoolean(Constants.SharedPrefs.HAS_COMPLETED_FULL_SYNC, value) }
+
     fun resetSyncTimestamp() {
         lastUpdatedPosts = 0
-        resetFullSync()
+        hasCompletedFullSync = false
     }
 
     companion object {
         @Volatile
         private var instance: PostRepository? = null
 
-        @Volatile
-        var hasCompletedFullSync = false
-            private set
-
         fun getInstance(context: Context): PostRepository {
             return instance ?: synchronized(this) {
                 instance ?: PostRepository(context).also { instance = it }
             }
-        }
-
-        fun resetFullSync() {
-            hasCompletedFullSync = false
         }
     }
 

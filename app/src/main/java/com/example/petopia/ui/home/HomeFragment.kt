@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
+import com.example.petopia.base.Constants
 import com.example.petopia.types.HomeItem
 import com.example.petopia.types.PostType
 import com.example.petopia.types.PostDisplayItem
@@ -70,8 +71,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-        parentFragmentManager.setFragmentResultListener("create_post_result", viewLifecycleOwner) { _, bundle ->
-            if (bundle.getBoolean("success")) {
+        parentFragmentManager.setFragmentResultListener(Constants.ResultKeys.CREATE_POST_RESULT, viewLifecycleOwner) { _, bundle ->
+            if (bundle.getBoolean(Constants.ResultKeys.SUCCESS)) {
                 shouldScrollToTop = true
                 viewModel.loadPosts()
             }
