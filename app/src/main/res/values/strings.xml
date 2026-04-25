@@ -127,4 +127,7 @@
     <string name="add_post">Add Post</string>
     <string name="email_example_hint">email@example.com</string>
     <string name="pet_count_zero_hint">0</string>
+    <string name="uploading">Uploading…</string>
+    <string name="title_required_error">Title is required</string>
+    <string name="description_required_error">Description is required</string>
 </resources>

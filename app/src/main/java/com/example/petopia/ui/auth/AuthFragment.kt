@@ -18,9 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.petopia.R
-import com.example.petopia.data.local.dao.AppLocalDB
 import com.example.petopia.data.model.User
-import com.example.petopia.data.repository.UserRepository
 import com.google.android.material.tabs.TabLayout
 import java.util.Calendar
 
@@ -45,9 +43,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val db = AppLocalDB.getDatabase(requireContext())
-        val repository = UserRepository(db.userDao(), db)
-        val factory = AuthViewModelFactory(repository)
+        val factory = AuthViewModelFactory(requireContext())
         viewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
         val authTabLayout = view.findViewById<TabLayout>(R.id.authTabLayout)

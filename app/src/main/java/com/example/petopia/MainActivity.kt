@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.google.firebase.auth.FirebaseAuth
+import com.example.petopia.data.remote.FirebaseAuthModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser != null) {
+        val isLoggedIn = FirebaseAuthModel.getCurrentUserId() != null
+        if (isLoggedIn) {
             val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
             navGraph.setStartDestination(R.id.homeFragment)
             navController.graph = navGraph

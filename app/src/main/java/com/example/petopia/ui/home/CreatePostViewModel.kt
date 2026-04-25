@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.petopia.R
 import com.example.petopia.data.remote.storage.StorageModel
 import com.example.petopia.types.PostType
 import com.example.petopia.data.model.Post
@@ -42,11 +43,11 @@ class CreatePostViewModel(
     private val _isUploading = MutableLiveData<Boolean>(false)
     val isUploading: LiveData<Boolean> = _isUploading
 
-    private val _titleError = MutableLiveData<String?>(null)
-    val titleError: LiveData<String?> = _titleError
+    private val _titleError = MutableLiveData<Int?>(null)
+    val titleError: LiveData<Int?> = _titleError
 
-    private val _contentError = MutableLiveData<String?>(null)
-    val contentError: LiveData<String?> = _contentError
+    private val _contentError = MutableLiveData<Int?>(null)
+    val contentError: LiveData<Int?> = _contentError
 
     fun setPostType(type: PostType) {
         _postType.value = type
@@ -82,11 +83,11 @@ class CreatePostViewModel(
         
         var hasError = false
         if (currentTitle.isBlank()) {
-            _titleError.value = "Title is required"
+            _titleError.value = R.string.title_required_error
             hasError = true
         }
         if (currentContent.isBlank()) {
-            _contentError.value = "Description is required"
+            _contentError.value = R.string.description_required_error
             hasError = true
         }
         

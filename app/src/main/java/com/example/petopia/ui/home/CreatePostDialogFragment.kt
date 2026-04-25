@@ -146,7 +146,7 @@ class CreatePostDialogFragment : DialogFragment() {
 
         viewModel.isUploading.observe(viewLifecycleOwner) { isUploading ->
             binding.btnCreatePost.isEnabled = !isUploading
-            binding.btnCreatePost.text = if (isUploading) "Uploading..." else "Create Post"
+            binding.btnCreatePost.text = if (isUploading) getString(R.string.uploading) else getString(R.string.create_post_button)
         }
 
         viewModel.postCreated.observe(viewLifecycleOwner) { created ->
@@ -158,11 +158,13 @@ class CreatePostDialogFragment : DialogFragment() {
             }
         }
 
-        viewModel.titleError.observe(viewLifecycleOwner) { error ->
+        viewModel.titleError.observe(viewLifecycleOwner) { errorResId ->
+            val error = errorResId?.let { getString(it) }
             binding.editTitle.setError(error, if (error != null) getTintedErrorIcon() else null)
         }
 
-        viewModel.contentError.observe(viewLifecycleOwner) { error ->
+        viewModel.contentError.observe(viewLifecycleOwner) { errorResId ->
+            val error = errorResId?.let { getString(it) }
             binding.editDescription.setError(error, if (error != null) getTintedErrorIcon() else null)
         }
     }
