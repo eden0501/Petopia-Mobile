@@ -48,6 +48,12 @@ class ProfileFragment : Fragment() {
         setupPostsFeed()
         setupBottomNav()
         observeViewModel()
+
+        parentFragmentManager.setFragmentResultListener("create_post_result", viewLifecycleOwner) { _, bundle ->
+            if (bundle.getBoolean("success")) {
+                viewModel.loadProfile()
+            }
+        }
     }
 
     override fun onResume() {

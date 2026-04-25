@@ -25,4 +25,7 @@ interface PostDao {
 
     @Query("SELECT COUNT(*) FROM posts WHERE likes LIKE '%' || :userId || '%'")
     fun getLikesGivenByUser(userId: String): Int
+
+    @Query("SELECT * FROM posts WHERE authorId = :userId")
+    fun getRawPostsByUserId(userId: String): List<Post>
 }

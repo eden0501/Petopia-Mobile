@@ -1,6 +1,7 @@
 package com.example.petopia.data.repository
 
 import android.content.Context
+import androidx.core.content.edit
 import com.example.petopia.data.local.dao.AppLocalDB
 import com.example.petopia.types.CommentPreview
 import com.example.petopia.types.PostDisplayItem
@@ -21,7 +22,7 @@ class PostRepository private constructor(context: Context) {
 
     var lastUpdatedPosts: Long
         get() = sharedPrefs.getLong(Constants.SharedPrefs.LAST_UPDATED_POSTS, 0)
-        set(value) = sharedPrefs.edit().putLong(Constants.SharedPrefs.LAST_UPDATED_POSTS, value).apply()
+        set(value) = sharedPrefs.edit { putLong(Constants.SharedPrefs.LAST_UPDATED_POSTS, value) }
 
     fun resetSyncTimestamp() {
         lastUpdatedPosts = 0
@@ -184,12 +185,13 @@ class PostRepository private constructor(context: Context) {
         }
     }
 
-    suspend fun getTotalLikesForUser(userId: String): Int = withContext(Dispatchers.IO) {
-        postDao.getLikesGivenByUser(userId)
+    suspend fun getTotalLikesReceived(userId: String): Int = withContext(Dispatchers.IO) {
+        val posts = postDao.getRawPostsByUserId(userId)
+        posts.sumOf { it.likes.size }
     }
 
-    suspend fun getTotalCommentsForUser(userId: String): Int = withContext(Dispatchers.IO) {
-        commentDao.getCommentCountByUserId(userId)
+    suspend fun getTotalCommentsReceived(userId: String): Int = withContext(Dispatchers.IO) {
+        commentDao.getReceivedCommentsCount(userId)
     }
 
     private suspend fun resolveAuthor(authorId: String): com.example.petopia.data.model.User? {
@@ -202,7 +204,7 @@ class PostRepository private constructor(context: Context) {
                 userDao.registerUser(remoteUser)
             }
             remoteUser
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

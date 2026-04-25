@@ -60,8 +60,8 @@ class ProfileViewModel(
         val userPosts = postRepository.getPostsByUser(userId, userId)
         _posts.value = userPosts
         _postCount.value = userPosts.size
-        _likesCount.value = postRepository.getTotalLikesForUser(userId)
-        _commentsCount.value = postRepository.getTotalCommentsForUser(userId)
+        _likesCount.value = postRepository.getTotalLikesReceived(userId)
+        _commentsCount.value = postRepository.getTotalCommentsReceived(userId)
     }
 
     fun toggleLike(postId: String) {
