@@ -63,7 +63,7 @@
                         android:layout_height="72dp"
                         android:background="@drawable/bg_stub_avatar"
                         android:scaleType="centerCrop"
-                        android:contentDescription="Profile picture"
+                        android:contentDescription="@string/profile_picture"
                         app:shapeAppearanceOverlay="@style/CircleImage"
                         app:strokeColor="@color/white"
                         app:strokeWidth="2dp" />
@@ -79,7 +79,7 @@
                             android:layout_height="14dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_camera"
-                            android:contentDescription="Change photo" />
+                            android:contentDescription="@string/change_photo" />
                     </FrameLayout>
                 </FrameLayout>
 

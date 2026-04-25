@@ -103,7 +103,7 @@
         android:id="@+id/fabAddPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Add Post"
+        android:contentDescription="@string/add_post"
         android:elevation="16dp"
         android:translationZ="16dp"
         android:translationY="12dp"

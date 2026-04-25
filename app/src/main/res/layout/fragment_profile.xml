@@ -52,7 +52,7 @@
                         android:layout_height="80dp"
                         android:background="@drawable/bg_stub_avatar"
                         android:scaleType="centerCrop"
-                        android:contentDescription="Profile picture"
+                        android:contentDescription="@string/profile_picture"
                         app:shapeAppearanceOverlay="@style/CircleImage"
                         app:strokeColor="@color/white"
                         app:strokeWidth="3dp" />
@@ -97,7 +97,7 @@
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
                                 android:src="@drawable/ic_paw_no_bg"
-                                android:contentDescription="Pets" />
+                                android:contentDescription="@string/pets" />
 
                             <TextView
                                 android:id="@+id/tvPetsBadge"

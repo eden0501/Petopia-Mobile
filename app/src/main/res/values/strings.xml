@@ -123,4 +123,8 @@
     <string name="pets_icon">Pets icon</string>
     <string name="action_settings">Settings</string>
     <string name="action_logout">Logout</string>
+    <string name="pets">Pets</string>
+    <string name="add_post">Add Post</string>
+    <string name="email_example_hint">email@example.com</string>
+    <string name="pet_count_zero_hint">0</string>
 </resources>

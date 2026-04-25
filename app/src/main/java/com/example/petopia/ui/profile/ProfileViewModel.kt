@@ -37,22 +37,24 @@ class ProfileViewModel(
     fun loadProfile() {
         viewModelScope.launch {
             _isLoading.value = true
+            try {
+                val currentUser = userRepository.getCurrentUser()
+                if (currentUser == null) {
+                    return@launch
+                }
+                _user.value = currentUser
 
-            val currentUser = userRepository.getCurrentUser()
-            if (currentUser == null) {
+                val userId = currentUser.id
+
+                loadUserData(userId)
+
+                postRepository.refreshUserPosts(userId)
+                loadUserData(userId)
+            } catch (e: Exception) {
+                // Error during profile load — UI will stop loading
+            } finally {
                 _isLoading.value = false
-                return@launch
             }
-            _user.value = currentUser
-
-            val userId = currentUser.id
-
-            loadUserData(userId)
-
-            postRepository.refreshUserPosts(userId)
-            loadUserData(userId)
-
-            _isLoading.value = false
         }
     }
 

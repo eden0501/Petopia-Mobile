@@ -6,7 +6,7 @@
             <stroke
                 android:width="2dp"
                 android:color="@color/care_blue" />
-            <solid android:color="#1A2563EB" />
+            <solid android:color="@color/care_blue_10" />
         </shape>
     </item>
     <item android:state_focused="true">
@@ -15,7 +15,7 @@
             <stroke
                 android:width="2dp"
                 android:color="@color/care_blue" />
-            <solid android:color="#1A2563EB" />
+            <solid android:color="@color/care_blue_10" />
         </shape>
     </item>
     <item>

@@ -1,7 +1,6 @@
 package com.example.petopia.data.repository
 
 import com.example.petopia.data.local.dao.UserDao
-import com.example.petopia.data.local.dao.AppLocalDB
 import com.example.petopia.data.local.dao.AppLocalDbRepository
 import com.example.petopia.data.model.User
 import com.example.petopia.data.remote.FirebaseAuthModel

@@ -38,4 +38,22 @@
     <color name="text_hint">#888888</color>
     <color name="overlay_white">#80FFFFFF</color>
     <color name="loading_subtitle">#DDFFFFFF</color>
+    <color name="input_border">#DFE6E9</color>
+    <color name="gray_500">#757575</color>
+    <color name="petopia_orange_dark">#ea580c</color>
+    <color name="transparent">#00000000</color>
+    <color name="warning_orange">#FF8A65</color>
+    <color name="care_blue_10">#1A2563EB</color>
+    <color name="tag_rescue_bg">#FFEBEE</color>
+    <color name="tag_rescue_border">#FFCDD2</color>
+    <color name="tag_care_bg">#E3F2FD</color>
+    <color name="tag_care_border">#BBDEFB</color>
+    <color name="tag_equipment_bg">#E0F2F1</color>
+    <color name="tag_equipment_border">#B2DFDB</color>
+    <color name="stub_gray">#E0E0E0</color>
+    <color name="stub_light_gray">#EEEEEE</color>
+    <color name="rescue_alert_bg">#FCE4EC</color>
+    <color name="rescue_alert_border">#F8BBD0</color>
+    <color name="comment_bg">#F5F5F5</color>
+    <color name="comment_input_bg">#FAFAFA</color>
 </resources>

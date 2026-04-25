@@ -7,6 +7,7 @@ import com.example.petopia.data.model.Post
 import com.example.petopia.data.model.Comment
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -78,14 +79,11 @@ object FirebaseAuthModel {
             }
 
             // Remove user's likes from all posts
-            val allPosts = db.collection(Constants.Collections.POSTS)
+            val likedPosts = db.collection(Constants.Collections.POSTS)
+                .whereArrayContains(Post.LIKES_KEY, uid)
                 .get().await()
-            for (doc in allPosts.documents) {
-                val likes = (doc.get(Post.LIKES_KEY) as? List<*>)?.filterIsInstance<String>() ?: continue
-                if (likes.contains(uid)) {
-                    val updated = likes.filter { it != uid }
-                    doc.reference.update(Post.LIKES_KEY, updated).await()
-                }
+            for (doc in likedPosts.documents) {
+                doc.reference.update(Post.LIKES_KEY, FieldValue.arrayRemove(uid)).await()
             }
 
             // Delete user profile

@@ -46,12 +46,13 @@ class PostRepository private constructor(context: Context) {
 
     suspend fun getAllPostsWithPreviews(currentUserId: String?): List<PostDisplayItem> = withContext(Dispatchers.IO) {
         val posts = postDao.getAllPosts()
+        val authorCache = mutableMapOf<String, com.example.petopia.data.model.User?>()
         posts.map { post ->
-            val author = resolveAuthor(post.authorId)
+            val author = authorCache.getOrPut(post.authorId) { resolveAuthor(post.authorId) }
             val comments = commentDao.getCommentsByPostId(post.id)
             val previews = comments.map {
-                val commentAuthor = resolveAuthorName(it.authorId)
-                CommentPreview(commentAuthor, it.content, it.createdAt)
+                val cachedAuthor = authorCache.getOrPut(it.authorId) { resolveAuthor(it.authorId) }
+                CommentPreview(cachedAuthor?.username ?: "Unknown", it.content, it.createdAt)
             }
             PostDisplayItem(
                 post = post,
@@ -151,12 +152,13 @@ class PostRepository private constructor(context: Context) {
 
     suspend fun getPostsByUser(userId: String, currentUserId: String?): List<PostDisplayItem> = withContext(Dispatchers.IO) {
         val posts = postDao.getPostsByUserId(userId)
+        val authorCache = mutableMapOf<String, com.example.petopia.data.model.User?>()
         posts.map { post ->
-            val author = resolveAuthor(post.authorId)
+            val author = authorCache.getOrPut(post.authorId) { resolveAuthor(post.authorId) }
             val comments = commentDao.getCommentsByPostId(post.id)
             val previews = comments.map {
-                val commentAuthor = resolveAuthorName(it.authorId)
-                CommentPreview(commentAuthor, it.content, it.createdAt)
+                val cachedAuthor = authorCache.getOrPut(it.authorId) { resolveAuthor(it.authorId) }
+                CommentPreview(cachedAuthor?.username ?: "Unknown", it.content, it.createdAt)
             }
             PostDisplayItem(
                 post = post,

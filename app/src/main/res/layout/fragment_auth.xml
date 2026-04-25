@@ -90,7 +90,7 @@
             <EditText
                 android:id="@+id/etEmail"
                 style="@style/InputStyle"
-                android:hint="email@example.com"
+                android:hint="@string/email_example_hint"
                 android:inputType="textEmailAddress" />
 
             <TextView
@@ -162,7 +162,7 @@
                                 android:layout_height="13dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_camera"
-                                android:contentDescription="Change photo" />
+                                android:contentDescription="@string/change_photo" />
                         </FrameLayout>
                     </FrameLayout>
                 </LinearLayout>
@@ -187,7 +187,7 @@
                         <EditText
                             android:id="@+id/etPetCount"
                             style="@style/InputStyle"
-                            android:hint="0"
+                            android:hint="@string/pet_count_zero_hint"
                             android:inputType="number" />
                     </LinearLayout>
 
