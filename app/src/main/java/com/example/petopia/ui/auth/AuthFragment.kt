@@ -1,13 +1,19 @@
 package com.example.petopia.ui.auth
 
 import android.app.DatePickerDialog
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -22,6 +28,20 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private lateinit var viewModel: AuthViewModel
 
+    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            val bitmap = if (Build.VERSION.SDK_INT < 28) {
+                @Suppress("DEPRECATION")
+                MediaStore.Images.Media.getBitmap(requireContext().contentResolver, it)
+            } else {
+                val source = ImageDecoder.createSource(requireContext().contentResolver, it)
+                ImageDecoder.decodeBitmap(source)
+            }
+            viewModel.setProfileImageBitmap(bitmap)
+            view?.findViewById<ImageView>(R.id.ivProfilePicture)?.setImageBitmap(bitmap)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -35,12 +55,17 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         val tvFormTitle = view.findViewById<TextView>(R.id.tvFormTitle)
         val tvFormDescription = view.findViewById<TextView>(R.id.tvFormDescription)
         val btnSubmit = view.findViewById<Button>(R.id.btnSubmit)
+        val ivProfilePicture = view.findViewById<ImageView>(R.id.ivProfilePicture)
 
         val etEmail = view.findViewById<EditText>(R.id.etEmail)
         val etUser = view.findViewById<EditText>(R.id.etUsername)
         val etPass = view.findViewById<EditText>(R.id.etPassword)
         val etPetCount = view.findViewById<EditText>(R.id.etPetCount)
         val etOwnerSince = view.findViewById<EditText>(R.id.etOwnerSince)
+
+        ivProfilePicture?.setOnClickListener {
+            pickImage.launch("image/*")
+        }
 
         etOwnerSince.setOnClickListener {
             val calendar = Calendar.getInstance()
