@@ -166,6 +166,14 @@ class HomeViewModel(
         }
     }
 
+    fun deletePost(postId: String) {
+        viewModelScope.launch {
+            val post = repository.getPostById(postId) ?: return@launch
+            repository.deletePost(post)
+            _posts.value = _posts.value?.filter { it.post.id != postId }
+        }
+    }
+
     fun addComment(postId: String, text: String) {
         viewModelScope.launch {
             val user = userRepository.getCurrentUser() ?: return@launch

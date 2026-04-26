@@ -181,10 +181,15 @@ class PostRepository private constructor(context: Context) {
     suspend fun refreshUserPosts(userId: String) = withContext(Dispatchers.IO) {
         val remotePosts = FirebaseModel.getPostsByAuthor(userId)
         for (post in remotePosts) {
-            postDao.insertPosts(post)
-            val remoteComments = FirebaseModel.getAllComments(post.id)
-            for (comment in remoteComments) {
-                commentDao.insertComments(comment)
+            if (post.isDeleted) {
+                postDao.deletePost(post)
+                commentDao.deleteCommentsByPostId(post.id)
+            } else {
+                postDao.insertPosts(post)
+                val remoteComments = FirebaseModel.getAllComments(post.id)
+                for (comment in remoteComments) {
+                    commentDao.insertComments(comment)
+                }
             }
         }
     }
