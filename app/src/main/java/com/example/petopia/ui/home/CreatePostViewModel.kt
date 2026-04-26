@@ -49,7 +49,6 @@ class CreatePostViewModel(
     private val _contentError = MutableLiveData<Int?>(null)
     val contentError: LiveData<Int?> = _contentError
 
-    // Edit mode
     private var editingPost: Post? = null
     val isEditMode: Boolean get() = editingPost != null
 
