@@ -241,11 +241,6 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider" />
-
                 <!-- User's Posts Feed -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerMyPosts"
