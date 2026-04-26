@@ -64,7 +64,12 @@ class PostViewHolder(
                     onDeleteClick?.invoke(item)
                 }
 
-                popupWindow.showAsDropDown(anchor, -300, -10)
+                popupView.measure(
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                )
+                val xOff = -(popupView.measuredWidth - anchor.width)
+                popupWindow.showAsDropDown(anchor, xOff, 0)
             }
         }
     }
