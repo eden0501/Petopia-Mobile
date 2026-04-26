@@ -1,10 +1,14 @@
 package com.example.petopia.data.repository
 
 import com.example.petopia.data.local.dao.UserDao
+import com.example.petopia.data.local.dao.AppLocalDbRepository
 import com.example.petopia.data.model.User
 import com.example.petopia.data.remote.FirebaseAuthModel
 
-class UserRepository(private val userDao: UserDao) {
+class UserRepository(
+    private val userDao: UserDao,
+    private val database: AppLocalDbRepository? = null
+) {
 
     suspend fun signup(user: User, pass: String): Result<User> {
         return try {
@@ -67,13 +71,33 @@ class UserRepository(private val userDao: UserDao) {
         return getUser(userId)
     }
 
-    suspend fun updateUser(user: User) {
-        FirebaseAuthModel.addUser(user)
-        userDao.registerUser(user)
+    suspend fun logout() {
+        FirebaseAuthModel.logout()
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            database?.clearAllTables()
+        }
     }
 
-    fun logout() {
-        FirebaseAuthModel.logout()
+    suspend fun updateUser(user: User): Result<User> {
+        return try {
+            FirebaseAuthModel.addUser(user)
+            userDao.registerUser(user)
+            Result.success(user)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteAccount(password: String): Result<Unit> {
+        return try {
+            FirebaseAuthModel.deleteUser(password)
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                database?.clearAllTables()
+            }
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }
 

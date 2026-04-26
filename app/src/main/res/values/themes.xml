@@ -1,26 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Petopia" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/petopia_orange</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.Petopia" parent="Base.Theme.Petopia" />
 
-    <style name="DatePickerTheme" parent="Theme.Material3.Light.Dialog">
+    <style name="DatePickerTheme" parent="@android:style/Theme.Material.Light.Dialog">
         <item name="colorAccent">@color/petopia_orange</item>
-        <item name="android:datePickerStyle">@style/CustomDatePickerStyle</item>
+        <item name="android:colorAccent">@color/petopia_orange</item>
+        <item name="android:colorPrimary">@color/petopia_orange</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/DatePickerButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/DatePickerButton</item>
     </style>
 
-    <style name="CustomDatePickerStyle" parent="android:Widget.Material.Light.DatePicker">
-        <item name="android:headerBackground">@color/petopia_orange</item>
-        <item name="android:calendarTextColor">@color/petopia_orange</item>
-        <item name="android:dayOfWeekBackground">@color/petopia_orange</item>
-        <item name="android:yearListItemTextAppearance">@style/YearAppearance</item>
-        <item name="android:yearListSelectorColor">@color/petopia_orange</item>
-    </style>
-
-    <style name="YearAppearance" parent="TextAppearance.MaterialComponents.Subtitle2">
+    <style name="DatePickerButton" parent="android:Widget.Material.Button.Borderless">
         <item name="android:textColor">@color/petopia_orange</item>
     </style>
 

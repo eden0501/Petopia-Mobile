@@ -85,12 +85,12 @@
 
             <TextView
                 style="@style/LabelStyle"
-                android:text="Email Address" />
+                android:text="@string/email_address_label" />
 
             <EditText
                 android:id="@+id/etEmail"
                 style="@style/InputStyle"
-                android:hint="email@example.com"
+                android:hint="@string/email_example_hint"
                 android:inputType="textEmailAddress" />
 
             <TextView
@@ -129,13 +129,15 @@
                         <EditText
                             android:id="@+id/etUsername"
                             style="@style/InputStyle"
-                            android:hint="Unique name" />
+                            android:hint="@string/unique_name_hint" />
                     </LinearLayout>
 
                     <FrameLayout
                         android:id="@+id/profileImageContainer"
                         android:layout_width="70dp"
-                        android:layout_height="70dp">
+                        android:layout_height="70dp"
+                        android:clipChildren="false"
+                        android:clipToPadding="false">
 
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/ivProfilePicture"
@@ -148,6 +150,20 @@
                             app:shapeAppearanceOverlay="@style/CircleImage"
                             app:strokeColor="@color/white"
                             app:strokeWidth="2dp" />
+
+                        <FrameLayout
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="bottom|end"
+                            android:background="@drawable/bg_camera_badge">
+
+                            <ImageView
+                                android:layout_width="13dp"
+                                android:layout_height="13dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_camera"
+                                android:contentDescription="@string/change_photo" />
+                        </FrameLayout>
                     </FrameLayout>
                 </LinearLayout>
 
@@ -166,12 +182,12 @@
 
                         <TextView
                             style="@style/LabelStyle"
-                            android:text="Pets" />
+                            android:text="@string/pets_label" />
 
                         <EditText
                             android:id="@+id/etPetCount"
                             style="@style/InputStyle"
-                            android:hint="0"
+                            android:hint="@string/pet_count_zero_hint"
                             android:inputType="number" />
                     </LinearLayout>
 
@@ -184,13 +200,13 @@
 
                         <TextView
                             style="@style/LabelStyle"
-                            android:text="Since" />
+                            android:text="@string/since_label" />
 
                         <EditText
                             android:id="@+id/etOwnerSince"
                             style="@style/InputStyle"
                             android:focusable="false"
-                            android:hint="Select Date"
+                            android:hint="@string/select_date"
                             android:inputType="none" />
                     </LinearLayout>
                 </LinearLayout>

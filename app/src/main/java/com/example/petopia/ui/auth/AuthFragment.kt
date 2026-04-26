@@ -1,20 +1,24 @@
 package com.example.petopia.ui.auth
 
 import android.app.DatePickerDialog
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.petopia.R
-import com.example.petopia.data.local.dao.AppLocalDB
 import com.example.petopia.data.model.User
-import com.example.petopia.data.repository.UserRepository
 import com.google.android.material.tabs.TabLayout
 import java.util.Calendar
 
@@ -22,12 +26,24 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private lateinit var viewModel: AuthViewModel
 
+    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            val bitmap = if (Build.VERSION.SDK_INT < 28) {
+                @Suppress("DEPRECATION")
+                MediaStore.Images.Media.getBitmap(requireContext().contentResolver, it)
+            } else {
+                val source = ImageDecoder.createSource(requireContext().contentResolver, it)
+                ImageDecoder.decodeBitmap(source)
+            }
+            viewModel.setProfileImageBitmap(bitmap)
+            view?.findViewById<ImageView>(R.id.ivProfilePicture)?.setImageBitmap(bitmap)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val db = AppLocalDB.getDatabase(requireContext())
-        val repository = UserRepository(db.userDao())
-        val factory = AuthViewModelFactory(repository)
+        val factory = AuthViewModelFactory(requireContext())
         viewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
         val authTabLayout = view.findViewById<TabLayout>(R.id.authTabLayout)
@@ -35,6 +51,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         val tvFormTitle = view.findViewById<TextView>(R.id.tvFormTitle)
         val tvFormDescription = view.findViewById<TextView>(R.id.tvFormDescription)
         val btnSubmit = view.findViewById<Button>(R.id.btnSubmit)
+        val ivProfilePicture = view.findViewById<ImageView>(R.id.ivProfilePicture)
 
         val etEmail = view.findViewById<EditText>(R.id.etEmail)
         val etUser = view.findViewById<EditText>(R.id.etUsername)
@@ -42,19 +59,34 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         val etPetCount = view.findViewById<EditText>(R.id.etPetCount)
         val etOwnerSince = view.findViewById<EditText>(R.id.etOwnerSince)
 
+        ivProfilePicture?.setOnClickListener {
+            pickImage.launch("image/*")
+        }
+
         etOwnerSince.setOnClickListener {
             val calendar = Calendar.getInstance()
+            val existingDate = etOwnerSince.text.toString()
+            if (existingDate.isNotBlank()) {
+                try {
+                    val parts = existingDate.split("/")
+                    calendar.set(Calendar.DAY_OF_MONTH, parts[0].toInt())
+                    calendar.set(Calendar.MONTH, parts[1].toInt() - 1)
+                    calendar.set(Calendar.YEAR, parts[2].toInt())
+                } catch (_: Exception) { }
+            }
+
             DatePickerDialog(
                 requireContext(),
                 R.style.DatePickerTheme,
                 { _, year, month, day ->
-                    val date = "$day/${month + 1}/$year"
-                    etOwnerSince.setText(date)
+                    etOwnerSince.setText("$day/${month + 1}/$year")
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            ).apply {
+                datePicker.maxDate = System.currentTimeMillis()
+            }.show()
         }
 
         authTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -80,7 +112,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             val password = etPass.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(context, "Email and password are required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.email_password_required), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -91,7 +123,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             } else {
                 val username = etUser.text.toString().trim()
                 if (username.isEmpty()) {
-                    Toast.makeText(context, "Username is required", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.username_required), Toast.LENGTH_SHORT).show()
                     btnSubmit.isEnabled = true
                     return@setOnClickListener
                 }
@@ -101,7 +133,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                     petsCount = etPetCount.text.toString().toIntOrNull() ?: 0,
                     petOwnerSince = etOwnerSince.text.toString()
                 )
-                viewModel.signup(user, password)
+                viewModel.signup(user, password, requireContext())
             }
         }
 
@@ -112,7 +144,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 if (it.isSuccess) {
                     findNavController().navigate(R.id.action_auth_to_home)
                 } else {
-                    val errorMsg = it.exceptionOrNull()?.message ?: "Authentication failed"
+                    val errorMsg = it.exceptionOrNull()?.message ?: getString(R.string.auth_failed_default)
                     Toast.makeText(context, errorMsg, Toast.LENGTH_LONG).show()
                 }
             }

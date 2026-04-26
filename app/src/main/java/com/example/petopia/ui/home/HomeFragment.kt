@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
+import com.example.petopia.base.Constants
 import com.example.petopia.types.HomeItem
 import com.example.petopia.types.PostType
 import com.example.petopia.types.PostDisplayItem
@@ -70,11 +71,15 @@ class HomeFragment : Fragment() {
             }
         }
 
-        parentFragmentManager.setFragmentResultListener("create_post_result", viewLifecycleOwner) { _, bundle ->
-            if (bundle.getBoolean("success")) {
+        parentFragmentManager.setFragmentResultListener(Constants.ResultKeys.CREATE_POST_RESULT, viewLifecycleOwner) { _, bundle ->
+            if (bundle.getBoolean(Constants.ResultKeys.SUCCESS)) {
                 shouldScrollToTop = true
                 viewModel.loadPosts()
             }
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
+            binding.loadingOverlay.visibility = if (loading) View.VISIBLE else View.GONE
         }
 
         setupFilterDropdown()
@@ -82,8 +87,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupFilterDropdown() {
-        val filterContainer = binding.root.findViewById<View>(R.id.includeFilter) ?: return
-        val filterText = filterContainer.findViewById<android.widget.TextView>(R.id.filterDropdown) ?: return
+        val filterContainer = binding.includeFilter.filterDropdownContainer
+        val filterText = binding.includeFilter.filterDropdown
 
         filterContainer.setOnClickListener {
             if (System.currentTimeMillis() - lastFilterPopupDismissTime < 300) {
@@ -132,7 +137,7 @@ class HomeFragment : Fragment() {
                         iconCheck.setColorFilter(androidx.core.content.ContextCompat.getColor(context, R.color.petopia_orange))
                     } else {
                         innerContainer.setBackgroundResource(0)
-                        tv.setTextColor(android.graphics.Color.parseColor("#424242"))
+                        tv.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.text_body))
                         iconCheck.visibility = View.GONE
                     }
                     return view
@@ -157,47 +162,40 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupBottomNav() {
-        binding.root.findViewById<View>(R.id.fabAddPost)?.setOnClickListener {
+        binding.includeBottomNav.fabAddPost.setOnClickListener {
             findNavController().navigate(R.id.createPostDialogFragment)
         }
         
-        val navHome = binding.root.findViewById<View>(R.id.navHome)
-        val navProfile = binding.root.findViewById<View>(R.id.navProfile)
-        
-        navHome?.setOnClickListener {
+        binding.includeBottomNav.navHome.setOnClickListener {
             setActiveTab(isHome = true)
         }
         
-        navProfile?.setOnClickListener {
+        binding.includeBottomNav.navProfile.setOnClickListener {
             setActiveTab(isHome = false)
-            findNavController().navigate(R.id.action_home_to_profile)
+            val action = HomeFragmentDirections.actionHomeToProfile(
+                userId = viewModel.getCurrentUserId() ?: ""
+            )
+            findNavController().navigate(action)
         }
     }
 
     private fun setActiveTab(isHome: Boolean) {
-        val navHome = binding.root.findViewById<View>(R.id.navHome) ?: return
-        val iconHome = binding.root.findViewById<android.widget.ImageView>(R.id.iconHome) ?: return
-        val textHome = binding.root.findViewById<android.widget.TextView>(R.id.textHome) ?: return
-
-        val navProfile = binding.root.findViewById<View>(R.id.navProfile) ?: return
-        val iconProfile = binding.root.findViewById<android.widget.ImageView>(R.id.iconProfile) ?: return
-        val textProfile = binding.root.findViewById<android.widget.TextView>(R.id.textProfile) ?: return
-
+        val nav = binding.includeBottomNav
         val orange = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.petopia_orange)
         val gray = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.gray)
 
         if (isHome) {
-            iconHome.setColorFilter(orange)
-            textHome.setTextColor(orange)
+            nav.iconHome.setColorFilter(orange)
+            nav.textHome.setTextColor(orange)
 
-            iconProfile.setColorFilter(gray)
-            textProfile.setTextColor(gray)
+            nav.iconProfile.setColorFilter(gray)
+            nav.textProfile.setTextColor(gray)
         } else {
-            iconProfile.setColorFilter(orange)
-            textProfile.setTextColor(orange)
+            nav.iconProfile.setColorFilter(orange)
+            nav.textProfile.setTextColor(orange)
 
-            iconHome.setColorFilter(gray)
-            textHome.setTextColor(gray)
+            nav.iconHome.setColorFilter(gray)
+            nav.textHome.setTextColor(gray)
         }
     }
 

@@ -53,4 +53,81 @@
     <string name="pet_owner_since">Pet Owner Since</string>
     <string name="n_a">N/A</string>
     <string name="logout">Log Out</string>
+
+    <string name="active_volunteer">Active Volunteer</string>
+    <string name="pets_badge_format">%d Pets</string>
+    <string name="stat_posts">Posts</string>
+    <string name="stat_likes">Likes</string>
+    <string name="stat_comments">Comments</string>
+    <string name="my_posts">My Posts</string>
+    <string name="no_posts_yet">No posts yet</string>
+    <string name="no_posts_subtitle">Share your first post with the community!</string>
+    <string name="loading_community">Loading your pet community…</string>
+    <string name="profile_subtitle_format">%s · %s</string>
+
+    <string name="edit_profile">Edit Profile</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_account_confirm">Are you sure you want to delete your account? This action cannot be undone.</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="profile_updated">Profile updated</string>
+    <string name="account_deleted">Account deleted</string>
+
+    <string name="edit_profile_subtitle">Update your personal information and how others see you</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="profile_picture_formats">JPEG, PNG, GIF, and WebP images</string>
+    <string name="delete_profile">Delete Profile</string>
+    <string name="delete_data_description">Permanently remove all your data</string>
+    <string name="select_date">Select Date</string>
+    <string name="pet_count_default_hint">0</string>
+    <string name="username_required">Username is required</string>
+    <string name="password_required">Password is required to delete your account</string>
+    <string name="generic_error">Error</string>
+
+    <string name="logout_title">Logging out?</string>
+    <string name="logout_message">Are you sure you want to log out? You will need to enter your credentials again to access your Petopia account.</string>
+    <string name="logout_confirm">Log Me Out</string>
+
+    <string name="delete_title">Are you absolutely sure?</string>
+    <string name="delete_message">This action cannot be undone. This will permanently delete your account and remove your data from our servers.</string>
+    <string name="delete_keep">No, keep my account</string>
+    <string name="delete_confirm">Yes, delete account</string>
+
+    <string name="create_new_post">Create New Post</string>
+    <string name="create_post_subtitle">Share rescue alerts, care tips, or equipment donations with the community</string>
+    <string name="tab_rescue">Rescue</string>
+    <string name="tab_care_tips">Care Tips</string>
+    <string name="tab_supplies">Supplies</string>
+    <string name="rescue_alert_description">Report urgent animal distress situations that need immediate community help</string>
+    <string name="title_required">Title *</string>
+    <string name="description_required">Description *</string>
+    <string name="post_image_optional">Post Image (optional)</string>
+    <string name="click_to_upload">Click to upload photo</string>
+    <string name="upload_formats">PNG, JPG up to 10MB</string>
+    <string name="hashtags_optional">Hashtags (optional)</string>
+    <string name="hashtags_hint_text">Separate hashtags with spaces</string>
+    <string name="enter_title_hint">Enter post title…</string>
+    <string name="provide_details_hint">Provide details…</string>
+    <string name="hashtags_placeholder">#rescue #urgent #help</string>
+    <string name="create_post_button">Create Post</string>
+    <string name="unique_name_hint">Unique name</string>
+    <string name="email_address_label">Email Address</string>
+    <string name="email_password_required">Email and password are required</string>
+    <string name="auth_failed_default">Authentication failed</string>
+
+    <!-- New Accessibility Strings -->
+    <string name="close">Close</string>
+    <string name="warning">Warning</string>
+    <string name="change_photo">Change photo</string>
+    <string name="pets_icon">Pets icon</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
+    <string name="pets">Pets</string>
+    <string name="add_post">Add Post</string>
+    <string name="email_example_hint">email@example.com</string>
+    <string name="pet_count_zero_hint">0</string>
+    <string name="uploading">Uploading…</string>
+    <string name="title_required_error">Title is required</string>
+    <string name="description_required_error">Description is required</string>
 </resources>

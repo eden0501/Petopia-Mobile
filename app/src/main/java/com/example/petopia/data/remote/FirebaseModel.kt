@@ -14,7 +14,7 @@ object FirebaseModel {
 
     suspend fun getAllPosts(since: Long): List<Post> {
         return try {
-            val result = db.collection(Constants.POSTS_COLLECTION)
+            val result = db.collection(Constants.Collections.POSTS)
                 .whereGreaterThanOrEqualTo(Post.LAST_UPDATED_KEY, Timestamp(since / 1000, 0))
                 .get()
                 .await()
@@ -27,7 +27,7 @@ object FirebaseModel {
 
     suspend fun addPost(post: Post) {
         try {
-            db.collection(Constants.POSTS_COLLECTION)
+            db.collection(Constants.Collections.POSTS)
                 .document(post.id)
                 .set(post.toJson)
                 .await()
@@ -38,15 +38,17 @@ object FirebaseModel {
     
     suspend fun getAllComments(postId: String): List<Comment> {
         return try {
-            val task = db.collection(Constants.COMMENTS_COLLECTION)
-                .whereEqualTo("postId", postId)
+            val task = db.collection(Constants.Collections.COMMENTS)
+                .whereEqualTo(Comment.POST_ID_KEY, postId)
                 .get()
                 .await()
             val comments = mutableListOf<Comment>()
             for (document in task.documents) {
                 try {
-                    val comment = document.toObject(Comment::class.java)
-                    if (comment != null) comments.add(comment)
+                    val data = document.data
+                    if (data != null) {
+                        comments.add(Comment.fromJson(data))
+                    }
                 } catch (e: Exception) {
                     Log.e("FirebaseModel", "Error parsing comment", e)
                 }
@@ -60,8 +62,8 @@ object FirebaseModel {
 
     suspend fun addComment(comment: Comment) {
         try {
-            db.collection(Constants.COMMENTS_COLLECTION).document(comment.id)
-                .set(comment)
+            db.collection(Constants.Collections.COMMENTS).document(comment.id)
+                .set(comment.toJson)
                 .await()
         } catch (e: Exception) {
             Log.e("FirebaseModel", "Error adding comment", e)
@@ -70,12 +72,25 @@ object FirebaseModel {
 
     suspend fun deletePost(post: Post) {
         try {
-            db.collection(Constants.POSTS_COLLECTION)
+            db.collection(Constants.Collections.POSTS)
                 .document(post.id)
                 .update(Post.IS_DELETED_KEY, true, Post.LAST_UPDATED_KEY, FieldValue.serverTimestamp())
                 .await()
         } catch (e: Exception) {
             Log.e("FirebaseModel", "Error deleting document", e)
+        }
+    }
+
+    suspend fun getPostsByAuthor(authorId: String): List<Post> {
+        return try {
+            val result = db.collection(Constants.Collections.POSTS)
+                .whereEqualTo(Post.AUTHOR_ID_KEY, authorId)
+                .get()
+                .await()
+            result.map { Post.fromJson(it.data) }
+        } catch (e: Exception) {
+            Log.e("FirebaseModel", "Error getting user posts.", e)
+            emptyList()
         }
     }
 }

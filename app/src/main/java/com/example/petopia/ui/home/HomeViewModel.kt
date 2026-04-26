@@ -22,6 +22,9 @@ class HomeViewModel(
     private val _selectedFilter = MutableLiveData(PostFilter.ALL)
     val selectedFilter: LiveData<PostFilter> = _selectedFilter
 
+    private val _isLoading = MutableLiveData(true)
+    val isLoading: LiveData<Boolean> = _isLoading
+
     private val _factUpdatedTrigger = MutableLiveData<Unit>()
 
     val filteredHomeItems: LiveData<List<HomeItem>> = MediatorLiveData<List<HomeItem>>().apply {
@@ -39,10 +42,27 @@ class HomeViewModel(
 
     fun loadPosts() {
         viewModelScope.launch {
-            val userId = userRepository.getCurrentUserId()
-            repository.refreshAllPosts()
-            val refreshedList = repository.getAllPostsWithPreviews(userId)
-            _posts.value = refreshedList
+            try {
+                val needsFullSync = !repository.hasCompletedFullSync
+
+                if (needsFullSync) {
+                    _isLoading.value = true
+                    repository.refreshAllPosts()
+                } else {
+                    val userId = userRepository.getCurrentUserId()
+                    val list = repository.getAllPostsWithPreviews(userId)
+                    _posts.value = list
+                    repository.refreshPostsIncremental()
+                }
+
+                val userId = userRepository.getCurrentUserId()
+                val refreshedList = repository.getAllPostsWithPreviews(userId)
+                _posts.value = refreshedList
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
@@ -111,6 +131,8 @@ class HomeViewModel(
         _selectedFilter.value = filter
     }
 
+    fun getCurrentUserId(): String? = userRepository.getCurrentUserId()
+
     fun toggleLike(postId: String) {
         viewModelScope.launch {
             val userId = userRepository.getCurrentUserId() ?: return@launch
@@ -148,14 +170,14 @@ class HomeViewModel(
         viewModelScope.launch {
             val user = userRepository.getCurrentUser() ?: return@launch
 
-            repository.addComment(postId, user.id, user.username, text)
+            repository.addComment(postId, user.id, text)
 
             _posts.value = _posts.value?.map { item ->
                 if (item.post.id == postId) {
                     val newCommentPreview =
                         CommentPreview(user.username, text, System.currentTimeMillis())
                     val updatedPreviews = item.previewComments.toMutableList()
-                    updatedPreviews.add(0, newCommentPreview)
+                    updatedPreviews.add(newCommentPreview)
                     item.copy(
                         commentCount = item.commentCount + 1,
                         previewComments = updatedPreviews
@@ -167,4 +189,3 @@ class HomeViewModel(
         }
     }
 }
-

@@ -40,7 +40,7 @@ class PostViewHolder(
         currentItem = item
         val post = item.post
 
-        binding.textAuthorName.text = post.authorName
+        binding.textAuthorName.text = item.authorName
         binding.textTitle.text = post.title
         binding.textDescription.text = post.content
         binding.textHashtags.text = post.hashtags.joinToString(" ") { if (it.startsWith("#")) it else "#$it" }
@@ -99,12 +99,20 @@ class PostViewHolder(
         }
         
         binding.imageAuthor.setImageResource(R.drawable.bg_stub_avatar)
+        if (!item.authorProfileImageUrl.isNullOrEmpty()) {
+            Picasso.get()
+                .load(item.authorProfileImageUrl)
+                .placeholder(R.drawable.bg_stub_avatar)
+                .error(R.drawable.bg_stub_avatar)
+                .into(binding.imageAuthor)
+        }
         binding.imageCurrentUser.setImageResource(R.drawable.bg_stub_avatar)
 
         commentAdapter.submitList(item.previewComments)
 
         binding.layoutCommentSection.visibility = if (item.isCommentsVisible) View.VISIBLE else View.GONE
         binding.iconComment.setColorFilter(if (item.isCommentsVisible) petopiaOrange else defaultColor)
+        binding.textComments.setTextColor(if (item.isCommentsVisible) petopiaOrange else defaultColor)
 
         if (item.isLiked) {
             binding.iconLike.setImageResource(R.drawable.ic_heart_filled)

@@ -16,4 +16,16 @@ interface PostDao {
 
     @Query("SELECT * FROM posts WHERE id = :postId")
     fun getPostById(postId: String): Post?
+
+    @Query("DELETE FROM posts")
+    fun deleteAllPosts()
+
+    @Query("SELECT * FROM posts WHERE authorId = :userId ORDER BY createdAt DESC")
+    fun getPostsByUserId(userId: String): List<Post>
+
+    @Query("SELECT COUNT(*) FROM posts WHERE likes LIKE '%' || :userId || '%'")
+    fun getLikesGivenByUser(userId: String): Int
+
+    @Query("SELECT * FROM posts WHERE authorId = :userId")
+    fun getRawPostsByUserId(userId: String): List<Post>
 }

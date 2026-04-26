@@ -17,7 +17,7 @@ class HomeViewModelFactory(private val context: Context) : ViewModelProvider.Fac
             val defaultFact = context.getString(R.string.default_fact)
             return HomeViewModel(
                 PostRepository.getInstance(context),
-                UserRepository(db.userDao()),
+                UserRepository(db.userDao(), db),
                 defaultFact
             ) as T
         }
