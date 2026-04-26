@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,8 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
 import com.example.petopia.base.Constants
 import com.example.petopia.databinding.FragmentProfileBinding
+import com.example.petopia.ui.home.CreatePostDialogFragment
 import com.example.petopia.ui.home.PostAdapter
 import com.example.petopia.types.HomeItem
+import com.example.petopia.types.PostDisplayItem
 import com.squareup.picasso.Picasso
 
 class ProfileFragment : Fragment() {
@@ -108,11 +111,51 @@ class ProfileFragment : Fragment() {
         postAdapter = PostAdapter(
             onLikeClick = { item -> viewModel.toggleLike(item.post.id) },
             onCommentClick = { item -> viewModel.toggleComments(item.post.id) },
-            onAddCommentClick = { item, text -> viewModel.addComment(item.post.id, text) }
+            onAddCommentClick = { item, text -> viewModel.addComment(item.post.id, text) },
+            onEditClick = { item -> openEditDialog(item) },
+            onDeleteClick = { item -> showDeletePostDialog(item) },
+            currentUserId = args.userId
         )
         binding.recyclerMyPosts.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerMyPosts.adapter = postAdapter
         binding.recyclerMyPosts.isNestedScrollingEnabled = false
+    }
+
+    private fun openEditDialog(item: PostDisplayItem) {
+        val post = item.post
+        val dialog = CreatePostDialogFragment.newEditInstance(
+            postId = post.id,
+            title = post.title,
+            content = post.content,
+            imageUrl = post.imageUrl,
+            postType = post.postType.name,
+            hashtags = ArrayList(post.hashtags),
+            authorId = post.authorId,
+            createdAt = post.createdAt,
+            likes = ArrayList(post.likes)
+        )
+        dialog.show(parentFragmentManager, "edit_post")
+    }
+
+    private fun showDeletePostDialog(item: PostDisplayItem) {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_delete_post)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.85).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        dialog.findViewById<View>(R.id.btnClose).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.btnKeepPost).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.btnConfirmDelete).setOnClickListener {
+            dialog.dismiss()
+            viewModel.deletePost(item.post.id)
+            Toast.makeText(context, getString(R.string.post_deleted), Toast.LENGTH_SHORT).show()
+        }
+
+        dialog.show()
     }
 
     private fun observeViewModel() {

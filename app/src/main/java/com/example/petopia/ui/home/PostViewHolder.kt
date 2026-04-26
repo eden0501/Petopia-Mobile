@@ -1,6 +1,8 @@
 package com.example.petopia.ui.home
 
 import android.view.View
+import android.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -13,14 +15,18 @@ class PostViewHolder(
     private val binding: RowPostItemBinding,
     private val onLikeClick: ((PostDisplayItem) -> Unit)?,
     private val onCommentClick: ((PostDisplayItem) -> Unit)?,
-    private val onAddCommentClick: ((PostDisplayItem, String) -> Unit)?
+    private val onAddCommentClick: ((PostDisplayItem, String) -> Unit)?,
+    private val onEditClick: ((PostDisplayItem) -> Unit)?,
+    private val onDeleteClick: ((PostDisplayItem) -> Unit)?,
+    private val currentUserId: String?
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val commentAdapter = CommentAdapter()
     private var currentItem: PostDisplayItem? = null
+    private val context get() = binding.root.context
 
     init {
-        binding.recyclerComments.layoutManager = LinearLayoutManager(binding.root.context)
+        binding.recyclerComments.layoutManager = LinearLayoutManager(context)
         binding.recyclerComments.adapter = commentAdapter
         binding.recyclerComments.isNestedScrollingEnabled = false
 
@@ -34,11 +40,29 @@ class PostViewHolder(
                 binding.editComment.text.clear()
             }
         }
+
+        binding.btnPostMenu.setOnClickListener { anchor ->
+            currentItem?.let { item ->
+                val popup = PopupMenu(context, anchor)
+                popup.menuInflater.inflate(R.menu.menu_post_actions, popup.menu)
+                popup.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.action_edit_post -> { onEditClick?.invoke(item); true }
+                        R.id.action_delete_post -> { onDeleteClick?.invoke(item); true }
+                        else -> false
+                    }
+                }
+                popup.show()
+            }
+        }
     }
 
     fun bind(item: PostDisplayItem) {
         currentItem = item
         val post = item.post
+
+        val isOwner = currentUserId != null && post.authorId == currentUserId
+        binding.btnPostMenu.visibility = if (isOwner) View.VISIBLE else View.GONE
 
         binding.textAuthorName.text = item.authorName
         binding.textTitle.text = post.title
@@ -50,39 +74,33 @@ class PostViewHolder(
             android.text.format.DateUtils.MINUTE_IN_MILLIS
         ).toString()
 
-        binding.textLikes.text = binding.root.context.getString(
-            R.string.likes_format,
-            post.likeCount
-        )
-        binding.textComments.text = binding.root.context.getString(
-            R.string.comments_format,
-            item.commentCount
-        )
+        binding.textLikes.text = context.getString(R.string.likes_format, post.likeCount)
+        binding.textComments.text = context.getString(R.string.comments_format, item.commentCount)
 
-        val petopiaOrange = androidx.core.content.ContextCompat.getColor(binding.root.context, R.color.petopia_orange)
-        val defaultColor = android.graphics.Color.BLACK
-        
+        val petopiaOrange = ContextCompat.getColor(context, R.color.petopia_orange)
+        val defaultColor = ContextCompat.getColor(context, R.color.black)
+
         when (post.postType) {
             PostType.RESCUE -> {
                 binding.layoutPostTypeTag.setBackgroundResource(R.drawable.bg_tag_rescue)
-                binding.textPostType.text = binding.root.context.getString(R.string.rescue_alert)
-                binding.textPostType.setTextColor(android.graphics.Color.parseColor("#C62828"))
+                binding.textPostType.text = context.getString(R.string.rescue_alert)
+                binding.textPostType.setTextColor(ContextCompat.getColor(context, R.color.tag_rescue_text))
                 binding.iconPostType.setImageResource(R.drawable.ic_circle_alert)
-                binding.iconPostType.setColorFilter(android.graphics.Color.parseColor("#C62828"))
+                binding.iconPostType.setColorFilter(ContextCompat.getColor(context, R.color.tag_rescue_text))
             }
             PostType.KNOWLEDGE -> {
                 binding.layoutPostTypeTag.setBackgroundResource(R.drawable.bg_tag_care)
-                binding.textPostType.text = binding.root.context.getString(R.string.care_tip)
-                binding.textPostType.setTextColor(android.graphics.Color.parseColor("#1565C0"))
+                binding.textPostType.text = context.getString(R.string.care_tip)
+                binding.textPostType.setTextColor(ContextCompat.getColor(context, R.color.tag_care_text))
                 binding.iconPostType.setImageResource(R.drawable.ic_lightbulb)
-                binding.iconPostType.setColorFilter(android.graphics.Color.parseColor("#1565C0"))
+                binding.iconPostType.setColorFilter(ContextCompat.getColor(context, R.color.tag_care_text))
             }
             PostType.SUPPLIES -> {
                 binding.layoutPostTypeTag.setBackgroundResource(R.drawable.bg_tag_equipment)
-                binding.textPostType.text = binding.root.context.getString(R.string.equipment_donation)
-                binding.textPostType.setTextColor(android.graphics.Color.parseColor("#00695C"))
+                binding.textPostType.text = context.getString(R.string.equipment_donation)
+                binding.textPostType.setTextColor(ContextCompat.getColor(context, R.color.tag_supplies_text))
                 binding.iconPostType.setImageResource(R.drawable.ic_package)
-                binding.iconPostType.setColorFilter(android.graphics.Color.parseColor("#00695C"))
+                binding.iconPostType.setColorFilter(ContextCompat.getColor(context, R.color.tag_supplies_text))
             }
         }
         binding.iconPostType.visibility = View.VISIBLE
@@ -97,7 +115,7 @@ class PostViewHolder(
         } else {
             binding.cardPostImage.visibility = View.GONE
         }
-        
+
         binding.imageAuthor.setImageResource(R.drawable.bg_stub_avatar)
         if (!item.authorProfileImageUrl.isNullOrEmpty()) {
             Picasso.get()
@@ -114,10 +132,11 @@ class PostViewHolder(
         binding.iconComment.setColorFilter(if (item.isCommentsVisible) petopiaOrange else defaultColor)
         binding.textComments.setTextColor(if (item.isCommentsVisible) petopiaOrange else defaultColor)
 
+        val likeRed = ContextCompat.getColor(context, R.color.rescue_red)
         if (item.isLiked) {
             binding.iconLike.setImageResource(R.drawable.ic_heart_filled)
-            binding.iconLike.setColorFilter(android.graphics.Color.RED)
-            binding.textLikes.setTextColor(android.graphics.Color.RED)
+            binding.iconLike.setColorFilter(likeRed)
+            binding.textLikes.setTextColor(likeRed)
         } else {
             binding.iconLike.setImageResource(R.drawable.ic_heart_outline)
             binding.iconLike.setColorFilter(defaultColor)

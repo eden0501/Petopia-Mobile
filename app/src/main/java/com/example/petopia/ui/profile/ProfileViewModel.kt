@@ -52,7 +52,6 @@ class ProfileViewModel(
                 postRepository.refreshUserPosts(userId)
                 loadUserData(userId)
             } catch (e: Exception) {
-                // Error during profile load — UI will stop loading
             } finally {
                 _isLoading.value = false
             }
@@ -123,6 +122,20 @@ class ProfileViewModel(
                 }
             }
 
+            _commentsCount.value = _posts.value?.sumOf { it.commentCount } ?: 0
+        }
+    }
+
+    fun deletePost(postId: String) {
+        viewModelScope.launch {
+            val userId = userRepository.getCurrentUserId() ?: return@launch
+            val post = postRepository.getPostById(postId) ?: return@launch
+
+            postRepository.deletePost(post)
+
+            _posts.value = _posts.value?.filter { it.post.id != postId }
+            _postCount.value = _posts.value?.size ?: 0
+            _likesCount.value = _posts.value?.sumOf { it.post.likes.size } ?: 0
             _commentsCount.value = _posts.value?.sumOf { it.commentCount } ?: 0
         }
     }

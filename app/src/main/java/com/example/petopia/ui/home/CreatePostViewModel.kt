@@ -49,6 +49,19 @@ class CreatePostViewModel(
     private val _contentError = MutableLiveData<Int?>(null)
     val contentError: LiveData<Int?> = _contentError
 
+    // Edit mode
+    private var editingPost: Post? = null
+    val isEditMode: Boolean get() = editingPost != null
+
+    fun initEditMode(post: Post) {
+        editingPost = post
+        _postType.value = post.postType
+        _title.value = post.title
+        _content.value = post.content
+        _imageUrl.value = post.imageUrl
+        _hashtags.value = post.hashtags.joinToString(" ")
+    }
+
     fun setPostType(type: PostType) {
         _postType.value = type
     }
@@ -80,7 +93,7 @@ class CreatePostViewModel(
         val currentContent = _content.value ?: ""
         val currentType = _postType.value ?: PostType.RESCUE
         val currentBitmap = _imageBitmap.value
-        
+
         var hasError = false
         if (currentTitle.isBlank()) {
             _titleError.value = R.string.title_required_error
@@ -90,32 +103,32 @@ class CreatePostViewModel(
             _contentError.value = R.string.description_required_error
             hasError = true
         }
-        
+
         if (hasError) return
 
         val currentHashtags = _hashtags.value
             ?.split(Regex("\\s+"))
             ?.filter { it.isNotBlank() }
             ?: emptyList()
-            
+
         _isUploading.value = true
-        
+
         if (currentBitmap != null) {
             val path = "posts/${System.currentTimeMillis()}"
             storageModel.uploadImage(context, currentBitmap, path) { url ->
                 if (url != null) {
                     _imageUrl.value = url
-                    createAndSavePost(currentTitle, currentContent, currentType, currentHashtags, url)
+                    savePost(currentTitle, currentContent, currentType, currentHashtags, url)
                 } else {
                     _isUploading.value = false
                 }
             }
         } else {
-            createAndSavePost(currentTitle, currentContent, currentType, currentHashtags, _imageUrl.value)
+            savePost(currentTitle, currentContent, currentType, currentHashtags, _imageUrl.value)
         }
     }
 
-    private fun createAndSavePost(
+    private fun savePost(
         title: String,
         content: String,
         type: PostType,
@@ -123,21 +136,31 @@ class CreatePostViewModel(
         imageUrl: String?
     ) {
         viewModelScope.launch {
-            val user = userRepository.getCurrentUser() ?: return@launch
-            
-            val newPost = Post(
-                id = System.currentTimeMillis().toString(),
-                title = title,
-                content = content,
-                imageUrl = imageUrl,
-                authorId = user.id,
-                createdAt = System.currentTimeMillis(),
-                postType = type,
-                hashtags = hashtags,
-                likes = emptyList()
-            )
-            
-            postRepository.insertPosts(listOf(newPost))
+            val existing = editingPost
+            if (existing != null) {
+                val updated = existing.copy(
+                    title = title,
+                    content = content,
+                    imageUrl = imageUrl,
+                    postType = type,
+                    hashtags = hashtags
+                )
+                postRepository.updatePost(updated)
+            } else {
+                val user = userRepository.getCurrentUser() ?: return@launch
+                val newPost = Post(
+                    id = System.currentTimeMillis().toString(),
+                    title = title,
+                    content = content,
+                    imageUrl = imageUrl,
+                    authorId = user.id,
+                    createdAt = System.currentTimeMillis(),
+                    postType = type,
+                    hashtags = hashtags,
+                    likes = emptyList()
+                )
+                postRepository.insertPosts(listOf(newPost))
+            }
             _isUploading.postValue(false)
             _postCreated.postValue(true)
         }

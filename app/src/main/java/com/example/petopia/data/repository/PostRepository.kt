@@ -90,8 +90,14 @@ class PostRepository private constructor(context: Context) {
     }
 
     suspend fun deletePost(post: Post) = withContext(Dispatchers.IO) {
+        commentDao.deleteCommentsByPostId(post.id)
         postDao.deletePost(post)
         FirebaseModel.deletePost(post)
+    }
+
+    suspend fun updatePost(post: Post) = withContext(Dispatchers.IO) {
+        postDao.insertPosts(post)
+        FirebaseModel.addPost(post)
     }
 
     suspend fun refreshPostsIncremental() = withContext(Dispatchers.IO) {
