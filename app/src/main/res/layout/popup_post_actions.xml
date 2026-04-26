@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="8dp"
     app:cardElevation="8dp"
     app:cardBackgroundColor="@color/white">
 
@@ -20,8 +20,8 @@
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="12dp">
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
 
             <ImageView
                 android:layout_width="18dp"
@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
                 android:text="@string/edit"
                 android:textColor="@color/text_primary"
                 android:textSize="15sp" />
@@ -45,8 +45,8 @@
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="12dp">
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
 
             <ImageView
                 android:layout_width="18dp"
@@ -57,7 +57,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
                 android:text="@string/delete"
                 android:textColor="@color/rescue_red"
                 android:textSize="15sp" />
