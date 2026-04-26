@@ -198,7 +198,12 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
-            binding.loadingOverlay.visibility = if (loading) View.VISIBLE else View.GONE
+            binding.swipeRefresh.isRefreshing = loading
+        }
+
+        binding.swipeRefresh.setColorSchemeResources(R.color.petopia_orange)
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.loadProfile()
         }
     }
 
