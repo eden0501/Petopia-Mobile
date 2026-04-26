@@ -1,7 +1,9 @@
 package com.example.petopia.ui.home
 
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.PopupMenu
+import android.widget.PopupWindow
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,16 +45,26 @@ class PostViewHolder(
 
         binding.btnPostMenu.setOnClickListener { anchor ->
             currentItem?.let { item ->
-                val popup = PopupMenu(context, anchor)
-                popup.menuInflater.inflate(R.menu.menu_post_actions, popup.menu)
-                popup.setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.itemId) {
-                        R.id.action_edit_post -> { onEditClick?.invoke(item); true }
-                        R.id.action_delete_post -> { onDeleteClick?.invoke(item); true }
-                        else -> false
-                    }
+                val popupView = LayoutInflater.from(context).inflate(R.layout.popup_post_actions, null)
+                val popupWindow = PopupWindow(
+                    popupView,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    true
+                )
+                popupWindow.elevation = 16f
+                popupWindow.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+                popupView.findViewById<View>(R.id.actionEdit).setOnClickListener {
+                    popupWindow.dismiss()
+                    onEditClick?.invoke(item)
                 }
-                popup.show()
+                popupView.findViewById<View>(R.id.actionDelete).setOnClickListener {
+                    popupWindow.dismiss()
+                    onDeleteClick?.invoke(item)
+                }
+
+                popupWindow.showAsDropDown(anchor, -300, -10)
             }
         }
     }
