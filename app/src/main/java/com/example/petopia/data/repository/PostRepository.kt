@@ -217,8 +217,4 @@ class PostRepository private constructor(context: Context) {
             null
         }
     }
-
-    private suspend fun resolveAuthorName(authorId: String): String {
-        return resolveAuthor(authorId)?.username ?: "Unknown"
-    }
 }

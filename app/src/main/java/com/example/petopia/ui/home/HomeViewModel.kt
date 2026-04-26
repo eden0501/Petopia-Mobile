@@ -1,7 +1,6 @@
 package com.example.petopia.ui.home
 
 import androidx.lifecycle.*
-import com.example.petopia.R
 import com.example.petopia.base.Constants
 import com.example.petopia.types.PostDisplayItem
 import com.example.petopia.types.HomeItem
