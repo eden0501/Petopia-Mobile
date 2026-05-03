@@ -130,4 +130,16 @@
     <string name="uploading">Uploading…</string>
     <string name="title_required_error">Title is required</string>
     <string name="description_required_error">Description is required</string>
+    <string name="edit_post">Edit Post</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="update_post">Update Post</string>
+    <string name="updating">Updating…</string>
+    <string name="edit_post_subtitle">Update your post details</string>
+    <string name="delete_post_title">Delete Post?</string>
+    <string name="delete_post_message">This will permanently remove this post and all its comments. This action cannot be undone.</string>
+    <string name="delete_post_keep">No, keep it</string>
+    <string name="delete_post_confirm">Yes, delete post</string>
+    <string name="post_deleted">Post deleted</string>
+    <string name="post_updated">Post updated</string>
 </resources>

@@ -56,6 +56,17 @@
                     android:textSize="12sp"
                     tools:text="about 2 months ago" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btnPostMenu"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_more_vertical"
+                android:visibility="gone"
+                android:contentDescription="@null"
+                tools:visibility="visible" />
         </LinearLayout>
 
         <LinearLayout

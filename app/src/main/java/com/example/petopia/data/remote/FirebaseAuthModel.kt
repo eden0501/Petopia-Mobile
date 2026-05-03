@@ -58,11 +58,9 @@ object FirebaseAuthModel {
             val user = auth.currentUser ?: return
             val uid = user.uid
 
-            // Re-authenticate before sensitive operation
             val credential = EmailAuthProvider.getCredential(user.email!!, password)
             user.reauthenticate(credential).await()
 
-            // Delete user's posts
             val posts = db.collection(Constants.Collections.POSTS)
                 .whereEqualTo(Post.AUTHOR_ID_KEY, uid)
                 .get().await()
@@ -70,7 +68,6 @@ object FirebaseAuthModel {
                 doc.reference.delete().await()
             }
 
-            // Delete user's comments
             val comments = db.collection(Constants.Collections.COMMENTS)
                 .whereEqualTo(Comment.AUTHOR_ID_KEY, uid)
                 .get().await()
@@ -78,7 +75,6 @@ object FirebaseAuthModel {
                 doc.reference.delete().await()
             }
 
-            // Remove user's likes from all posts
             val likedPosts = db.collection(Constants.Collections.POSTS)
                 .whereArrayContains(Post.LIKES_KEY, uid)
                 .get().await()
@@ -86,10 +82,8 @@ object FirebaseAuthModel {
                 doc.reference.update(Post.LIKES_KEY, FieldValue.arrayRemove(uid)).await()
             }
 
-            // Delete user profile
             db.collection(Constants.Collections.USERS).document(uid).delete().await()
 
-            // Delete Firebase Auth account
             user.delete().await()
         } catch (e: Exception) {
             Log.e("FirebaseAuthModel", "Error deleting user", e)

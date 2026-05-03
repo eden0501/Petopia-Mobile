@@ -46,7 +46,10 @@ class HomeFragment : Fragment() {
             onCommentClick = { item -> viewModel.toggleComments(item.post.id) },
             onAddCommentClick = { item, text -> viewModel.addComment(item.post.id, text) },
             onRefreshFactClick = { viewModel.refreshFact() },
-            onFactVisible = { factId -> viewModel.loadFact(factId) }
+            onFactVisible = { factId -> viewModel.loadFact(factId) },
+            onEditClick = { item -> openEditDialog(item) },
+            onDeleteClick = { item -> showDeletePostDialog(item) },
+            currentUserId = viewModel.getCurrentUserId()
         )
         binding.recyclerFeed.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerFeed.adapter = adapter
@@ -84,6 +87,42 @@ class HomeFragment : Fragment() {
 
         setupFilterDropdown()
         setupBottomNav()
+    }
+
+    private fun openEditDialog(item: PostDisplayItem) {
+        val post = item.post
+        val dialog = CreatePostDialogFragment.newEditInstance(
+            postId = post.id,
+            title = post.title,
+            content = post.content,
+            imageUrl = post.imageUrl,
+            postType = post.postType.name,
+            hashtags = ArrayList(post.hashtags),
+            authorId = post.authorId,
+            createdAt = post.createdAt,
+            likes = ArrayList(post.likes)
+        )
+        dialog.show(parentFragmentManager, "edit_post")
+    }
+
+    private fun showDeletePostDialog(item: PostDisplayItem) {
+        val dialog = android.app.Dialog(requireContext())
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_delete_post)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.85).toInt(),
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        dialog.findViewById<View>(R.id.btnClose).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.btnKeepPost).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.btnConfirmDelete).setOnClickListener {
+            dialog.dismiss()
+            viewModel.deletePost(item.post.id)
+        }
+
+        dialog.show()
     }
 
     private fun setupFilterDropdown() {

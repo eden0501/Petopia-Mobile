@@ -1,15 +1,5 @@
 package com.example.petopia.base
 
-import com.example.petopia.data.model.Post
-import com.example.petopia.data.model.User
-
-typealias EmptyCallback = () -> Unit
-typealias PostsCompletion = (List<Post>) -> Unit
-typealias PostCompletion = (Post?) -> Unit
-typealias UsersCompletion = (List<User>) -> Unit
-typealias UserCompletion = (User?) -> Unit
-typealias StringCompletion = (String?) -> Unit
-
 object Constants {
     const val POSTS_PER_FACT = 3
     

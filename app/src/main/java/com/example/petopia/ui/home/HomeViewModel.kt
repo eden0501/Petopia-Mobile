@@ -1,7 +1,6 @@
 package com.example.petopia.ui.home
 
 import androidx.lifecycle.*
-import com.example.petopia.R
 import com.example.petopia.base.Constants
 import com.example.petopia.types.PostDisplayItem
 import com.example.petopia.types.HomeItem
@@ -163,6 +162,14 @@ class HomeViewModel(
             } else {
                 item
             }
+        }
+    }
+
+    fun deletePost(postId: String) {
+        viewModelScope.launch {
+            val post = repository.getPostById(postId) ?: return@launch
+            repository.deletePost(post)
+            _posts.value = _posts.value?.filter { it.post.id != postId }
         }
     }
 

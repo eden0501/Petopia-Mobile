@@ -15,7 +15,10 @@ class PostAdapter(
     private val onCommentClick: ((PostDisplayItem) -> Unit)? = null,
     private val onAddCommentClick: ((PostDisplayItem, String) -> Unit)? = null,
     private val onRefreshFactClick: (() -> Unit)? = null,
-    private val onFactVisible: ((String) -> Unit)? = null
+    private val onFactVisible: ((String) -> Unit)? = null,
+    private val onEditClick: ((PostDisplayItem) -> Unit)? = null,
+    private val onDeleteClick: ((PostDisplayItem) -> Unit)? = null,
+    private val currentUserId: String? = null
 ) : ListAdapter<HomeItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     companion object {
@@ -49,7 +52,7 @@ class PostAdapter(
         return when (viewType) {
             VIEW_TYPE_POST -> {
                 val binding = RowPostItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                PostViewHolder(binding, onLikeClick, onCommentClick, onAddCommentClick)
+                PostViewHolder(binding, onLikeClick, onCommentClick, onAddCommentClick, onEditClick, onDeleteClick, currentUserId)
             }
             else -> {
                 val binding = RowFactItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
