@@ -38,7 +38,7 @@ class EditProfileViewModel(
 
     private fun loadUser() {
         viewModelScope.launch {
-            _user.value = userRepository.getCurrentUser()
+            _user.value = userRepository.getCurrentUser().getOrNull()
         }
     }
 

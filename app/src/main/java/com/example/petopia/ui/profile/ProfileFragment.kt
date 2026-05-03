@@ -21,6 +21,7 @@ import com.example.petopia.ui.home.CreatePostDialogFragment
 import com.example.petopia.ui.home.PostAdapter
 import com.example.petopia.types.HomeItem
 import com.example.petopia.types.PostDisplayItem
+import com.example.petopia.util.showDeletePostDialog
 import com.squareup.picasso.Picasso
 
 class ProfileFragment : Fragment() {
@@ -113,7 +114,12 @@ class ProfileFragment : Fragment() {
             onCommentClick = { item -> viewModel.toggleComments(item.post.id) },
             onAddCommentClick = { item, text -> viewModel.addComment(item.post.id, text) },
             onEditClick = { item -> openEditDialog(item) },
-            onDeleteClick = { item -> showDeletePostDialog(item) },
+            onDeleteClick = { item ->
+                showDeletePostDialog {
+                    viewModel.deletePost(item.post.id)
+                    Toast.makeText(context, getString(R.string.post_deleted), Toast.LENGTH_SHORT).show()
+                }
+            },
             currentUserId = args.userId
         )
         binding.recyclerMyPosts.layoutManager = LinearLayoutManager(requireContext())
@@ -122,51 +128,25 @@ class ProfileFragment : Fragment() {
     }
 
     private fun openEditDialog(item: PostDisplayItem) {
-        val post = item.post
-        val dialog = CreatePostDialogFragment.newEditInstance(
-            postId = post.id,
-            title = post.title,
-            content = post.content,
-            imageUrl = post.imageUrl,
-            postType = post.postType.name,
-            hashtags = ArrayList(post.hashtags),
-            authorId = post.authorId,
-            createdAt = post.createdAt,
-            likes = ArrayList(post.likes)
-        )
+        val dialog = CreatePostDialogFragment.newEditInstance(item.post)
         dialog.show(parentFragmentManager, "edit_post")
     }
 
-    private fun showDeletePostDialog(item: PostDisplayItem) {
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.dialog_delete_post)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.85).toInt(),
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-
-        dialog.findViewById<View>(R.id.btnClose).setOnClickListener { dialog.dismiss() }
-        dialog.findViewById<View>(R.id.btnKeepPost).setOnClickListener { dialog.dismiss() }
-        dialog.findViewById<View>(R.id.btnConfirmDelete).setOnClickListener {
-            dialog.dismiss()
-            viewModel.deletePost(item.post.id)
-            Toast.makeText(context, getString(R.string.post_deleted), Toast.LENGTH_SHORT).show()
-        }
-
-        dialog.show()
-    }
 
     private fun observeViewModel() {
         viewModel.user.observe(viewLifecycleOwner) { user ->
             user?.let {
                 binding.tvUsername.text = it.username
-                binding.tvSubtitle.text = getString(
-                    R.string.profile_subtitle_format,
-                    getString(R.string.pet_owner_since),
-                    it.petOwnerSince ?: getString(R.string.n_a)
-                )
+                if (it.petOwnerSince.isNullOrEmpty() || it.petsCount == 0) {
+                    binding.tvSubtitle.visibility = View.GONE
+                } else {
+                    binding.tvSubtitle.visibility = View.VISIBLE
+                    binding.tvSubtitle.text = getString(
+                        R.string.profile_subtitle_format,
+                        getString(R.string.pet_owner_since),
+                        it.petOwnerSince
+                    )
+                }
                 binding.tvPetsBadge.text = getString(R.string.pets_badge_format, it.petsCount)
 
                 if (!it.profileImageUrl.isNullOrEmpty()) {
@@ -199,6 +179,12 @@ class ProfileFragment : Fragment() {
 
         viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
             binding.swipeRefresh.isRefreshing = loading
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { errorResId ->
+            errorResId?.let {
+                Toast.makeText(context, getString(it), Toast.LENGTH_LONG).show()
+            }
         }
 
         binding.swipeRefresh.setColorSchemeResources(R.color.petopia_orange)

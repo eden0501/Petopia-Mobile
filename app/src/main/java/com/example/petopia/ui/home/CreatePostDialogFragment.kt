@@ -19,6 +19,7 @@ import androidx.fragment.app.viewModels
 import com.example.petopia.R
 import com.example.petopia.base.Constants
 import com.example.petopia.types.PostType
+import com.example.petopia.data.model.Post
 import com.example.petopia.databinding.FragmentCreatePostBinding
 import com.squareup.picasso.Picasso
 
@@ -32,38 +33,12 @@ class CreatePostDialogFragment : DialogFragment() {
     }
 
     companion object {
-        private const val ARG_POST_ID = "arg_post_id"
-        private const val ARG_POST_TITLE = "arg_post_title"
-        private const val ARG_POST_CONTENT = "arg_post_content"
-        private const val ARG_POST_IMAGE_URL = "arg_post_image_url"
-        private const val ARG_POST_TYPE = "arg_post_type"
-        private const val ARG_POST_HASHTAGS = "arg_post_hashtags"
-        private const val ARG_POST_AUTHOR_ID = "arg_post_author_id"
-        private const val ARG_POST_CREATED_AT = "arg_post_created_at"
-        private const val ARG_POST_LIKES = "arg_post_likes"
+        private const val ARG_POST = "arg_post"
 
-        fun newEditInstance(
-            postId: String,
-            title: String,
-            content: String,
-            imageUrl: String?,
-            postType: String,
-            hashtags: ArrayList<String>,
-            authorId: String,
-            createdAt: Long,
-            likes: ArrayList<String>
-        ): CreatePostDialogFragment {
+        fun newEditInstance(post: Post): CreatePostDialogFragment {
             return CreatePostDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_POST_ID, postId)
-                    putString(ARG_POST_TITLE, title)
-                    putString(ARG_POST_CONTENT, content)
-                    putString(ARG_POST_IMAGE_URL, imageUrl)
-                    putString(ARG_POST_TYPE, postType)
-                    putStringArrayList(ARG_POST_HASHTAGS, hashtags)
-                    putString(ARG_POST_AUTHOR_ID, authorId)
-                    putLong(ARG_POST_CREATED_AT, createdAt)
-                    putStringArrayList(ARG_POST_LIKES, likes)
+                    putParcelable(ARG_POST, post)
                 }
             }
         }
@@ -111,19 +86,9 @@ class CreatePostDialogFragment : DialogFragment() {
     }
 
     private fun initEditMode() {
-        val postId = arguments?.getString(ARG_POST_ID) ?: return
-
-        val post = com.example.petopia.data.model.Post(
-            id = postId,
-            title = arguments?.getString(ARG_POST_TITLE) ?: "",
-            content = arguments?.getString(ARG_POST_CONTENT) ?: "",
-            imageUrl = arguments?.getString(ARG_POST_IMAGE_URL),
-            postType = PostType.valueOf(arguments?.getString(ARG_POST_TYPE) ?: PostType.RESCUE.name),
-            hashtags = arguments?.getStringArrayList(ARG_POST_HASHTAGS) ?: emptyList(),
-            authorId = arguments?.getString(ARG_POST_AUTHOR_ID) ?: "",
-            createdAt = arguments?.getLong(ARG_POST_CREATED_AT) ?: 0L,
-            likes = arguments?.getStringArrayList(ARG_POST_LIKES) ?: emptyList()
-        )
+        val post =
+            arguments?.getParcelable(ARG_POST, Post::class.java)
+                ?: return
 
         viewModel.initEditMode(post)
 
@@ -228,12 +193,20 @@ class CreatePostDialogFragment : DialogFragment() {
             }
         }
 
-        viewModel.postCreated.observe(viewLifecycleOwner) { created ->
-            if (created) {
-                val bundle = Bundle()
-                bundle.putBoolean(Constants.ResultKeys.SUCCESS, true)
-                parentFragmentManager.setFragmentResult(Constants.ResultKeys.CREATE_POST_RESULT, bundle)
-                dismiss()
+        viewModel.postResult.observe(viewLifecycleOwner) { result ->
+            result?.let {
+                if (it.isSuccess) {
+                    val bundle = Bundle()
+                    bundle.putBoolean(Constants.ResultKeys.SUCCESS, true)
+                    parentFragmentManager.setFragmentResult(Constants.ResultKeys.CREATE_POST_RESULT, bundle)
+                    dismiss()
+                } else {
+                    android.widget.Toast.makeText(
+                        context,
+                        getString(R.string.generic_error),
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
 

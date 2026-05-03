@@ -242,7 +242,7 @@ class EditProfileFragment : Fragment() {
                     Toast.makeText(context, getString(R.string.profile_updated), Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                 } else {
-                    Toast.makeText(context, it.exceptionOrNull()?.message ?: getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -256,7 +256,7 @@ class EditProfileFragment : Fragment() {
                     } catch (_: Exception) {
                     }
                 } else {
-                    Toast.makeText(context, it.exceptionOrNull()?.message ?: getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }

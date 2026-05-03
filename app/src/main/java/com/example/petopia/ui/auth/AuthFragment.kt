@@ -36,7 +36,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 ImageDecoder.decodeBitmap(source)
             }
             viewModel.setProfileImageBitmap(bitmap)
-            view?.findViewById<ImageView>(R.id.ivProfilePicture)?.setImageBitmap(bitmap)
+            view?.findViewById<ImageView>(R.id.profilePictureImage)?.setImageBitmap(bitmap)
         }
     }
 
@@ -46,26 +46,26 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         val factory = AuthViewModelFactory(requireContext())
         viewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
-        val authTabLayout = view.findViewById<TabLayout>(R.id.authTabLayout)
-        val signupExtraFields = view.findViewById<LinearLayout>(R.id.signupExtraFields)
-        val tvFormTitle = view.findViewById<TextView>(R.id.tvFormTitle)
-        val tvFormDescription = view.findViewById<TextView>(R.id.tvFormDescription)
-        val btnSubmit = view.findViewById<Button>(R.id.btnSubmit)
-        val ivProfilePicture = view.findViewById<ImageView>(R.id.ivProfilePicture)
+        val authModeTabLayout = view.findViewById<TabLayout>(R.id.authModeTabLayout)
+        val signupFieldsContainer = view.findViewById<LinearLayout>(R.id.signupFieldsContainer)
+        val formTitleText = view.findViewById<TextView>(R.id.formTitleText)
+        val formDescriptionText = view.findViewById<TextView>(R.id.formDescriptionText)
+        val submitButton = view.findViewById<Button>(R.id.submitButton)
+        val profilePictureImage = view.findViewById<ImageView>(R.id.profilePictureImage)
 
-        val etEmail = view.findViewById<EditText>(R.id.etEmail)
-        val etUser = view.findViewById<EditText>(R.id.etUsername)
-        val etPass = view.findViewById<EditText>(R.id.etPassword)
-        val etPetCount = view.findViewById<EditText>(R.id.etPetCount)
-        val etOwnerSince = view.findViewById<EditText>(R.id.etOwnerSince)
+        val emailInput = view.findViewById<EditText>(R.id.emailInput)
+        val usernameInput = view.findViewById<EditText>(R.id.usernameInput)
+        val passwordInput = view.findViewById<EditText>(R.id.passwordInput)
+        val petCountInput = view.findViewById<EditText>(R.id.petCountInput)
+        val petOwnerSinceInput = view.findViewById<EditText>(R.id.petOwnerSinceInput)
 
-        ivProfilePicture?.setOnClickListener {
+        profilePictureImage?.setOnClickListener {
             pickImage.launch("image/*")
         }
 
-        etOwnerSince.setOnClickListener {
+        petOwnerSinceInput.setOnClickListener {
             val calendar = Calendar.getInstance()
-            val existingDate = etOwnerSince.text.toString()
+            val existingDate = petOwnerSinceInput.text.toString()
             if (existingDate.isNotBlank()) {
                 try {
                     val parts = existingDate.split("/")
@@ -79,7 +79,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 requireContext(),
                 R.style.DatePickerTheme,
                 { _, year, month, day ->
-                    etOwnerSince.setText("$day/${month + 1}/$year")
+                    petOwnerSinceInput.setText("$day/${month + 1}/$year")
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -89,63 +89,62 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             }.show()
         }
 
-        authTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        authModeTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab?.position == 0) {
-                    tvFormTitle.text = getString(R.string.welcome_back)
-                    tvFormDescription.text = getString(R.string.login_description)
-                    signupExtraFields.visibility = View.GONE
-                    btnSubmit.text = getString(R.string.login_tab)
+                    formTitleText.text = getString(R.string.welcome_back)
+                    formDescriptionText.text = getString(R.string.login_description)
+                    signupFieldsContainer.visibility = View.GONE
+                    submitButton.text = getString(R.string.login_tab)
                 } else {
-                    tvFormTitle.text = getString(R.string.join_petopia)
-                    tvFormDescription.text = getString(R.string.create_account_description)
-                    signupExtraFields.visibility = View.VISIBLE
-                    btnSubmit.text = getString(R.string.signup_tab)
+                    formTitleText.text = getString(R.string.join_petopia)
+                    formDescriptionText.text = getString(R.string.create_account_description)
+                    signupFieldsContainer.visibility = View.VISIBLE
+                    submitButton.text = getString(R.string.signup_tab)
                 }
             }
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-        btnSubmit.setOnClickListener {
-            val email = etEmail.text.toString().trim()
-            val password = etPass.text.toString().trim()
+        submitButton.setOnClickListener {
+            val email = emailInput.text.toString().trim()
+            val password = passwordInput.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(context, getString(R.string.email_password_required), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            btnSubmit.isEnabled = false
+            submitButton.isEnabled = false
 
-            if (authTabLayout.selectedTabPosition == 0) {
+            if (authModeTabLayout.selectedTabPosition == 0) {
                 viewModel.login(email, password)
             } else {
-                val username = etUser.text.toString().trim()
+                val username = usernameInput.text.toString().trim()
                 if (username.isEmpty()) {
                     Toast.makeText(context, getString(R.string.username_required), Toast.LENGTH_SHORT).show()
-                    btnSubmit.isEnabled = true
+                    submitButton.isEnabled = true
                     return@setOnClickListener
                 }
                 val user = User(
                     email = email,
                     username = username,
-                    petsCount = etPetCount.text.toString().toIntOrNull() ?: 0,
-                    petOwnerSince = etOwnerSince.text.toString()
+                    petsCount = petCountInput.text.toString().toIntOrNull() ?: 0,
+                    petOwnerSince = petOwnerSinceInput.text.toString()
                 )
                 viewModel.signup(user, password, requireContext())
             }
         }
 
         viewModel.authStatus.observe(viewLifecycleOwner) { result ->
-            btnSubmit.isEnabled = true
+            submitButton.isEnabled = true
             
             result?.let {
                 if (it.isSuccess) {
                     findNavController().navigate(R.id.action_auth_to_home)
                 } else {
-                    val errorMsg = it.exceptionOrNull()?.message ?: getString(R.string.auth_failed_default)
-                    Toast.makeText(context, errorMsg, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, getString(R.string.auth_failed_default), Toast.LENGTH_LONG).show()
                 }
             }
         }
