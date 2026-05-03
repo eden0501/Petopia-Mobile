@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import com.example.petopia.base.Constants
 import com.example.petopia.data.remote.FirebaseModel
 import com.example.petopia.data.remote.FirebaseAuthModel
-import android.util.Log
 
 class PostRepository private constructor(context: Context) {
     private val postDao = AppDatabase.getDatabase(context).postDao()
@@ -106,7 +105,6 @@ class PostRepository private constructor(context: Context) {
             FirebaseModel.deletePost(post)
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e("PostRepository", "Error deleting post ${post.id}", e)
             Result.failure(e)
         }
     }
@@ -160,7 +158,6 @@ class PostRepository private constructor(context: Context) {
             FirebaseModel.addComment(comment)
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e("PostRepository", "Error adding comment to post $postId", e)
             Result.failure(e)
         }
     }
@@ -182,7 +179,6 @@ class PostRepository private constructor(context: Context) {
             
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e("PostRepository", "Error toggling like for post $postId", e)
             Result.failure(e)
         }
     }

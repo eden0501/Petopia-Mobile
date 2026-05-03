@@ -1,6 +1,5 @@
 package com.example.petopia.data.remote
 
-import android.util.Log
 import com.example.petopia.base.Constants
 import com.example.petopia.data.model.Comment
 import com.example.petopia.data.model.Post
