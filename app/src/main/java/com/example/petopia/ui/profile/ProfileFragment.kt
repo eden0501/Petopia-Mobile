@@ -97,7 +97,7 @@ class ProfileFragment : Fragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
-        dialog.findViewById<View>(R.id.btnClose).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.close).setOnClickListener { dialog.dismiss() }
         dialog.findViewById<View>(R.id.btnCancelLogout).setOnClickListener { dialog.dismiss() }
         dialog.findViewById<View>(R.id.btnConfirmLogout).setOnClickListener {
             dialog.dismiss()

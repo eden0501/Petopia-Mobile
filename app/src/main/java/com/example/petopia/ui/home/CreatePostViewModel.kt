@@ -165,8 +165,10 @@ class CreatePostViewModel(
                     Result.failure(userResult.exceptionOrNull() ?: Exception("Failed to get current user"))
                 }
             }
-            _isUploading.postValue(false)
             _postResult.postValue(result)
+            if (result.isFailure) {
+                _isUploading.postValue(false)
+            }
         }
     }
 }

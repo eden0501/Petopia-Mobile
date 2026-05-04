@@ -19,9 +19,9 @@ fun Fragment.showDeletePostDialog(onConfirm: () -> Unit) {
         ViewGroup.LayoutParams.WRAP_CONTENT
     )
 
-    dialog.findViewById<View>(R.id.btnClose).setOnClickListener { dialog.dismiss() }
+    dialog.findViewById<View>(R.id.close).setOnClickListener { dialog.dismiss() }
     dialog.findViewById<View>(R.id.btnKeepPost).setOnClickListener { dialog.dismiss() }
-    dialog.findViewById<View>(R.id.btnConfirmDelete).setOnClickListener {
+    dialog.findViewById<View>(R.id.confirmDelete).setOnClickListener {
         onConfirm()
         dialog.dismiss()
     }

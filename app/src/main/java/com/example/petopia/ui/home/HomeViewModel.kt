@@ -22,8 +22,11 @@ class HomeViewModel(
     private val _selectedFilter = MutableLiveData(PostFilter.ALL)
     val selectedFilter: LiveData<PostFilter> = _selectedFilter
 
-    private val _isLoading = MutableLiveData(true)
+    private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _isRefreshing = MutableLiveData(false)
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
 
     private val _error = MutableLiveData<Int?>(null)
     val error: LiveData<Int?> = _error
@@ -43,7 +46,7 @@ class HomeViewModel(
     private val loadedFacts = mutableMapOf<String, HomeItem.FactItem>()
     private val fetchingIds = mutableSetOf<String>()
 
-    fun loadPosts() {
+    fun loadPosts(isManualRefresh: Boolean = false) {
         viewModelScope.launch {
             try {
                 val needsFullSync = !repository.hasCompletedFullSync
@@ -55,6 +58,9 @@ class HomeViewModel(
                         _error.postValue(R.string.error_loading_posts)
                     }
                 } else {
+                    if (isManualRefresh) {
+                        _isRefreshing.value = true
+                    }
                     val userId = userRepository.getCurrentUserId()
                     val listResult = repository.getAllPostsWithPreviews(userId)
                     if (listResult.isFailure) {
@@ -74,6 +80,7 @@ class HomeViewModel(
                 _error.postValue(R.string.error_loading_posts)
             } finally {
                 _isLoading.value = false
+                _isRefreshing.value = false
             }
         }
     }
@@ -183,17 +190,22 @@ class HomeViewModel(
 
     fun deletePost(postId: String) {
         viewModelScope.launch {
-            val postResult = repository.getPostById(postId)
-            if (postResult.isFailure) {
-                _error.postValue(R.string.error_loading_posts)
-                return@launch
-            }
-            val post = postResult.getOrNull() ?: return@launch
-            val deleteResult = repository.deletePost(post)
-            if (deleteResult.isFailure) {
-                _error.postValue(R.string.error_deleting_post)
-            } else {
-                _posts.value = _posts.value?.filter { it.post.id != postId }
+            _isRefreshing.value = true
+            try {
+                val postResult = repository.getPostById(postId)
+                if (postResult.isFailure) {
+                    _error.postValue(R.string.error_loading_posts)
+                    return@launch
+                }
+                val post = postResult.getOrNull() ?: return@launch
+                val deleteResult = repository.deletePost(post)
+                if (deleteResult.isFailure) {
+                    _error.postValue(R.string.error_deleting_post)
+                } else {
+                    _posts.value = _posts.value?.filter { it.post.id != postId }
+                }
+            } finally {
+                _isRefreshing.value = false
             }
         }
     }

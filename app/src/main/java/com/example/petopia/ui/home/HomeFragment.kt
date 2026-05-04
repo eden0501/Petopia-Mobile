@@ -90,6 +90,10 @@ class HomeFragment : Fragment() {
             binding.loadingOverlay.visibility = if (loading) View.VISIBLE else View.GONE
         }
 
+        viewModel.isRefreshing.observe(viewLifecycleOwner) { refreshing ->
+            binding.swipeRefresh.isRefreshing = refreshing
+        }
+
         viewModel.error.observe(viewLifecycleOwner) { errorResId ->
             errorResId?.let {
                 android.widget.Toast.makeText(context, getString(it), android.widget.Toast.LENGTH_LONG).show()
@@ -98,6 +102,14 @@ class HomeFragment : Fragment() {
 
         setupFilterDropdown()
         setupBottomNav()
+        setupSwipeRefresh()
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setColorSchemeResources(R.color.petopia_orange)
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.loadPosts(isManualRefresh = true)
+        }
     }
 
     private fun openEditDialog(item: PostDisplayItem) {

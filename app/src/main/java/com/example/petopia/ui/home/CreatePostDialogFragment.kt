@@ -112,7 +112,7 @@ class CreatePostDialogFragment : DialogFragment() {
     }
 
     private fun setupListeners() {
-        binding.btnClose.setOnClickListener { dismiss() }
+        binding.close.setOnClickListener { dismiss() }
         binding.btnCancel.setOnClickListener { dismiss() }
 
         binding.tabRescue.setOnClickListener { viewModel.setPostType(PostType.RESCUE) }
@@ -184,7 +184,7 @@ class CreatePostDialogFragment : DialogFragment() {
             binding.uploadingOverlay.visibility = if (isUploading) View.VISIBLE else View.GONE
             binding.btnCreatePost.isEnabled = !isUploading
             binding.btnCancel.isEnabled = !isUploading
-            binding.btnClose.isEnabled = !isUploading
+            binding.close.isEnabled = !isUploading
             dialog?.setCancelable(!isUploading)
             if (viewModel.isEditMode) {
                 binding.btnCreatePost.text = if (isUploading) getString(R.string.updating) else getString(R.string.update_post)

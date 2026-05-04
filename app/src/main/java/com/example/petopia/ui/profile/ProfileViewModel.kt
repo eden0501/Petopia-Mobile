@@ -153,22 +153,27 @@ class ProfileViewModel(
 
     fun deletePost(postId: String) {
         viewModelScope.launch {
-            val userId = userRepository.getCurrentUserId() ?: return@launch
-            val postResult = postRepository.getPostById(postId)
-            if (postResult.isFailure) {
-                _error.postValue(R.string.error_loading_posts)
-                return@launch
-            }
-            val post = postResult.getOrNull() ?: return@launch
+            _isLoading.value = true
+            try {
+                val userId = userRepository.getCurrentUserId() ?: return@launch
+                val postResult = postRepository.getPostById(postId)
+                if (postResult.isFailure) {
+                    _error.postValue(R.string.error_loading_posts)
+                    return@launch
+                }
+                val post = postResult.getOrNull() ?: return@launch
 
-            val result = postRepository.deletePost(post)
-            if (result.isFailure) {
-                _error.postValue(R.string.error_deleting_post)
-            } else {
-                _posts.value = _posts.value?.filter { it.post.id != postId }
-                _postCount.value = _posts.value?.size ?: 0
-                _likesCount.value = _posts.value?.sumOf { it.post.likes.size } ?: 0
-                _commentsCount.value = _posts.value?.sumOf { it.commentCount } ?: 0
+                val result = postRepository.deletePost(post)
+                if (result.isFailure) {
+                    _error.postValue(R.string.error_deleting_post)
+                } else {
+                    _posts.value = _posts.value?.filter { it.post.id != postId }
+                    _postCount.value = _posts.value?.size ?: 0
+                    _likesCount.value = _posts.value?.sumOf { it.post.likes.size } ?: 0
+                    _commentsCount.value = _posts.value?.sumOf { it.commentCount } ?: 0
+                }
+            } finally {
+                _isLoading.value = false
             }
         }
     }
