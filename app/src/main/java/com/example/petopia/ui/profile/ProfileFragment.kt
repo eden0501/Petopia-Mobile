@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petopia.R
 import com.example.petopia.base.Constants
 import com.example.petopia.databinding.FragmentProfileBinding
+import com.example.petopia.databinding.DialogLogoutBinding
 import com.example.petopia.ui.home.CreatePostDialogFragment
 import com.example.petopia.ui.home.PostAdapter
 import com.example.petopia.types.HomeItem
@@ -90,16 +91,17 @@ class ProfileFragment : Fragment() {
     private fun showLogoutDialog() {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.dialog_logout)
+        val dialogBinding = DialogLogoutBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.setLayout(
             (resources.displayMetrics.widthPixels * 0.85).toInt(),
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
-        dialog.findViewById<View>(R.id.close).setOnClickListener { dialog.dismiss() }
-        dialog.findViewById<View>(R.id.btnCancelLogout).setOnClickListener { dialog.dismiss() }
-        dialog.findViewById<View>(R.id.btnConfirmLogout).setOnClickListener {
+        dialogBinding.close.setOnClickListener { dialog.dismiss() }
+        dialogBinding.btnCancelLogout.setOnClickListener { dialog.dismiss() }
+        dialogBinding.btnConfirmLogout.setOnClickListener {
             dialog.dismiss()
             viewModel.logout()
             findNavController().navigate(R.id.action_profile_to_auth)
