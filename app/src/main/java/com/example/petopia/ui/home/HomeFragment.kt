@@ -15,6 +15,7 @@ import com.example.petopia.types.PostType
 import com.example.petopia.types.PostDisplayItem
 import com.example.petopia.types.PostFilter
 import com.example.petopia.databinding.FragmentHomeBinding
+import com.example.petopia.databinding.RowFilterItemBinding
 import com.example.petopia.util.showDeletePostDialog
 
 class HomeFragment : Fragment() {
@@ -148,9 +149,10 @@ class HomeFragment : Fragment() {
             val adapter = object : android.widget.ArrayAdapter<String>(requireContext(), R.layout.row_filter_item, items) {
                 override fun getView(position: Int, convertView: View?, parent: android.view.ViewGroup): View {
                     val view = convertView ?: layoutInflater.inflate(R.layout.row_filter_item, parent, false)
-                    val tv = view.findViewById<android.widget.TextView>(R.id.textFilterName)
-                    val iconCheck = view.findViewById<android.widget.ImageView>(R.id.iconCheck)
-                    val innerContainer = view.findViewById<android.widget.LinearLayout>(R.id.innerContainer)
+                    val rowBinding = RowFilterItemBinding.bind(view)
+                    val tv = rowBinding.textFilterName
+                    val iconCheck = rowBinding.iconCheck
+                    val innerContainer = rowBinding.innerContainer
 
                     tv.text = getItem(position)
 

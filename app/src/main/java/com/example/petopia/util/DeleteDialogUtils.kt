@@ -8,20 +8,22 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.Fragment
 import com.example.petopia.R
+import com.example.petopia.databinding.DialogDeletePostBinding
 
 fun Fragment.showDeletePostDialog(onConfirm: () -> Unit) {
     val dialog = Dialog(requireContext())
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-    dialog.setContentView(R.layout.dialog_delete_post)
+    val dialogBinding = DialogDeletePostBinding.inflate(layoutInflater)
+    dialog.setContentView(dialogBinding.root)
     dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     dialog.window?.setLayout(
         (resources.displayMetrics.widthPixels * 0.85).toInt(),
         ViewGroup.LayoutParams.WRAP_CONTENT
     )
 
-    dialog.findViewById<View>(R.id.close).setOnClickListener { dialog.dismiss() }
-    dialog.findViewById<View>(R.id.btnKeepPost).setOnClickListener { dialog.dismiss() }
-    dialog.findViewById<View>(R.id.confirmDelete).setOnClickListener {
+    dialogBinding.close.setOnClickListener { dialog.dismiss() }
+    dialogBinding.btnKeepPost.setOnClickListener { dialog.dismiss() }
+    dialogBinding.confirmDelete.setOnClickListener {
         onConfirm()
         dialog.dismiss()
     }
