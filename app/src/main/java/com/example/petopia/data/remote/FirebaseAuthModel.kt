@@ -1,6 +1,5 @@
 package com.example.petopia.data.remote
 
-import android.util.Log
 import com.example.petopia.base.Constants
 import com.example.petopia.data.model.User
 import com.example.petopia.data.model.Post
@@ -18,23 +17,13 @@ object FirebaseAuthModel {
     fun getCurrentUserId(): String? = auth.currentUser?.uid
 
     suspend fun signup(email: String, pass: String): String? {
-        return try {
-            val result = auth.createUserWithEmailAndPassword(email, pass).await()
-            result.user?.uid
-        } catch (e: Exception) {
-            Log.e("FirebaseAuthModel", "Signup failed", e)
-            throw e
-        }
+        val result = auth.createUserWithEmailAndPassword(email, pass).await()
+        return result.user?.uid
     }
 
     suspend fun login(email: String, pass: String): String? {
-        return try {
-            val result = auth.signInWithEmailAndPassword(email, pass).await()
-            result.user?.uid
-        } catch (e: Exception) {
-            Log.e("FirebaseAuthModel", "Login failed", e)
-            throw e
-        }
+        val result = auth.signInWithEmailAndPassword(email, pass).await()
+        return result.user?.uid
     }
 
     fun logout() {
@@ -42,68 +31,53 @@ object FirebaseAuthModel {
     }
 
     suspend fun addUser(user: User) {
-        try {
-            db.collection(Constants.Collections.USERS)
-                .document(user.id)
-                .set(user)
-                .await()
-        } catch (e: Exception) {
-            Log.e("FirebaseAuthModel", "Error adding user", e)
-            throw e
-        }
+        db.collection(Constants.Collections.USERS)
+            .document(user.id)
+            .set(user)
+            .await()
     }
 
     suspend fun deleteUser(password: String) {
-        try {
-            val user = auth.currentUser ?: return
-            val uid = user.uid
+        val user = auth.currentUser ?: throw Exception("No user logged in")
+        val uid = user.uid
 
-            val credential = EmailAuthProvider.getCredential(user.email!!, password)
-            user.reauthenticate(credential).await()
+        val credential = EmailAuthProvider.getCredential(user.email!!, password)
+        user.reauthenticate(credential).await()
 
-            val posts = db.collection(Constants.Collections.POSTS)
-                .whereEqualTo(Post.AUTHOR_ID_KEY, uid)
-                .get().await()
-            for (doc in posts.documents) {
-                doc.reference.delete().await()
-            }
-
-            val comments = db.collection(Constants.Collections.COMMENTS)
-                .whereEqualTo(Comment.AUTHOR_ID_KEY, uid)
-                .get().await()
-            for (doc in comments.documents) {
-                doc.reference.delete().await()
-            }
-
-            val likedPosts = db.collection(Constants.Collections.POSTS)
-                .whereArrayContains(Post.LIKES_KEY, uid)
-                .get().await()
-            for (doc in likedPosts.documents) {
-                doc.reference.update(Post.LIKES_KEY, FieldValue.arrayRemove(uid)).await()
-            }
-
-            db.collection(Constants.Collections.USERS).document(uid).delete().await()
-
-            user.delete().await()
-        } catch (e: Exception) {
-            Log.e("FirebaseAuthModel", "Error deleting user", e)
-            throw e
+        val posts = db.collection(Constants.Collections.POSTS)
+            .whereEqualTo(Post.AUTHOR_ID_KEY, uid)
+            .get().await()
+        for (doc in posts.documents) {
+            doc.reference.delete().await()
         }
+
+        val comments = db.collection(Constants.Collections.COMMENTS)
+            .whereEqualTo(Comment.AUTHOR_ID_KEY, uid)
+            .get().await()
+        for (doc in comments.documents) {
+            doc.reference.delete().await()
+        }
+
+        val likedPosts = db.collection(Constants.Collections.POSTS)
+            .whereArrayContains(Post.LIKES_KEY, uid)
+            .get().await()
+        for (doc in likedPosts.documents) {
+            doc.reference.update(Post.LIKES_KEY, FieldValue.arrayRemove(uid)).await()
+        }
+
+        db.collection(Constants.Collections.USERS).document(uid).delete().await()
+
+        user.delete().await()
     }
 
     suspend fun getUser(userId: String): User? {
-        return try {
-            val document = db.collection(Constants.Collections.USERS)
-                .document(userId)
-                .get()
-                .await()
-            if (document.exists()) {
-                document.toObject(User::class.java)
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            Log.e("FirebaseAuthModel", "Error getting user", e)
+        val document = db.collection(Constants.Collections.USERS)
+            .document(userId)
+            .get()
+            .await()
+        return if (document.exists()) {
+            document.toObject(User::class.java)
+        } else {
             null
         }
     }

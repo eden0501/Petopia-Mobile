@@ -1,12 +1,16 @@
 package com.example.petopia.data.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.petopia.types.PostType
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 
+@Parcelize
 @Entity(tableName = "posts")
 data class Post(
     @PrimaryKey val id: String,
@@ -20,7 +24,8 @@ data class Post(
     var likes: List<String> = emptyList(),
     var lastUpdated: Long? = null,
     val isDeleted: Boolean = false
-) {
+) : Parcelable {
+    @IgnoredOnParcel
     val likeCount: Int
         get() = likes.size
 

@@ -142,4 +142,8 @@
     <string name="delete_post_confirm">Yes, delete post</string>
     <string name="post_deleted">Post deleted</string>
     <string name="post_updated">Post updated</string>
+    <string name="error_loading_posts">Unable to load posts. Please check your connection.</string>
+    <string name="error_toggling_like">Failed to update like.</string>
+    <string name="error_deleting_post">Could not delete post. Please try again.</string>
+    <string name="error_adding_comment">Could not add comment. Please try again.</string>
 </resources>

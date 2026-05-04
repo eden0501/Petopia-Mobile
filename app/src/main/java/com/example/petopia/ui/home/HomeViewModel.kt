@@ -1,6 +1,7 @@
 package com.example.petopia.ui.home
 
 import androidx.lifecycle.*
+import com.example.petopia.R
 import com.example.petopia.base.Constants
 import com.example.petopia.types.PostDisplayItem
 import com.example.petopia.types.HomeItem
@@ -21,8 +22,14 @@ class HomeViewModel(
     private val _selectedFilter = MutableLiveData(PostFilter.ALL)
     val selectedFilter: LiveData<PostFilter> = _selectedFilter
 
-    private val _isLoading = MutableLiveData(true)
+    private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _isRefreshing = MutableLiveData(false)
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
+
+    private val _error = MutableLiveData<Int?>(null)
+    val error: LiveData<Int?> = _error
 
     private val _factUpdatedTrigger = MutableLiveData<Unit>()
 
@@ -39,28 +46,41 @@ class HomeViewModel(
     private val loadedFacts = mutableMapOf<String, HomeItem.FactItem>()
     private val fetchingIds = mutableSetOf<String>()
 
-    fun loadPosts() {
+    fun loadPosts(isManualRefresh: Boolean = false) {
         viewModelScope.launch {
             try {
                 val needsFullSync = !repository.hasCompletedFullSync
 
                 if (needsFullSync) {
                     _isLoading.value = true
-                    repository.refreshAllPosts()
+                    val refreshResult = repository.refreshAllPosts()
+                    if (refreshResult.isFailure) {
+                        _error.postValue(R.string.error_loading_posts)
+                    }
                 } else {
+                    if (isManualRefresh) {
+                        _isRefreshing.value = true
+                    }
                     val userId = userRepository.getCurrentUserId()
-                    val list = repository.getAllPostsWithPreviews(userId)
-                    _posts.value = list
+                    val listResult = repository.getAllPostsWithPreviews(userId)
+                    if (listResult.isFailure) {
+                        _error.postValue(R.string.error_loading_posts)
+                    }
+                    _posts.value = listResult.getOrDefault(emptyList())
                     repository.refreshPostsIncremental()
                 }
 
                 val userId = userRepository.getCurrentUserId()
-                val refreshedList = repository.getAllPostsWithPreviews(userId)
-                _posts.value = refreshedList
+                val refreshedListResult = repository.getAllPostsWithPreviews(userId)
+                if (refreshedListResult.isFailure) {
+                    _error.postValue(R.string.error_loading_posts)
+                }
+                _posts.value = refreshedListResult.getOrDefault(emptyList())
             } catch (e: Exception) {
-                e.printStackTrace()
+                _error.postValue(R.string.error_loading_posts)
             } finally {
                 _isLoading.value = false
+                _isRefreshing.value = false
             }
         }
     }
@@ -136,7 +156,10 @@ class HomeViewModel(
         viewModelScope.launch {
             val userId = userRepository.getCurrentUserId() ?: return@launch
             
-            repository.toggleLike(userId, postId)
+            val result = repository.toggleLike(userId, postId)
+            if (result.isFailure) {
+                _error.postValue(R.string.error_toggling_like)
+            }
             
             _posts.value = _posts.value?.map { item ->
                 if (item.post.id == postId) {
@@ -167,30 +190,52 @@ class HomeViewModel(
 
     fun deletePost(postId: String) {
         viewModelScope.launch {
-            val post = repository.getPostById(postId) ?: return@launch
-            repository.deletePost(post)
-            _posts.value = _posts.value?.filter { it.post.id != postId }
+            _isRefreshing.value = true
+            try {
+                val postResult = repository.getPostById(postId)
+                if (postResult.isFailure) {
+                    _error.postValue(R.string.error_loading_posts)
+                    return@launch
+                }
+                val post = postResult.getOrNull() ?: return@launch
+                val deleteResult = repository.deletePost(post)
+                if (deleteResult.isFailure) {
+                    _error.postValue(R.string.error_deleting_post)
+                } else {
+                    _posts.value = _posts.value?.filter { it.post.id != postId }
+                }
+            } finally {
+                _isRefreshing.value = false
+            }
         }
     }
 
     fun addComment(postId: String, text: String) {
         viewModelScope.launch {
-            val user = userRepository.getCurrentUser() ?: return@launch
+            val userResult = userRepository.getCurrentUser()
+            if (userResult.isFailure) {
+                _error.postValue(R.string.error_loading_posts)
+                return@launch
+            }
+            val user = userResult.getOrNull() ?: return@launch
 
-            repository.addComment(postId, user.id, text)
-
-            _posts.value = _posts.value?.map { item ->
-                if (item.post.id == postId) {
-                    val newCommentPreview =
-                        CommentPreview(user.username, text, System.currentTimeMillis())
-                    val updatedPreviews = item.previewComments.toMutableList()
-                    updatedPreviews.add(newCommentPreview)
-                    item.copy(
-                        commentCount = item.commentCount + 1,
-                        previewComments = updatedPreviews
-                    )
-                } else {
-                    item
+            val commentResult = repository.addComment(postId, user.id, text)
+            if (commentResult.isFailure) {
+                _error.postValue(R.string.error_adding_comment)
+            } else {
+                _posts.value = _posts.value?.map { item ->
+                    if (item.post.id == postId) {
+                        val newCommentPreview =
+                            CommentPreview(user.username, text, System.currentTimeMillis())
+                        val updatedPreviews = item.previewComments.toMutableList()
+                        updatedPreviews.add(newCommentPreview)
+                        item.copy(
+                            commentCount = item.commentCount + 1,
+                            previewComments = updatedPreviews
+                        )
+                    } else {
+                        item
+                    }
                 }
             }
         }

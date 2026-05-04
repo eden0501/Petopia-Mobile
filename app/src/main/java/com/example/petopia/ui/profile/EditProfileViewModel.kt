@@ -38,7 +38,7 @@ class EditProfileViewModel(
 
     private fun loadUser() {
         viewModelScope.launch {
-            _user.value = userRepository.getCurrentUser()
+            _user.value = userRepository.getCurrentUser().getOrNull()
         }
     }
 
@@ -67,10 +67,11 @@ class EditProfileViewModel(
                             profileImageUrl = url ?: current.profileImageUrl
                         )
                         val result = userRepository.updateUser(updated)
-                        _isSaving.postValue(false)
                         _saveResult.postValue(result)
                         if (result.isSuccess) {
                             _user.postValue(updated)
+                        } else {
+                            _isSaving.postValue(false)
                         }
                     }
                 }
@@ -81,10 +82,11 @@ class EditProfileViewModel(
                     petOwnerSince = petOwnerSince
                 )
                 val result = userRepository.updateUser(updated)
-                _isSaving.value = false
                 _saveResult.value = result
                 if (result.isSuccess) {
                     _user.value = updated
+                } else {
+                    _isSaving.value = false
                 }
             }
         }

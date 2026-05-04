@@ -6,20 +6,20 @@ import com.example.petopia.data.model.Comment
 @Dao
 interface CommentDao {
     @Query("SELECT * FROM comments WHERE postId = :postId ORDER BY createdAt ASC")
-    fun getCommentsByPostId(postId: String): List<Comment>
+    suspend fun getCommentsByPostId(postId: String): List<Comment>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertComments(vararg comments: Comment)
+    suspend fun insertComments(vararg comments: Comment)
 
     @Delete
-    fun deleteComment(comment: Comment)
+    suspend fun deleteComment(comment: Comment)
 
     @Query("SELECT COUNT(*) FROM comments WHERE postId IN (SELECT id FROM posts WHERE authorId = :userId)")
-    fun getReceivedCommentsCount(userId: String): Int
+    suspend fun getReceivedCommentsCount(userId: String): Int
     
     @Query("DELETE FROM comments")
-    fun deleteAllComments()
+    suspend fun deleteAllComments()
 
     @Query("DELETE FROM comments WHERE postId = :postId")
-    fun deleteCommentsByPostId(postId: String)
+    suspend fun deleteCommentsByPostId(postId: String)
 }

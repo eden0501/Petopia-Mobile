@@ -15,26 +15,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include
-            android:id="@+id/includeFilter"
-            layout="@layout/filter_dropdown" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerFeed"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:paddingBottom="88dp"
-            android:scrollbars="vertical"
-            tools:listitem="@layout/row_post_item" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/includeFilter"
+                layout="@layout/filter_dropdown" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerFeed"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingBottom="88dp"
+                android:scrollbars="vertical"
+                tools:listitem="@layout/row_post_item" />
+        </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include
         android:id="@+id/includeBottomNav"
@@ -50,7 +56,7 @@
         android:layout_height="match_parent"
         android:background="@color/loading_orange"
         android:elevation="100dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="wrap_content"

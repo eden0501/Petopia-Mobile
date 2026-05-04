@@ -10,7 +10,7 @@
 
     <!-- Close button -->
     <ImageView
-        android:id="@+id/btnClose"
+        android:id="@+id/close"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="end"
@@ -46,7 +46,7 @@
         android:lineSpacingExtra="4dp" />
 
     <EditText
-        android:id="@+id/etPassword"
+        android:id="@+id/passwordEditText"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
@@ -59,7 +59,7 @@
         android:textSize="14sp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnKeepAccount"
+        android:id="@+id/keepAccount"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -70,7 +70,7 @@
         android:textStyle="bold" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnConfirmDelete"
+        android:id="@+id/confirmDelete"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="4dp"

@@ -36,9 +36,9 @@ class CreatePostViewModel(
     val imageUrl: LiveData<String?> = _imageUrl
 
     private val _hashtags = MutableLiveData<String>("")
-
-    private val _postCreated = MutableLiveData<Boolean>()
-    val postCreated: LiveData<Boolean> = _postCreated
+    
+    private val _postResult = MutableLiveData<Result<Unit>?>()
+    val postResult: LiveData<Result<Unit>?> = _postResult
 
     private val _isUploading = MutableLiveData<Boolean>(false)
     val isUploading: LiveData<Boolean> = _isUploading
@@ -136,7 +136,7 @@ class CreatePostViewModel(
     ) {
         viewModelScope.launch {
             val existing = editingPost
-            if (existing != null) {
+            val result = if (existing != null) {
                 val updated = existing.copy(
                     title = title,
                     content = content,
@@ -144,24 +144,31 @@ class CreatePostViewModel(
                     postType = type,
                     hashtags = hashtags
                 )
-                postRepository.updatePost(updated)
+                postRepository.insertPosts(listOf(updated))
             } else {
-                val user = userRepository.getCurrentUser() ?: return@launch
-                val newPost = Post(
-                    id = System.currentTimeMillis().toString(),
-                    title = title,
-                    content = content,
-                    imageUrl = imageUrl,
-                    authorId = user.id,
-                    createdAt = System.currentTimeMillis(),
-                    postType = type,
-                    hashtags = hashtags,
-                    likes = emptyList()
-                )
-                postRepository.insertPosts(listOf(newPost))
+                val userResult = userRepository.getCurrentUser()
+                if (userResult.isSuccess) {
+                    val user = userResult.getOrNull()!!
+                    val newPost = Post(
+                        id = System.currentTimeMillis().toString(),
+                        title = title,
+                        content = content,
+                        imageUrl = imageUrl,
+                        authorId = user.id,
+                        createdAt = System.currentTimeMillis(),
+                        postType = type,
+                        hashtags = hashtags,
+                        likes = emptyList()
+                    )
+                    postRepository.insertPosts(listOf(newPost))
+                } else {
+                    Result.failure(userResult.exceptionOrNull() ?: Exception("Failed to get current user"))
+                }
             }
-            _isUploading.postValue(false)
-            _postCreated.postValue(true)
+            _postResult.postValue(result)
+            if (result.isFailure) {
+                _isUploading.postValue(false)
+            }
         }
     }
 }

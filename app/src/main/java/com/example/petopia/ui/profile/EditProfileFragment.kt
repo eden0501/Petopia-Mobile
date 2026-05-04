@@ -189,11 +189,11 @@ class EditProfileFragment : Fragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
-        val etPassword = dialog.findViewById<android.widget.EditText>(R.id.etPassword)
+        val etPassword = dialog.findViewById<android.widget.EditText>(R.id.passwordEditText)
 
-        dialog.findViewById<View>(R.id.btnClose).setOnClickListener { dialog.dismiss() }
-        dialog.findViewById<View>(R.id.btnKeepAccount).setOnClickListener { dialog.dismiss() }
-        dialog.findViewById<View>(R.id.btnConfirmDelete).setOnClickListener {
+        dialog.findViewById<View>(R.id.close).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.keepAccount).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.confirmDelete).setOnClickListener {
             val password = etPassword.text.toString()
             if (password.isEmpty()) {
                 Toast.makeText(context, getString(R.string.password_required), Toast.LENGTH_SHORT).show()
@@ -242,7 +242,7 @@ class EditProfileFragment : Fragment() {
                     Toast.makeText(context, getString(R.string.profile_updated), Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                 } else {
-                    Toast.makeText(context, it.exceptionOrNull()?.message ?: getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -256,7 +256,7 @@ class EditProfileFragment : Fragment() {
                     } catch (_: Exception) {
                     }
                 } else {
-                    Toast.makeText(context, it.exceptionOrNull()?.message ?: getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.generic_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
