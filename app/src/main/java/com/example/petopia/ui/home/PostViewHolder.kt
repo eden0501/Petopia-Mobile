@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.example.petopia.R
 import com.example.petopia.databinding.RowPostItemBinding
+import com.example.petopia.databinding.PopupPostActionsBinding
 import com.example.petopia.types.PostDisplayItem
 import com.example.petopia.types.PostType
 
@@ -55,11 +56,13 @@ class PostViewHolder(
                 popupWindow.elevation = 16f
                 popupWindow.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
-                popupView.findViewById<View>(R.id.actionEdit).setOnClickListener {
+                val popupBinding = PopupPostActionsBinding.bind(popupView)
+
+                popupBinding.actionEdit.setOnClickListener {
                     popupWindow.dismiss()
                     onEditClick?.invoke(item)
                 }
-                popupView.findViewById<View>(R.id.actionDelete).setOnClickListener {
+                popupBinding.actionDelete.setOnClickListener {
                     popupWindow.dismiss()
                     onDeleteClick?.invoke(item)
                 }

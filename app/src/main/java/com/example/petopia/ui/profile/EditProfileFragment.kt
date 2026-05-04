@@ -23,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.petopia.R
 import com.example.petopia.databinding.FragmentEditProfileBinding
+import com.example.petopia.databinding.DialogDeleteAccountBinding
 import com.squareup.picasso.Picasso
 import java.util.Calendar
 
@@ -182,19 +183,18 @@ class EditProfileFragment : Fragment() {
     private fun showDeleteDialog() {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.dialog_delete_account)
+        val dialogBinding = DialogDeleteAccountBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.setLayout(
             (resources.displayMetrics.widthPixels * 0.85).toInt(),
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
-        val etPassword = dialog.findViewById<android.widget.EditText>(R.id.passwordEditText)
-
-        dialog.findViewById<View>(R.id.close).setOnClickListener { dialog.dismiss() }
-        dialog.findViewById<View>(R.id.keepAccount).setOnClickListener { dialog.dismiss() }
-        dialog.findViewById<View>(R.id.confirmDelete).setOnClickListener {
-            val password = etPassword.text.toString()
+        dialogBinding.close.setOnClickListener { dialog.dismiss() }
+        dialogBinding.keepAccount.setOnClickListener { dialog.dismiss() }
+        dialogBinding.confirmDelete.setOnClickListener {
+            val password = dialogBinding.passwordEditText.text.toString()
             if (password.isEmpty()) {
                 Toast.makeText(context, getString(R.string.password_required), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener

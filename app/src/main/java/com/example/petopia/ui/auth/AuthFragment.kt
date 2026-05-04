@@ -6,12 +6,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -19,10 +16,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.petopia.R
 import com.example.petopia.data.model.User
+import com.example.petopia.databinding.FragmentAuthBinding
 import com.google.android.material.tabs.TabLayout
 import java.util.Calendar
 
-class AuthFragment : Fragment(R.layout.fragment_auth) {
+class AuthFragment : Fragment() {
+
+    private var _binding: FragmentAuthBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var viewModel: AuthViewModel
 
@@ -36,8 +37,17 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 ImageDecoder.decodeBitmap(source)
             }
             viewModel.setProfileImageBitmap(bitmap)
-            view?.findViewById<ImageView>(R.id.profilePictureImage)?.setImageBitmap(bitmap)
+            binding.profilePictureImage.setImageBitmap(bitmap)
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAuthBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,26 +56,13 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         val factory = AuthViewModelFactory(requireContext())
         viewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
-        val authModeTabLayout = view.findViewById<TabLayout>(R.id.authModeTabLayout)
-        val signupFieldsContainer = view.findViewById<LinearLayout>(R.id.signupFieldsContainer)
-        val formTitleText = view.findViewById<TextView>(R.id.formTitleText)
-        val formDescriptionText = view.findViewById<TextView>(R.id.formDescriptionText)
-        val submitButton = view.findViewById<Button>(R.id.submitButton)
-        val profilePictureImage = view.findViewById<ImageView>(R.id.profilePictureImage)
-
-        val emailInput = view.findViewById<EditText>(R.id.emailInput)
-        val usernameInput = view.findViewById<EditText>(R.id.usernameInput)
-        val passwordInput = view.findViewById<EditText>(R.id.passwordInput)
-        val petCountInput = view.findViewById<EditText>(R.id.petCountInput)
-        val petOwnerSinceInput = view.findViewById<EditText>(R.id.petOwnerSinceInput)
-
-        profilePictureImage?.setOnClickListener {
+        binding.profilePictureImage.setOnClickListener {
             pickImage.launch("image/*")
         }
 
-        petOwnerSinceInput.setOnClickListener {
+        binding.petOwnerSinceInput.setOnClickListener {
             val calendar = Calendar.getInstance()
-            val existingDate = petOwnerSinceInput.text.toString()
+            val existingDate = binding.petOwnerSinceInput.text.toString()
             if (existingDate.isNotBlank()) {
                 try {
                     val parts = existingDate.split("/")
@@ -79,7 +76,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 requireContext(),
                 R.style.DatePickerTheme,
                 { _, year, month, day ->
-                    petOwnerSinceInput.setText("$day/${month + 1}/$year")
+                    binding.petOwnerSinceInput.setText("$day/${month + 1}/$year")
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -89,56 +86,56 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             }.show()
         }
 
-        authModeTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.authModeTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab?.position == 0) {
-                    formTitleText.text = getString(R.string.welcome_back)
-                    formDescriptionText.text = getString(R.string.login_description)
-                    signupFieldsContainer.visibility = View.GONE
-                    submitButton.text = getString(R.string.login_tab)
+                    binding.formTitleText.text = getString(R.string.welcome_back)
+                    binding.formDescriptionText.text = getString(R.string.login_description)
+                    binding.signupFieldsContainer.visibility = View.GONE
+                    binding.submitButton.text = getString(R.string.login_tab)
                 } else {
-                    formTitleText.text = getString(R.string.join_petopia)
-                    formDescriptionText.text = getString(R.string.create_account_description)
-                    signupFieldsContainer.visibility = View.VISIBLE
-                    submitButton.text = getString(R.string.signup_tab)
+                    binding.formTitleText.text = getString(R.string.join_petopia)
+                    binding.formDescriptionText.text = getString(R.string.create_account_description)
+                    binding.signupFieldsContainer.visibility = View.VISIBLE
+                    binding.submitButton.text = getString(R.string.signup_tab)
                 }
             }
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-        submitButton.setOnClickListener {
-            val email = emailInput.text.toString().trim()
-            val password = passwordInput.text.toString().trim()
+        binding.submitButton.setOnClickListener {
+            val email = binding.emailInput.text.toString().trim()
+            val password = binding.passwordInput.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(context, getString(R.string.email_password_required), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            submitButton.isEnabled = false
+            binding.submitButton.isEnabled = false
 
-            if (authModeTabLayout.selectedTabPosition == 0) {
+            if (binding.authModeTabLayout.selectedTabPosition == 0) {
                 viewModel.login(email, password)
             } else {
-                val username = usernameInput.text.toString().trim()
+                val username = binding.usernameInput.text.toString().trim()
                 if (username.isEmpty()) {
                     Toast.makeText(context, getString(R.string.username_required), Toast.LENGTH_SHORT).show()
-                    submitButton.isEnabled = true
+                    binding.submitButton.isEnabled = true
                     return@setOnClickListener
                 }
                 val user = User(
                     email = email,
                     username = username,
-                    petsCount = petCountInput.text.toString().toIntOrNull() ?: 0,
-                    petOwnerSince = petOwnerSinceInput.text.toString()
+                    petsCount = binding.petCountInput.text.toString().toIntOrNull() ?: 0,
+                    petOwnerSince = binding.petOwnerSinceInput.text.toString()
                 )
                 viewModel.signup(user, password, requireContext())
             }
         }
 
         viewModel.authStatus.observe(viewLifecycleOwner) { result ->
-            submitButton.isEnabled = true
+            binding.submitButton.isEnabled = true
             
             result?.let {
                 if (it.isSuccess) {
@@ -148,5 +145,10 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
