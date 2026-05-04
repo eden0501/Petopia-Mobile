@@ -2,6 +2,8 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Petopia" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/petopia_orange</item>
+        <item name="android:statusBarColor">@color/gray_900</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>
